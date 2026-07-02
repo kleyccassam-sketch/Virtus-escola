@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <title>Resultados dos Exames</title>
+    <style>
+        body { font-family: Arial; background: #f3f4f6; padding: 20px; }
+        .container { max-width: 1400px; margin: auto; background: white; padding: 20px; border-radius: 12px; box-shadow: 0 5px 20px rgba(0,0,0,0.1); }
+        h2 { text-align: center; margin-bottom: 20px; }
+        h3 { color: #1e3a8a; margin-top: 30px; border-bottom: 2px solid #2563eb; padding-bottom: 10px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+        th, td { border: 1px solid #ddd; padding: 10px; text-align: center; font-size: 13px; }
+        th { background: #2563eb; color: white; }
+        .aluno-nome { font-weight: bold; text-align: left; background: #f0f2f5; }
+        .aprovado { background: #dcfce7; color: #166534; font-weight: bold; }
+        .reprovado { background: #fee2e2; color: #991b1b; font-weight: bold; }
+        .media-final { font-weight: bold; background: #dbeafe; }
+        .botoes { text-align: center; margin-top: 30px; padding-top: 20px; border-top: 1px solid #ddd; }
+        .btn-voltar { background: #6c757d; color: white; padding: 12px 24px; border: none; border-radius: 8px; cursor: pointer; font-size: 16px; }
+        .btn-voltar:hover { background: #5a6268; }
+        .info { background: #e3f2fd; padding: 15px; border-radius: 8px; margin-bottom: 20px; text-align: center; }
+        .legenda { display: flex; justify-content: center; gap: 20px; margin-top: 20px; }
+        .legenda-item { display: flex; align-items: center; gap: 8px; }
+        .cor-aprovado { width: 20px; height: 20px; background: #dcfce7; border: 1px solid #166534; }
+        .cor-reprovado { width: 20px; height: 20px; background: #fee2e2; border: 1px solid #991b1b; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>📊 Resultados dos Exames - {{ turma_nome }}</h2>
+        <div class="info">
+            <strong>📌 Fórmula de cálculo:</strong> Média Final = (2 × Média de Frequência + Nota do Exame) / 3
+            <br>
+            <strong>✅ Aprovação:</strong> Média Final ≥ 10
+        </div>
+        
+        <h3>📖 Disciplinas com Exame</h3>
+        
+        <div style="overflow-x: auto;">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Aluno</th>
+                        {% for disc in disciplinas %}
+                        <th colspan="3">{{ disc[1] }}</th>
+                        {% endfor %}
+                        <th>Média Geral</th>
+                    </tr>
+                    <tr>
+                        <th></th>
+                        {% for disc in disciplinas %}
+                        <th>Média Freq</th>
+                        <th>Nota Exame</th>
+                        <th>Média Final</th>
+                        {% endfor %}
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for aluno in alunos %}
+                    <tr>
+                        <td class="aluno-nome">{{ aluno.nome }}</td>
+                        
+                        {% for disc in aluno.disciplinas %}
+                        <td>{{ disc.media_frequencia }}</td>
+                        <td>
+                            {% if disc.nota_exame > 0 %}
+                                <strong>{{ disc.nota_exame }}</strong>
+                            {% else %}
+                                —
+                            {% endif %}
+                        </td>
+                        <td class="{% if disc.aprovado %}aprovado{% else %}reprovado{% endif %}">
+                            <strong>{{ disc.media_final }}</strong>
+                        </td>
+                        {% endfor %}
+                        
+                        <td class="media-final {% if aluno.aprovado_geral %}aprovado{% else %}reprovado{% endif %}">
+                            <strong>{{ aluno.media_geral }}</strong>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        
+        <div class="legenda">
+            <div class="legenda-item">
+                <div class="cor-aprovado"></div>
+                <span>Aprovado (≥ 10)</span>
+            </div>
+            <div class="legenda-item">
+                <div class="cor-reprovado"></div>
+                <span>Reprovado (< 10)</span>
+            </div>
+        </div>
+        
+        <div class="botoes">
+            <a href="/diretor">
+                <button class="btn-voltar">← Voltar para Pauta</button>
+            </a>
+            <a href="/diretor/grafico">
+                <button class="btn-voltar" style="background: #f59e0b;">📊 Gráficos</button>
+            </a>
+            <a href="/logout">
+                <button class="btn-voltar" style="background: #dc2626;">🚪 Sair</button>
+            </a>
+        </div>
+    </div>
+</body>
+</html>

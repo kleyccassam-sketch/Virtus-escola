@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VIRTUS - Gestão de Escolas</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', Arial, sans-serif; background: linear-gradient(135deg, #1a1a2e, #2d1b3d); padding: 25px; min-height: 100vh; }
+        .container { max-width: 1400px; margin: auto; background: rgba(255,255,255,0.95); backdrop-filter: blur(10px); padding: 25px; border-radius: 18px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); animation: fadeIn 0.5s ease; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+        
+        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding-bottom: 15px; border-bottom: 2px solid rgba(255,215,0,0.2); flex-wrap: wrap; gap: 10px; }
+        .logo { display: flex; align-items: center; gap: 10px; }
+        .logo .icon { width: 40px; height: 40px; background: linear-gradient(135deg, #ffd700, #f59e0b); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 18px; font-weight: 900; color: #0f0c29; font-family: 'Georgia', serif; }
+        .logo .text { font-size: 20px; font-weight: 900; letter-spacing: 4px; background: linear-gradient(135deg, #ffd700, #f59e0b); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-family: 'Georgia', serif; }
+        
+        .btn { padding: 10px 20px; border: none; border-radius: 10px; cursor: pointer; font-size: 14px; font-weight: 600; transition: all 0.3s ease; text-decoration: none; display: inline-flex; align-items: center; gap: 8px; }
+        .btn:hover { transform: translateY(-2px); }
+        .btn-primary { background: linear-gradient(135deg, #4f46e5, #7c3aed); color: white; }
+        .btn-primary:hover { box-shadow: 0 10px 30px rgba(79,70,229,0.3); }
+        .btn-success { background: linear-gradient(135deg, #10b981, #059669); color: white; }
+        .btn-success:hover { box-shadow: 0 10px 30px rgba(16,185,129,0.3); }
+        .btn-danger { background: linear-gradient(135deg, #dc2626, #b91c1c); color: white; }
+        .btn-danger:hover { box-shadow: 0 10px 30px rgba(220,38,38,0.3); }
+        .btn-warning { background: linear-gradient(135deg, #f59e0b, #d97706); color: white; }
+        .btn-warning:hover { box-shadow: 0 10px 30px rgba(245,158,11,0.3); }
+        .btn-secondary { background: #6c757d; color: white; }
+        .btn-secondary:hover { background: #5a6268; }
+        .btn-gold { background: linear-gradient(135deg, #ffd700, #f59e0b); color: #0f0c29; }
+        .btn-gold:hover { box-shadow: 0 10px 30px rgba(255,215,0,0.3); }
+        
+        .btn-sair { background: #dc2626; color: white; padding: 10px 22px; border-radius: 12px; text-decoration: none; font-weight: 600; font-size: 14px; transition: all 0.3s ease; display: inline-flex; align-items: center; gap: 8px; }
+        .btn-sair:hover { background: #b91c1c; transform: translateY(-2px); }
+        
+        .btn-selecionar { background: #4f46e5; color: white; padding: 5px 12px; font-size: 12px; border-radius: 8px; text-decoration: none; display: inline-flex; align-items: center; gap: 4px; }
+        .btn-selecionar:hover { background: #4338ca; }
+        .btn-desativar { background: #ef4444; color: white; padding: 5px 12px; font-size: 12px; border-radius: 8px; text-decoration: none; display: inline-flex; align-items: center; gap: 4px; }
+        .btn-desativar:hover { background: #dc2626; }
+        .btn-renovar { background: #10b981; color: white; padding: 5px 12px; font-size: 12px; border-radius: 8px; text-decoration: none; display: inline-flex; align-items: center; gap: 4px; }
+        .btn-renovar:hover { background: #059669; }
+        .btn-reset-senha { background: #f59e0b; color: white; padding: 5px 12px; font-size: 12px; border-radius: 8px; text-decoration: none; display: inline-flex; align-items: center; gap: 4px; }
+        .btn-reset-senha:hover { background: #d97706; }
+        .btn-pagamentos { background: #8b5cf6; color: white; padding: 5px 12px; font-size: 12px; border-radius: 8px; text-decoration: none; display: inline-flex; align-items: center; gap: 4px; }
+        .btn-pagamentos:hover { background: #7c3aed; }
+        
+        .table-container { overflow-x: auto; border-radius: 12px; border: 1px solid rgba(0,0,0,0.05); margin-top: 15px; }
+        table { width: 100%; border-collapse: collapse; font-size: 13px; }
+        thead th { background: linear-gradient(135deg, #1a1a2e, #2d1b3d); color: white; padding: 12px 10px; text-align: center; font-size: 12px; font-weight: 700; text-transform: uppercase; border-bottom: 2px solid #ffd700; position: sticky; top: 0; z-index: 10; }
+        tbody tr:nth-child(even) { background: #faf8f5; }
+        tbody tr:hover { background: #f5f3ff; }
+        tbody td { padding: 10px; text-align: center; border-bottom: 1px solid #f1f5f9; vertical-align: middle; }
+        
+        .badge { display: inline-block; padding: 3px 12px; border-radius: 20px; font-size: 11px; font-weight: 600; }
+        .badge-ativo { background: #dcfce7; color: #166534; }
+        .badge-inativo { background: #fee2e2; color: #991b1b; }
+        .badge-expirado { background: #fef3c7; color: #92400e; }
+        
+        .actions { display: flex; gap: 5px; justify-content: center; flex-wrap: wrap; }
+        .empty { text-align: center; padding: 40px; color: #6c757d; }
+        .empty .icon { font-size: 48px; display: block; margin-bottom: 10px; }
+        .footer { text-align: center; margin-top: 20px; padding-top: 15px; border-top: 1px solid rgba(0,0,0,0.05); color: #6c757d; font-size: 12px; }
+        .header-actions { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+        
+        .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px; margin-bottom: 20px; }
+        .stat-card { background: #f8fafc; padding: 15px 20px; border-radius: 12px; border: 1px solid #e2e8f0; text-align: center; transition: all 0.3s ease; }
+        .stat-card:hover { transform: translateY(-3px); box-shadow: 0 8px 25px rgba(0,0,0,0.06); }
+        .stat-card .number { font-size: 28px; font-weight: 900; color: #1a1a2e; }
+        .stat-card .label { font-size: 13px; color: #6c757d; }
+        .stat-card .icon { font-size: 24px; display: block; margin-bottom: 5px; }
+        
+        .card-destaque { border: 2px solid #ffd700; background: #fffbeb; }
+        
+        .btn-pagamentos-card {
+            background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 10px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .btn-pagamentos-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(139,92,246,0.3);
+        }
+        
+        @media (max-width: 768px) { 
+            .header { flex-direction: column; align-items: stretch; } 
+            .header-actions { flex-direction: column; align-items: stretch; } 
+            .actions { flex-direction: column; align-items: center; } 
+            .stats { grid-template-columns: 1fr 1fr; } 
+            table { font-size: 12px; }
+            thead th, tbody td { padding: 6px 4px; }
+        }
+        @media (max-width: 480px) { 
+            .stats { grid-template-columns: 1fr; } 
+            .actions { gap: 3px; }
+            .btn-selecionar, .btn-desativar, .btn-renovar, .btn-reset-senha, .btn-pagamentos { font-size: 10px; padding: 3px 8px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- ===== HEADER ===== -->
+        <div class="header">
+            <div class="logo">
+                <div class="icon">V</div>
+                <span class="text">VIRTUS</span>
+            </div>
+            <div class="header-actions">
+                <span style="font-size:14px;color:#1a1a2e;font-weight:600;">👑 Super Admin</span>
+                <a href="/admin/configurar-escola" class="btn btn-primary"><i class="fas fa-plus"></i> Nova Escola</a>
+                <a href="/super-login/trocar-senha" class="btn btn-warning"><i class="fas fa-key"></i> Trocar Senha</a>
+                <a href="/logout" class="btn btn-danger"><i class="fas fa-sign-out-alt"></i> Sair</a>
+            </div>
+        </div>
+
+        <h1 style="color: #1a1a2e; margin-bottom: 5px;">🏫 Gestão de Escolas</h1>
+        <p style="color: #6c757d; margin-bottom: 20px; font-size: 14px;">
+            <i class="fas fa-info-circle"></i> 
+            Gerencie todas as escolas, licenças e configurações de pagamento de acesso
+        </p>
+
+        <!-- ===== ESTATÍSTICAS ===== -->
+        <div class="stats">
+            <div class="stat-card">
+                <span class="icon">🏫</span>
+                <div class="number">{{ escolas|length }}</div>
+                <div class="label">Total de Escolas</div>
+            </div>
+            <div class="stat-card">
+                <span class="icon">✅</span>
+                <div class="number">{{ escolas_ativas }}</div>
+                <div class="label">Escolas Ativas</div>
+            </div>
+            <div class="stat-card">
+                <span class="icon">👨‍🎓</span>
+                <div class="number">{{ total_alunos }}</div>
+                <div class="label">Total de Alunos</div>
+            </div>
+            <div class="stat-card">
+                <span class="icon">❌</span>
+                <div class="number">{{ escolas|length - escolas_ativas }}</div>
+                <div class="label">Escolas Inativas</div>
+            </div>
+        </div>
+
+        <!-- ===== TABELA ===== -->
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nome</th>
+                        <th>Email</th>
+                        <th>Telefone</th>
+                        <th>Licença</th>
+                        <th>Status</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% if escolas %}
+                    {% for escola in escolas %}
+                    <tr>
+                        <td>{{ escola[0] }}</td>
+                        <td><strong>{{ escola[1] }}</strong></td>
+                        <td>{{ escola[2] if escola[2] else '-' }}</td>
+                        <td>{{ escola[3] if escola[3] else '-' }}</td>
+                        <td><code style="background: #f1f5f9; padding: 2px 8px; border-radius: 4px; font-size: 11px;">{{ escola[7] }}</code></td>
+                        <td>
+                            {% if escola[6] == 1 %}
+                            <span class="badge badge-ativo">✅ Ativo</span>
+                            {% else %}
+                            <span class="badge badge-inativo">❌ Inativo</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <div class="actions">
+                                <a href="/super-admin/escolas/selecionar/{{ escola[0] }}" class="btn-selecionar">
+                                    <i class="fas fa-arrow-right"></i> Acessar
+                                </a>
+                                
+                                {% if escola[6] == 1 %}
+                                <a href="/super-admin/escolas/desativar/{{ escola[0] }}" class="btn-desativar" onclick="return confirm('Desativar esta escola?')">
+                                    <i class="fas fa-lock"></i> Desativar
+                                </a>
+                                {% else %}
+                                <a href="/super-admin/escolas/ativar/{{ escola[0] }}" class="btn-success" style="padding:5px 12px;font-size:12px;border-radius:8px;text-decoration:none;display:inline-flex;align-items:center;gap:4px;" onclick="return confirm('Ativar esta escola?')">
+                                    <i class="fas fa-unlock"></i> Ativar
+                                </a>
+                                {% endif %}
+                                
+                                <a href="/super-admin/escolas/renovar/{{ escola[0] }}" class="btn-renovar" onclick="return confirm('Renovar licença por mais 1 ano?')">
+                                    <i class="fas fa-sync"></i> Renovar
+                                </a>
+                                
+                                <a href="/super-admin/resetar-senha-admin/{{ escola[0] }}" 
+                                   class="btn-reset-senha" 
+                                   onclick="return confirm('⚠️ Resetar a senha do administrador desta escola?\n\nA nova senha será gerada automaticamente e mostrada no ecrã.')">
+                                   <i class="fas fa-key"></i> Resetar Senha
+                                </a>
+
+                                <!-- 🔥 NOVO: CONFIGURAR PAGAMENTOS DE ACESSO -->
+                                <a href="/super-admin/configurar-pagamentos-acesso?escola_id={{ escola[0] }}" 
+                                   class="btn-pagamentos">
+                                    <i class="fas fa-coins"></i> Pagamentos
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                    {% else %}
+                    <tr>
+                        <td colspan="7">
+                            <div class="empty">
+                                <span class="icon">🏫</span>
+                                <p>Nenhuma escola cadastrada ainda.</p>
+                                <p style="font-size: 13px; color: #a0aec0;">Clique em "Nova Escola" para começar.</p>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endif %}
+                </tbody>
+            </table>
+        </div>
+
+        <!-- ===== FOOTER ===== -->
+        <div class="footer">
+            Desenvolvido por <strong>Klésio Yannick Cassamo</strong> <span style="color: #f59e0b;">✦</span>
+            <br>
+            <span style="font-size: 10px;">VIRTUS © 2026 — Todos os direitos reservados</span>
+        </div>
+    </div>
+</body>
+</html>

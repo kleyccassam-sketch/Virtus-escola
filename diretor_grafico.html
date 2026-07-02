@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Gráfico - Diretor de Turma</title>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+        body {
+            font-family: Arial;
+            margin: 20px;
+            background: #f5f5f5;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: auto;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+
+        canvas {
+            max-width: 100%;
+            margin: 20px 0;
+        }
+
+        .filtros {
+            background: #e3f2fd;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .filtros a {
+            text-decoration: none;
+            padding: 5px 10px;
+            background: #e0e0e0;
+            border-radius: 5px;
+            color: black;
+        }
+
+        .filtros a.ativo {
+            background: #4CAF50;
+            color: white;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: center;
+        }
+
+        th {
+            background: #2196F3;
+            color: white;
+        }
+
+        button {
+            padding: 10px 20px;
+            margin-top: 20px;
+            cursor: pointer;
+        }
+
+        .btn-voltar {
+            background: #666;
+            color: white;
+            border: none;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <h1>📊 Desempenho da Turma - {{ turma_nome }}</h1>
+
+    <div class="filtros">
+        <strong>📚 Turma:</strong>
+
+        {% for t in turmas %}
+            <a href="/diretor/grafico?turma_id={{ t[0] }}"
+               {% if turma_atual|string == t[0]|string %}class="ativo"{% endif %}>
+                {{ t[1] }} {{ t[2] }}
+            </a>
+        {% endfor %}
+    </div>
+
+    <canvas id="grafico"></canvas>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Disciplina</th>
+                <th>Média</th>
+                <th>Aprovados</th>
+                <th>Total Alunos</th>
+                <th>Aproveitamento</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            {% for d in dados %}
+            <tr>
+                <td>
+                    <strong>{{ d.disciplina }}</strong>
+                </td>
+
+                <td>
+                    {{ d.media }}
+                </td>
+
+                <td>
+                    {{ d.aprovados }}/{{ d.total }}
+                </td>
+
+                <td>
+                    {{ d.total }}
+                </td>
+
+                <td>
+                    {{ d.percentagem }}%
+
+                    <div style="
+                        background: #ddd;
+                        border-radius: 5px;
+                        margin-top: 5px;
+                    ">
+                        <div style="
+                            background:
+                            {% if d.percentagem >= 70 %}
+                                green
+                            {% elif d.percentagem >= 50 %}
+                                orange
+                            {% else %}
+                                red
+                            {% endif %};
+                            width: {{ d.percentagem }}%;
+                            height: 20px;
+                            border-radius: 5px;
+                        ">
+                        </div>
+                    </div>
+                </td>
+
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <div style="text-align: center;">
+        <button class="btn-voltar" onclick="window.location.href='/diretor'">
+            ← Voltar
+        </button>
+    </div>
+
+</div>
+
+<script>
+    const ctx = document.getElementById('grafico').getContext('2d');
+    const dados = {{ dados|tojson }};
+
+    new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: dados.map(d => d.disciplina),
+            datasets: [{
+                label: 'Percentagem de Aproveitamento (%)',
+                data: dados.map(d => d.percentagem),
+                backgroundColor: dados.map(d =>
+                    d.percentagem >= 70
+                        ? '#4CAF50'
+                        : (d.percentagem >= 50
+                            ? '#FF9800'
+                            : '#F44336')
+                ),
+                borderRadius: 5
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    max: 100,
+                    title: {
+                        display: true,
+                        text: 'Aproveitamento (%)'
+                    }
+                }
+            }
+        }
+    });
+</script>
+
+</body>
+</html>

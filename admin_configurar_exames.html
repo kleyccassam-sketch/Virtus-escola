@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <title>Configurar Exames</title>
+    <style>
+        body { font-family: Arial; background: linear-gradient(135deg, #667eea, #764ba2); padding: 20px; }
+        .container { max-width: 800px; margin: auto; background: white; padding: 25px; border-radius: 15px; box-shadow: 0 5px 20px rgba(0,0,0,0.2); }
+        h1 { color: #1e3a8a; text-align: center; margin-bottom: 20px; }
+        h2 { color: #1e3a8a; font-size: 1.3em; margin-top: 30px; border-bottom: 2px solid #2563eb; padding-bottom: 10px; }
+        .info { background: #e3f2fd; padding: 15px; border-radius: 8px; margin-bottom: 20px; border-left: 4px solid #2196f3; }
+        .form-group { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 8px; font-weight: bold; color: #333; }
+        select, input { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px; font-size: 14px; }
+        button { background: #2563eb; color: white; padding: 12px 24px; border: none; border-radius: 8px; cursor: pointer; font-size: 16px; margin-right: 10px; }
+        button:hover { background: #1d4ed8; }
+        .btn-voltar { background: #6c757d; }
+        .btn-voltar:hover { background: #5a6268; }
+        .checkbox-group { display: flex; flex-wrap: wrap; gap: 15px; margin-top: 10px; }
+        .checkbox-item { display: flex; align-items: center; gap: 8px; background: #f0f2f5; padding: 8px 15px; border-radius: 8px; }
+        .checkbox-item input { width: auto; margin: 0; }
+        .sucesso { color: #155724; background: #d4edda; padding: 12px; border-radius: 5px; margin-bottom: 20px; border: 1px solid #c3e6cb; }
+        .erro { color: #721c24; background: #f8d7da; padding: 12px; border-radius: 5px; margin-bottom: 20px; border: 1px solid #f5c6cb; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📝 Configurar Disciplinas com Exame</h1>
+        <div class="info">
+            <strong>ℹ️ Informação:</strong> Ano Letivo Atual: <strong>{{ ano_letivo }}</strong>
+            <br>
+            Configure quais classes (anos) terão disciplinas com exame.
+            <br>
+            Depois de configurar as classes, você poderá selecionar as disciplinas específicas.
+        </div>
+
+        <form method="POST" action="/admin/salvar-classes-exames">
+            <h2>📚 Classes com Exame</h2>
+            <div class="checkbox-group">
+                {% for t in turmas %}
+                <div class="checkbox-item">
+                    <input type="checkbox" name="classes_exame" value="{{ t[0] }}" 
+                        {% if t[0] in classes_com_exame %}checked{% endif %}>
+                    <label style="margin: 0;">{{ t[0] }}ª Classe</label>
+                </div>
+                {% endfor %}
+            </div>
+            <button type="submit">💾 Salvar Classes</button>
+        </form>
+
+        <div class="botoes" style="margin-top: 30px; text-align: center;">
+            <a href="/admin"><button type="button" class="btn-voltar">← Voltar ao Painel</button></a>
+        </div>
+    </div>
+</body>
+</html>

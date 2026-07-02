@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VIRTUS - Disciplinas Super Relevantes</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background: linear-gradient(135deg, #1a0a2e, #2d1b3d);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: rgba(255,255,255,0.95);
+            border-radius: 24px;
+            padding: 30px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            animation: fadeIn 0.5s ease;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid rgba(255,215,0,0.2);
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        .logo { font-size: 24px; font-weight: 900; color: #1a1a2e; }
+        .logo span { color: #f59e0b; }
+        .btn-voltar {
+            background: #6b7280;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 10px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: 0.3s;
+        }
+        .btn-voltar:hover { background: #4b5563; }
+        .btn-salvar {
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+            color: white;
+            padding: 14px 40px;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .btn-salvar:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(245,158,11,0.3);
+        }
+        .alert-success {
+            background: #d1fae5;
+            color: #065f46;
+            padding: 15px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            border-left: 4px solid #10b981;
+        }
+        .info-box {
+            background: #fef3c7;
+            padding: 15px 20px;
+            border-radius: 12px;
+            border-left: 4px solid #f59e0b;
+            margin-bottom: 20px;
+            color: #78350f;
+            font-size: 14px;
+        }
+        .info-box ul { margin: 10px 0 0 20px; }
+        .info-box ul li { margin-bottom: 5px; }
+        .disciplina-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 12px;
+            margin: 20px 0;
+        }
+        .disciplina-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 14px 18px;
+            background: #f8f6f2;
+            border-radius: 12px;
+            border: 2px solid #e2e8f0;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        .disciplina-item:hover {
+            border-color: #f59e0b;
+            background: #fffbeb;
+        }
+        .disciplina-item input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            accent-color: #f59e0b;
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+        .disciplina-item .info { flex: 1; }
+        .disciplina-item .info .nome {
+            font-weight: 600;
+            color: #1a1a2e;
+            font-size: 15px;
+        }
+        .disciplina-item .info .turma {
+            font-size: 13px;
+            color: #6b7280;
+        }
+        .disciplina-item .badge {
+            padding: 3px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+        .badge-super {
+            background: #fef3c7;
+            color: #78350f;
+            border: 1px solid #f59e0b;
+        }
+        .badge-normal {
+            background: #e0e7ff;
+            color: #4f46e5;
+        }
+        .disciplina-item.selecionada {
+            border-color: #f59e0b;
+            background: #fef3c7;
+        }
+        .footer {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #e2e8f0;
+            text-align: center;
+            color: #9ca3af;
+            font-size: 12px;
+        }
+        @media (max-width: 768px) {
+            .container { padding: 15px; }
+            .disciplina-grid { grid-template-columns: 1fr; }
+            .header { flex-direction: column; text-align: center; gap: 10px; }
+            .info-box ul { margin-left: 15px; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+
+    <div class="header">
+        <div class="logo">🏫 VIRTUS <span>✦</span></div>
+        <a href="/admin" class="btn-voltar"><i class="fas fa-arrow-left"></i> Voltar</a>
+    </div>
+
+    <h2 style="color: #1a1a2e; margin-bottom: 5px;">
+        <i class="fas fa-star" style="color: #f59e0b;"></i> 
+        Disciplinas Super Relevantes
+    </h2>
+    <p style="color: #6b7280; margin-bottom: 20px;">
+        Selecione as disciplinas onde o aluno será <strong>REPROVADO automaticamente</strong> se tirar nota inferior a 8 no exame.
+    </p>
+
+    {% if sucesso %}
+    <div class="alert-success">
+        <i class="fas fa-check-circle"></i> {{ sucesso }}
+    </div>
+    {% endif %}
+
+    <div class="info-box">
+        <strong>⚠️ Atenção:</strong>
+        <ul>
+            <li>Disciplinas <strong>Super Relevantes</strong> reprovam automaticamente o aluno se a nota do exame for inferior a <strong>8</strong>.</li>
+            <li>A média final é calculada como: <strong>(2 × Média de Frequência + Nota do Exame) / 3</strong></li>
+            <li>Se o aluno não fizer exame, a média de frequência é considerada.</li>
+            <li>Disciplinas normais usam a mesma fórmula mas <strong>não</strong> reprovam automaticamente.</li>
+        </ul>
+    </div>
+
+    <form method="POST">
+
+        <div class="disciplina-grid">
+            {% for disc in disciplinas %}
+            <label class="disciplina-item {% if disc[4] == 1 %}selecionada{% endif %}">
+                <input type="checkbox" name="super_relevantes" value="{{ disc[0] }}" 
+                       {% if disc[4] == 1 %}checked{% endif %}>
+                <div class="info">
+                    <div class="nome">{{ disc[1] }}</div>
+                    <div class="turma">{{ disc[2] }}ª {{ disc[3] }}</div>
+                </div>
+                {% if disc[4] == 1 %}
+                <span class="badge badge-super"><i class="fas fa-star"></i> Super</span>
+                {% else %}
+                <span class="badge badge-normal">Normal</span>
+                {% endif %}
+            </label>
+            {% endfor %}
+        </div>
+
+        <div style="text-align: center; margin-top: 20px;">
+            <button type="submit" class="btn-salvar">
+                <i class="fas fa-save"></i> Salvar Configurações
+            </button>
+        </div>
+
+    </form>
+
+    <div class="footer">
+        Desenvolvido por <strong style="color: #4b5563;">Klésio Yannick Cassamo</strong> 
+        <span style="color: #f59e0b;">✦</span>
+        <br>
+        VIRTUS © 2026 — Todos os direitos reservados
+    </div>
+
+</div>
+
+</body>
+</html>

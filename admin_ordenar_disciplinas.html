@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VIRTUS - Ordenar Disciplinas</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background: linear-gradient(135deg, #1a0a2e, #2d1b3d);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: rgba(255,255,255,0.95);
+            border-radius: 24px;
+            padding: 30px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            animation: fadeIn 0.5s ease forwards;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid rgba(255,215,0,0.2);
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        .logo {
+            font-size: 24px;
+            font-weight: 900;
+            color: #1a1a2e;
+        }
+        .logo span { color: #f59e0b; }
+        .btn-voltar {
+            background: #6b7280;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 10px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: 0.3s;
+        }
+        .btn-voltar:hover { background: #4b5563; }
+        .btn-salvar {
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+            color: white;
+            padding: 14px 40px;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .btn-salvar:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(245,158,11,0.3);
+        }
+        .alert-success {
+            background: #d1fae5;
+            color: #065f46;
+            padding: 15px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            border-left: 4px solid #10b981;
+        }
+        .alert-error {
+            background: #fee2e2;
+            color: #991b1b;
+            padding: 15px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            border-left: 4px solid #dc2626;
+        }
+        .filtro {
+            background: #f8f6f2;
+            padding: 20px;
+            border-radius: 16px;
+            margin-bottom: 25px;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 15px;
+        }
+        .filtro select {
+            padding: 12px 20px;
+            border-radius: 10px;
+            border: 2px solid #e2e8f0;
+            font-size: 14px;
+            flex: 1;
+            min-width: 200px;
+            background: white;
+            cursor: pointer;
+        }
+        .filtro select:focus {
+            border-color: #f59e0b;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(245,158,11,0.1);
+        }
+        .filtro .btn-filtrar {
+            background: linear-gradient(135deg, #4f46e5, #7c3aed);
+            color: white;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .filtro .btn-filtrar:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(79,70,229,0.3);
+        }
+        .info-box {
+            background: #eff6ff;
+            padding: 15px 20px;
+            border-radius: 12px;
+            border-left: 4px solid #3b82f6;
+            margin-bottom: 20px;
+            color: #1e40af;
+            font-size: 14px;
+        }
+        .info-box .highlight { font-weight: 700; color: #1e40af; }
+
+        /* ===== OPÇÕES DE ORDENAÇÃO ===== */
+        .opcoes-ordem {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin: 15px 0 20px;
+        }
+        .opcao-ordem {
+            background: #f8f6f2;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 15px 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .opcao-ordem:hover {
+            border-color: #f59e0b;
+            background: #fffbeb;
+        }
+        .opcao-ordem.ativa {
+            border-color: #f59e0b;
+            background: #fef3c7;
+            box-shadow: 0 0 0 3px rgba(245,158,11,0.15);
+        }
+        .opcao-ordem input[type="radio"] {
+            width: 18px;
+            height: 18px;
+            accent-color: #f59e0b;
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+        .opcao-ordem .label {
+            font-weight: 600;
+            color: #1a1a2e;
+            font-size: 14px;
+        }
+        .opcao-ordem .desc {
+            font-size: 12px;
+            color: #6b7280;
+            display: block;
+            margin-top: 2px;
+        }
+        .opcao-ordem .icone {
+            font-size: 20px;
+            color: #f59e0b;
+        }
+
+        /* ===== LISTA DE DISCIPLINAS ===== */
+        .disciplina-list {
+            list-style: none;
+            padding: 0;
+            margin: 15px 0;
+        }
+        .disciplina-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 14px 18px;
+            background: white;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            margin-bottom: 10px;
+            cursor: grab;
+            transition: all 0.2s ease;
+        }
+        .disciplina-item:hover {
+            border-color: #f59e0b;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        }
+        .disciplina-item.dragging {
+            opacity: 0.5;
+            border-color: #f59e0b;
+        }
+        .disciplina-item .drag-icon {
+            color: #9ca3af;
+            font-size: 18px;
+            cursor: grab;
+        }
+        .disciplina-item .numero {
+            background: linear-gradient(135deg, #ffd700, #f59e0b);
+            color: #0f0c29;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 14px;
+            flex-shrink: 0;
+        }
+        .disciplina-item .nome {
+            flex: 1;
+            font-weight: 600;
+            color: #1a1a2e;
+            font-size: 15px;
+        }
+        .disciplina-item .badge {
+            padding: 3px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+        .badge-exame {
+            background: #fef3c7;
+            color: #78350f;
+            border: 1px solid #f59e0b;
+        }
+        .badge-normal {
+            background: #e0e7ff;
+            color: #4f46e5;
+        }
+
+        /* ===== CHECKBOX ===== */
+        .checkbox-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 15px 0 20px;
+            padding: 12px 16px;
+            background: #fef3c7;
+            border-radius: 10px;
+            border-left: 4px solid #f59e0b;
+        }
+        .checkbox-wrapper input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            accent-color: #f59e0b;
+            cursor: pointer;
+        }
+        .checkbox-wrapper label {
+            font-weight: 600;
+            color: #78350f;
+            cursor: pointer;
+        }
+        .checkbox-wrapper .desc {
+            font-weight: 400;
+            color: #92400e;
+            font-size: 13px;
+            margin-left: 5px;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: #6b7280;
+        }
+        .empty-state .icon {
+            font-size: 48px;
+            margin-bottom: 15px;
+            color: #d1d5db;
+        }
+
+        /* ===== BOTÕES DE AÇÃO RÁPIDA ===== */
+        .acoes-rapidas {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin: 10px 0 15px;
+        }
+        .btn-acao {
+            padding: 8px 16px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            background: white;
+            font-size: 13px;
+            font-weight: 600;
+            color: #4b5563;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .btn-acao:hover {
+            border-color: #f59e0b;
+            background: #fffbeb;
+            color: #78350f;
+        }
+        .btn-acao i { margin-right: 6px; }
+
+        .footer {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #e2e8f0;
+            text-align: center;
+            color: #9ca3af;
+            font-size: 12px;
+        }
+
+        @media (max-width: 768px) {
+            .container { padding: 15px; }
+            .header { flex-direction: column; text-align: center; }
+            .filtro { flex-direction: column; }
+            .filtro select { width: 100%; }
+            .disciplina-item { flex-wrap: wrap; }
+            .opcoes-ordem { grid-template-columns: 1fr; }
+            .checkbox-wrapper { flex-wrap: wrap; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+
+    <!-- ===== HEADER ===== -->
+    <div class="header">
+        <div class="logo">🏫 VIRTUS <span>✦</span></div>
+        <a href="/admin" class="btn-voltar"><i class="fas fa-arrow-left"></i> Voltar</a>
+    </div>
+
+    <h2 style="color: #1a1a2e; margin-bottom: 5px;">
+        <i class="fas fa-sort" style="color: #f59e0b;"></i> 
+        Ordenar Disciplinas na Pauta
+    </h2>
+    <p style="color: #6b7280; margin-bottom: 20px;">
+        Defina a ordem das disciplinas na pauta. Arraste para reordenar ou use os botões de ação rápida.
+    </p>
+
+    {% if sucesso %}
+    <div class="alert-success">
+        <i class="fas fa-check-circle"></i> 
+        Ordem das disciplinas salva com sucesso!
+    </div>
+    {% endif %}
+
+    {% if erro %}
+    <div class="alert-error">
+        <i class="fas fa-exclamation-circle"></i> 
+        {{ erro }}
+    </div>
+    {% endif %}
+
+    <!-- ===== FILTRO ===== -->
+    <form method="GET" action="/admin/ordenar-disciplinas" class="filtro">
+        <select name="turma_id" required>
+            <option value="">Selecione uma turma...</option>
+            {% for t in turmas %}
+            <option value="{{ t[0] }}" {% if turma_id == t[0]|string %}selected{% endif %}>
+                {{ t[1] }}ª {{ t[2] }}
+            </option>
+            {% endfor %}
+        </select>
+        <button type="submit" class="btn-filtrar">
+            <i class="fas fa-search"></i> Carregar Disciplinas
+        </button>
+    </form>
+
+    {% if turma_selecionada %}
+    <!-- ===== INFORMAÇÕES DA TURMA ===== -->
+    <div class="info-box">
+        <i class="fas fa-info-circle"></i>
+        <span class="highlight">{{ turma_selecionada[0] }}ª {{ turma_selecionada[1] }}</span>
+        — Arraste as disciplinas para a ordem desejada.
+        <span style="display: block; margin-top: 5px; font-size: 13px;">
+            <i class="fas fa-arrows-alt"></i> Clique e arraste para reordenar
+            {% if total_com_exame > 0 %}
+            <span style="margin-left: 15px; background: #fef3c7; padding: 2px 10px; border-radius: 12px; font-weight: 600;">
+                📝 {{ total_com_exame }} disciplina(s) com exame
+            </span>
+            {% endif %}
+        </span>
+    </div>
+
+    <form method="POST" action="/admin/salvar-ordem-disciplinas" id="form-ordem">
+        <input type="hidden" name="turma_id" value="{{ turma_id }}">
+
+        <!-- ===== OPÇÕES DE ORDENAÇÃO ===== -->
+        <div class="opcoes-ordem">
+            <label class="opcao-ordem {% if tipo_ordenacao == 'todas' %}ativa{% endif %}">
+                <input type="radio" name="tipo_ordenacao" value="todas" 
+                       {% if tipo_ordenacao == 'todas' %}checked{% endif %}>
+                <div>
+                    <div class="label"><i class="fas fa-list icone"></i> Todas as Disciplinas</div>
+                    <span class="desc">Ordenar todas as disciplinas da turma</span>
+                </div>
+            </label>
+            <label class="opcao-ordem {% if tipo_ordenacao == 'exames' %}ativa{% endif %}">
+                <input type="radio" name="tipo_ordenacao" value="exames" 
+                       {% if tipo_ordenacao == 'exames' %}checked{% endif %}>
+                <div>
+                    <div class="label"><i class="fas fa-file-alt icone"></i> Apenas com Exame</div>
+                    <span class="desc">Ordenar apenas disciplinas que têm exame</span>
+                </div>
+            </label>
+        </div>
+
+        <!-- ===== BOTÕES DE AÇÃO RÁPIDA ===== -->
+        <div class="acoes-rapidas">
+            <button type="button" class="btn-acao" onclick="moverTopo()">
+                <i class="fas fa-arrow-up"></i> Mover para Topo
+            </button>
+            <button type="button" class="btn-acao" onclick="moverCima()">
+                <i class="fas fa-chevron-up"></i> Subir
+            </button>
+            <button type="button" class="btn-acao" onclick="moverBaixo()">
+                <i class="fas fa-chevron-down"></i> Descer
+            </button>
+            <button type="button" class="btn-acao" onclick="moverFim()">
+                <i class="fas fa-arrow-down"></i> Mover para Fim
+            </button>
+            <button type="button" class="btn-acao" onclick="ordenarAlfabetico()">
+                <i class="fas fa-sort-alpha-down"></i> Ordenar A-Z
+            </button>
+        </div>
+
+        <!-- ===== CHECKBOX: APLICAR A TODAS AS TURMAS ===== -->
+        <div class="checkbox-wrapper">
+            <input type="checkbox" name="aplicar_todas" id="aplicar_todas">
+            <label for="aplicar_todas">
+                <i class="fas fa-layer-group"></i> 
+                Aplicar esta ordem a <strong>todas as turmas da {{ turma_selecionada[0] }}ª classe</strong>
+                <span class="desc">(todas as turmas com o mesmo ano terão a mesma ordem)</span>
+            </label>
+        </div>
+
+        <!-- ===== LISTA DE DISCIPLINAS ===== -->
+        {% if disciplinas %}
+        <ul class="disciplina-list" id="disciplina-list">
+            {% for d in disciplinas %}
+            <li class="disciplina-item" data-id="{{ d[0] }}" 
+                {% if d[3] %}data-tem-exame="1"{% endif %}>
+                <span class="drag-icon"><i class="fas fa-grip-vertical"></i></span>
+                <span class="numero">{{ loop.index }}</span>
+                <span class="nome">{{ d[1] }}</span>
+                {% if d[3] %}
+                <span class="badge badge-exame"><i class="fas fa-file-alt"></i> Com Exame</span>
+                {% else %}
+                <span class="badge badge-normal">Normal</span>
+                {% endif %}
+                <input type="hidden" name="disciplina_ordem[]" value="{{ d[0] }}">
+            </li>
+            {% endfor %}
+        </ul>
+        {% else %}
+        <div class="empty-state">
+            <div class="icon"><i class="fas fa-book"></i></div>
+            <p>Nenhuma disciplina encontrada para esta turma.</p>
+            <p style="font-size: 13px; margin-top: 5px;">Crie disciplinas primeiro no painel administrativo.</p>
+        </div>
+        {% endif %}
+
+        <div style="text-align: center; margin-top: 20px;">
+            <button type="submit" class="btn-salvar">
+                <i class="fas fa-save"></i> Salvar Ordem
+            </button>
+        </div>
+    </form>
+    {% endif %}
+
+    <div class="footer">
+        Desenvolvido por <strong style="color: #4b5563;">Klésio Yannick Cassamo</strong> 
+        <span style="color: #f59e0b;">✦</span>
+        <br>
+        VIRTUS © 2026 — Todos os direitos reservados
+    </div>
+
+</div>
+
+<!-- ===== DRAG AND DROP + AÇÕES ===== -->
+<script>
+    const list = document.getElementById('disciplina-list');
+    
+    if (list) {
+        let dragIndex = null;
+
+        // ===== DRAG AND DROP =====
+        list.addEventListener('dragstart', function(e) {
+            const item = e.target.closest('.disciplina-item');
+            if (!item) return;
+            dragIndex = Array.from(list.children).indexOf(item);
+            item.classList.add('dragging');
+            e.dataTransfer.effectAllowed = 'move';
+        });
+
+        list.addEventListener('dragend', function(e) {
+            const item = e.target.closest('.disciplina-item');
+            if (!item) return;
+            item.classList.remove('dragging');
+        });
+
+        list.addEventListener('dragover', function(e) {
+            e.preventDefault();
+            const target = e.target.closest('.disciplina-item');
+            if (!target || dragIndex === null) return;
+
+            const fromIndex = dragIndex;
+            const toIndex = Array.from(list.children).indexOf(target);
+
+            if (fromIndex === toIndex) return;
+
+            const items = Array.from(list.children);
+            const [movedItem] = items.splice(fromIndex, 1);
+            items.splice(toIndex, 0, movedItem);
+            list.innerHTML = '';
+            items.forEach(item => list.appendChild(item));
+
+            updateOrder();
+            dragIndex = toIndex;
+        });
+
+        // ===== FUNÇÕES DE AÇÃO =====
+        window.moverTopo = function() {
+            const items = list.querySelectorAll('.disciplina-item');
+            if (items.length < 2) return;
+            const selected = document.querySelector('.disciplina-item.selecionado');
+            if (!selected) {
+                alert('Selecione uma disciplina clicando nela primeiro!');
+                return;
+            }
+            const selectedIndex = Array.from(items).indexOf(selected);
+            if (selectedIndex === 0) return;
+            
+            const itemsArray = Array.from(items);
+            const [movedItem] = itemsArray.splice(selectedIndex, 1);
+            itemsArray.unshift(movedItem);
+            list.innerHTML = '';
+            itemsArray.forEach(item => list.appendChild(item));
+            updateOrder();
+            selected.classList.remove('selecionado');
+        };
+
+        window.moverFim = function() {
+            const items = list.querySelectorAll('.disciplina-item');
+            if (items.length < 2) return;
+            const selected = document.querySelector('.disciplina-item.selecionado');
+            if (!selected) {
+                alert('Selecione uma disciplina clicando nela primeiro!');
+                return;
+            }
+            const selectedIndex = Array.from(items).indexOf(selected);
+            if (selectedIndex === items.length - 1) return;
+            
+            const itemsArray = Array.from(items);
+            const [movedItem] = itemsArray.splice(selectedIndex, 1);
+            itemsArray.push(movedItem);
+            list.innerHTML = '';
+            itemsArray.forEach(item => list.appendChild(item));
+            updateOrder();
+            selected.classList.remove('selecionado');
+        };
+
+        window.moverCima = function() {
+            const items = list.querySelectorAll('.disciplina-item');
+            const selected = document.querySelector('.disciplina-item.selecionado');
+            if (!selected) {
+                alert('Selecione uma disciplina clicando nela primeiro!');
+                return;
+            }
+            const selectedIndex = Array.from(items).indexOf(selected);
+            if (selectedIndex === 0) return;
+            
+            const itemsArray = Array.from(items);
+            [itemsArray[selectedIndex - 1], itemsArray[selectedIndex]] = 
+            [itemsArray[selectedIndex], itemsArray[selectedIndex - 1]];
+            list.innerHTML = '';
+            itemsArray.forEach(item => list.appendChild(item));
+            updateOrder();
+        };
+
+        window.moverBaixo = function() {
+            const items = list.querySelectorAll('.disciplina-item');
+            const selected = document.querySelector('.disciplina-item.selecionado');
+            if (!selected) {
+                alert('Selecione uma disciplina clicando nela primeiro!');
+                return;
+            }
+            const selectedIndex = Array.from(items).indexOf(selected);
+            if (selectedIndex === items.length - 1) return;
+            
+            const itemsArray = Array.from(items);
+            [itemsArray[selectedIndex + 1], itemsArray[selectedIndex]] = 
+            [itemsArray[selectedIndex], itemsArray[selectedIndex + 1]];
+            list.innerHTML = '';
+            itemsArray.forEach(item => list.appendChild(item));
+            updateOrder();
+        };
+
+        window.ordenarAlfabetico = function() {
+            const items = list.querySelectorAll('.disciplina-item');
+            const itemsArray = Array.from(items);
+            itemsArray.sort((a, b) => {
+                const nomeA = a.querySelector('.nome').textContent.toLowerCase();
+                const nomeB = b.querySelector('.nome').textContent.toLowerCase();
+                return nomeA.localeCompare(nomeB);
+            });
+            list.innerHTML = '';
+            itemsArray.forEach(item => list.appendChild(item));
+            updateOrder();
+        };
+
+        // ===== SELECIONAR ITEM =====
+        list.addEventListener('click', function(e) {
+            const item = e.target.closest('.disciplina-item');
+            if (!item) return;
+            
+            // Remove seleção anterior
+            document.querySelectorAll('.disciplina-item.selecionado').forEach(el => {
+                el.classList.remove('selecionado');
+                el.style.borderColor = '#e2e8f0';
+            });
+            
+            // Seleciona o atual
+            item.classList.add('selecionado');
+            item.style.borderColor = '#4f46e5';
+        });
+
+        // ===== ATUALIZAR ORDEM =====
+        function updateOrder() {
+            const items = list.querySelectorAll('.disciplina-item');
+            items.forEach((item, index) => {
+                const num = item.querySelector('.numero');
+                if (num) num.textContent = index + 1;
+
+                const input = item.querySelector('input[name="disciplina_ordem[]"]');
+                if (input) {
+                    input.value = item.dataset.id;
+                }
+            });
+        }
+
+        // Prevenir comportamento padrão
+        document.addEventListener('dragover', function(e) { e.preventDefault(); });
+        document.addEventListener('drop', function(e) { e.preventDefault(); });
+    }
+</script>
+
+</body>
+</html>

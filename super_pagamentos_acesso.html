@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VIRTUS - Pagamentos de Acesso</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background: linear-gradient(135deg, #1a0a2e, #2d1b3d);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: rgba(255,255,255,0.95);
+            border-radius: 24px;
+            padding: 30px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            animation: fadeIn 0.5s ease;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid rgba(255,215,0,0.2);
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        .header-left { display: flex; align-items: center; gap: 20px; }
+        .logo-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #ffd700, #f59e0b);
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            font-weight: 900;
+            color: #0f0c29;
+            font-family: 'Georgia', serif;
+        }
+        .logo-text {
+            font-size: 24px;
+            font-weight: 900;
+            letter-spacing: 5px;
+            background: linear-gradient(135deg, #ffd700, #f59e0b);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-family: 'Georgia', serif;
+        }
+        .header-title {
+            color: #1a1a2e;
+            font-size: 20px;
+            font-weight: 700;
+            border-left: 2px solid rgba(255,215,0,0.2);
+            padding-left: 18px;
+        }
+        .header-title .sub {
+            font-size: 13px;
+            font-weight: 400;
+            color: #6b7280;
+            display: block;
+        }
+        .btn-voltar {
+            background: #6b7280;
+            color: white;
+            padding: 10px 22px;
+            border-radius: 12px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 14px;
+            transition: 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .btn-voltar:hover { background: #4b5563; transform: translateY(-2px); }
+        
+        .tabela-container {
+            overflow-x: auto;
+            border-radius: 16px;
+            border: 1px solid rgba(0,0,0,0.04);
+            margin-top: 10px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+        }
+        th, td {
+            padding: 12px 15px;
+            border: 1px solid #e2e8f0;
+            text-align: left;
+        }
+        th {
+            background: linear-gradient(135deg, #1a0a2e, #2d1b3d);
+            color: white;
+            font-weight: 700;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        tr:nth-child(even) { background: #faf8f5; }
+        tr:hover { background: #f5f3ff; }
+        .badge-status {
+            padding: 3px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+        .badge-status.pago { background: #dcfce7; color: #166534; }
+        .badge-status.pendente { background: #fef3c7; color: #78350f; }
+        .badge-status.cancelado { background: #fee2e2; color: #991b1b; }
+        .badge-status.expirado { background: #f3f4f6; color: #6b7280; }
+        .badge-metodo {
+            padding: 2px 10px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+        .badge-metodo.mpesa { background: #dbeafe; color: #1e40af; }
+        .badge-metodo.emola { background: #dcfce7; color: #166534; }
+        .badge-metodo.mkesh { background: #fef3c7; color: #78350f; }
+        
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+        .stats .stat {
+            background: white;
+            padding: 15px;
+            border-radius: 12px;
+            text-align: center;
+            border: 1px solid #e2e8f0;
+        }
+        .stats .stat .num {
+            font-size: 24px;
+            font-weight: 900;
+            color: #1a1a2e;
+        }
+        .stats .stat .label {
+            font-size: 12px;
+            color: #6b7280;
+        }
+        
+        .footer {
+            text-align: center;
+            margin-top: 25px;
+            padding-top: 20px;
+            border-top: 1px solid #e2e8f0;
+            color: #9ca3af;
+            font-size: 12px;
+        }
+        .footer strong { color: #4b5563; }
+        .footer .gold { color: #f59e0b; }
+        
+        @media (max-width: 768px) {
+            .container { padding: 15px; }
+            .header { flex-direction: column; align-items: stretch; text-align: center; }
+            .header-left { flex-wrap: wrap; justify-content: center; }
+            .header-title { border-left: none; padding-left: 0; }
+            table { font-size: 12px; }
+            th, td { padding: 8px 10px; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+
+    <!-- ===== HEADER ===== -->
+    <div class="header">
+        <div class="header-left">
+            <div class="logo-icon">V</div>
+            <span class="logo-text">VIRTUS</span>
+            <div class="header-title">
+                💰 Pagamentos de Acesso
+                <span class="sub"><i class="fas fa-list"></i> Histórico de pagamentos</span>
+            </div>
+        </div>
+        <a href="/super-admin" class="btn-voltar"><i class="fas fa-arrow-left"></i> Voltar</a>
+    </div>
+
+    <!-- ===== ESTATÍSTICAS ===== -->
+    {% set total_pagos = 0 %}
+    {% set total_pendentes = 0 %}
+    {% set total_valor = 0 %}
+    {% for p in pagamentos %}
+        {% if p[6] == 'pago' %}
+            {% set total_pagos = total_pagos + 1 %}
+            {% set total_valor = total_valor + (p[3] or 0) %}
+        {% elif p[6] == 'pendente' %}
+            {% set total_pendentes = total_pendentes + 1 %}
+        {% endif %}
+    {% endfor %}
+
+    <div class="stats">
+        <div class="stat">
+            <div class="num">{{ pagamentos|length }}</div>
+            <div class="label">Total Transações</div>
+        </div>
+        <div class="stat">
+            <div class="num">{{ total_pagos }}</div>
+            <div class="label">✅ Pagos</div>
+        </div>
+        <div class="stat">
+            <div class="num">{{ total_pendentes }}</div>
+            <div class="label">⏳ Pendentes</div>
+        </div>
+        <div class="stat">
+            <div class="num">{{ "%.2f"|format(total_valor) }} MT</div>
+            <div class="label">💰 Total Arrecadado</div>
+        </div>
+    </div>
+
+    <!-- ===== TABELA ===== -->
+    <div class="tabela-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Aluno</th>
+                    <th>Tipo</th>
+                    <th>Valor</th>
+                    <th>Método</th>
+                    <th>Referência</th>
+                    <th>Status</th>
+                    <th>Data</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% if pagamentos %}
+                    {% for p in pagamentos %}
+                    <tr>
+                        <td>{{ p[0] }}</td>
+                        <td><strong>{{ p[1] }}</strong></td>
+                        <td>
+                            {% if p[2] == 'notas' %}
+                                📊 Notas
+                            {% else %}
+                                📚 Biblioteca
+                            {% endif %}
+                        </td>
+                        <td><strong>{{ "%.2f"|format(p[3]) }} MT</strong></td>
+                        <td>
+                            {% if p[4] == 'mpesa' %}
+                                <span class="badge-metodo mpesa">M-PESA</span>
+                            {% elif p[4] == 'emola' %}
+                                <span class="badge-metodo emola">E-Mola</span>
+                            {% elif p[4] == 'mkesh' %}
+                                <span class="badge-metodo mkesh">M-Kesh</span>
+                            {% else %}
+                                <span style="color: #6b7280; font-size: 12px;">-</span>
+                            {% endif %}
+                        </td>
+                        <td style="font-family: 'Courier New', monospace; font-size: 12px;">{{ p[5] }}</td>
+                        <td>
+                            {% if p[6] == 'pago' %}
+                                <span class="badge-status pago">✅ Pago</span>
+                            {% elif p[6] == 'pendente' %}
+                                <span class="badge-status pendente">⏳ Pendente</span>
+                            {% elif p[6] == 'cancelado' %}
+                                <span class="badge-status cancelado">❌ Cancelado</span>
+                            {% else %}
+                                <span class="badge-status expirado">⏰ Expirado</span>
+                            {% endif %}
+                        </td>
+                        <td style="font-size: 12px;">{{ p[7] }}</td>
+                    </tr>
+                    {% endfor %}
+                {% else %}
+                    <tr>
+                        <td colspan="8" style="text-align:center; padding:40px; color:#6c757d;">
+                            <i class="fas fa-inbox" style="font-size: 40px; display: block; margin-bottom: 10px;"></i>
+                            Nenhum pagamento registado ainda.
+                        </td>
+                    </tr>
+                {% endif %}
+            </tbody>
+        </table>
+    </div>
+
+    <!-- ===== FOOTER ===== -->
+    <div class="footer">
+        Desenvolvido por <strong>Klésio Yannick Cassamo</strong> <span class="gold">✦</span>
+        <br>
+        VIRTUS © 2026 — Todos os direitos reservados
+    </div>
+
+</div>
+
+</body>
+</html>

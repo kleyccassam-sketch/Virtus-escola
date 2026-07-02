@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VIRTUS - Portal do Aluno</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 480px;
+        }
+
+        .login-box {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 45px 40px;
+            border-radius: 24px;
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.5);
+            transition: transform 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .login-box:hover {
+            transform: translateY(-5px);
+        }
+
+        .logo {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .logo-icon {
+            font-size: 52px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            width: 80px;
+            height: 80px;
+            line-height: 80px;
+            border-radius: 20px;
+            display: inline-block;
+            color: white;
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+        }
+
+        h1 {
+            text-align: center;
+            color: #1a1a2e;
+            font-size: 28px;
+            font-weight: 700;
+            margin-top: 15px;
+            letter-spacing: -0.5px;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #6c757d;
+            font-size: 15px;
+            margin-bottom: 30px;
+            font-weight: 400;
+        }
+
+        .subtitle span {
+            color: #667eea;
+            font-weight: 600;
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+            position: relative;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            color: #2d3748;
+            margin-bottom: 6px;
+            letter-spacing: 0.3px;
+        }
+
+        .form-group .input-icon {
+            position: absolute;
+            left: 14px;
+            top: 42px;
+            font-size: 18px;
+            color: #a0aec0;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 14px 14px 14px 45px;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            font-size: 15px;
+            transition: all 0.3s ease;
+            background: #f7fafc;
+            color: #2d3748;
+            font-weight: 500;
+        }
+
+        .form-group input:focus {
+            border-color: #667eea;
+            background: white;
+            outline: none;
+            box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.15);
+        }
+
+        .form-group input::placeholder {
+            color: #a0aec0;
+            font-weight: 400;
+        }
+
+        .btn-primary {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 17px;
+            font-weight: 700;
+            transition: all 0.3s ease;
+            letter-spacing: 0.5px;
+            margin-top: 8px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-primary:active {
+            transform: translateY(0);
+        }
+
+        .btn-primary::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: rgba(255, 255, 255, 0.1);
+            transform: rotate(45deg);
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary:hover::after {
+            left: 100%;
+        }
+
+        .erro {
+            color: #e53e3e;
+            background: #fff5f5;
+            padding: 14px 18px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            border-left: 4px solid #e53e3e;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .erro::before {
+            content: '⚠️';
+            font-size: 18px;
+        }
+
+        .divider {
+            display: flex;
+            align-items: center;
+            margin: 28px 0 22px;
+        }
+
+        .divider::before,
+        .divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: linear-gradient(to right, transparent, #e2e8f0, transparent);
+        }
+
+        .divider span {
+            padding: 0 16px;
+            color: #a0aec0;
+            font-size: 13px;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .links {
+            text-align: center;
+        }
+
+        .links .btn-link {
+            display: inline-block;
+            color: #667eea;
+            font-weight: 600;
+            font-size: 15px;
+            text-decoration: none;
+            padding: 10px 20px;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+            background: rgba(102, 126, 234, 0.08);
+        }
+
+        .links .btn-link:hover {
+            background: rgba(102, 126, 234, 0.15);
+            transform: translateY(-2px);
+        }
+
+        .links .btn-link .icon {
+            margin-right: 8px;
+        }
+
+        .links small {
+            display: block;
+            color: #a0aec0;
+            font-size: 13px;
+            margin-top: 12px;
+            font-weight: 400;
+        }
+
+        .links small .highlight {
+            color: #667eea;
+            font-weight: 600;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 4px 14px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-top: 5px;
+        }
+
+        .status-pago {
+            background: #c6f6d5;
+            color: #276749;
+        }
+
+        .status-pendente {
+            background: #fefcbf;
+            color: #975a16;
+        }
+
+        @media (max-width: 520px) {
+            .login-box {
+                padding: 30px 20px;
+            }
+            h1 {
+                font-size: 24px;
+            }
+            .logo-icon {
+                width: 60px;
+                height: 60px;
+                line-height: 60px;
+                font-size: 38px;
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .login-box {
+            animation: fadeInUp 0.6s ease forwards;
+        }
+
+        .btn-primary.loading {
+            pointer-events: none;
+            opacity: 0.8;
+        }
+
+        .btn-primary.loading::before {
+            content: '';
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: spin 0.8s ease infinite;
+            margin-right: 10px;
+            vertical-align: middle;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="login-box">
+
+            <div class="logo">
+                <div class="logo-icon">📚</div>
+            </div>
+
+            <h1>Portal do Aluno</h1>
+            <p class="subtitle">
+                Acesse suas notas e <span>boletim escolar</span>
+            </p>
+
+            {% if erro %}
+                <div class="erro">{{ erro }}</div>
+            {% endif %}
+
+            <form method="POST" action="/buscar-notas" id="formConsulta">
+
+                <div class="form-group">
+                    <label for="nome">👤 Nome Completo</label>
+                    <span class="input-icon">👤</span>
+                    <input 
+                        type="text" 
+                        id="nome" 
+                        name="nome" 
+                        placeholder="Ex: João Silva" 
+                        required
+                        autocomplete="off"
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="turma">🏫 Turma</label>
+                    <span class="input-icon">🏫</span>
+                    <input 
+                        type="text" 
+                        id="turma" 
+                        name="turma" 
+                        placeholder="Ex: 10ª A" 
+                        required
+                        autocomplete="off"
+                    >
+                </div>
+
+                <button type="submit" class="btn-primary" id="btnBuscar">
+                    🔍 Ver minhas notas
+                </button>
+
+            </form>
+
+            <div class="divider">
+                <span>ou</span>
+            </div>
+
+            <div class="links">
+                <a href="/aluno/criar-senha" class="btn-link">
+                    <span class="icon">🔑</span>
+                    Criar minha senha
+                </a>
+                <small>
+                    💡 Primeiro acesso? Crie sua senha com <span class="highlight">nome + turma</span>
+                </small>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('formConsulta').addEventListener('submit', function(e) {
+            const nome = document.getElementById('nome').value.trim();
+            const turma = document.getElementById('turma').value.trim();
+            
+            if (!nome || !turma) {
+                e.preventDefault();
+                alert('Por favor, preencha todos os campos.');
+                return false;
+            }
+            
+            const btn = document.getElementById('btnBuscar');
+            btn.classList.add('loading');
+            btn.textContent = 'Buscando...';
+        });
+
+        document.getElementById('turma').addEventListener('focus', function() {
+            if (!this.value) {
+                this.placeholder = 'Ex: 10ª A, 11ª B, 12ª C';
+            }
+        });
+
+        document.getElementById('turma').addEventListener('blur', function() {
+            this.value = this.value.trim().replace(/\s+/g, ' ');
+        });
+
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') {
+                const active = document.activeElement;
+                if (active && (active.id === 'nome' || active.id === 'turma')) {
+                    document.getElementById('btnBuscar').click();
+                }
+            }
+        });
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VIRTUS - Biblioteca Digital</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background: linear-gradient(135deg, #1a0a2e, #2d1b3d);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: rgba(255,255,255,0.95);
+            border-radius: 24px;
+            padding: 30px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            animation: fadeIn 0.5s ease;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid rgba(255,215,0,0.2);
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        .header-left { display: flex; align-items: center; gap: 20px; }
+        .logo-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #ffd700, #f59e0b);
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            font-weight: 900;
+            color: #0f0c29;
+            font-family: 'Georgia', serif;
+        }
+        .logo-text {
+            font-size: 24px;
+            font-weight: 900;
+            letter-spacing: 5px;
+            background: linear-gradient(135deg, #ffd700, #f59e0b);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-family: 'Georgia', serif;
+        }
+        .header-title {
+            color: #1a1a2e;
+            font-size: 20px;
+            font-weight: 700;
+            border-left: 2px solid rgba(255,215,0,0.2);
+            padding-left: 18px;
+        }
+        .header-title .sub {
+            font-size: 13px;
+            font-weight: 400;
+            color: #6b7280;
+            display: block;
+        }
+        .btn-voltar {
+            background: #6b7280;
+            color: white;
+            padding: 10px 22px;
+            border-radius: 12px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 14px;
+            transition: 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .btn-voltar:hover { background: #4b5563; transform: translateY(-2px); }
+        
+        .acesso-bloqueado {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 60vh;
+        }
+        .acesso-bloqueado .card-bloqueado {
+            text-align: center;
+            max-width: 500px;
+            padding: 40px;
+            background: #fef3c7;
+            border-radius: 20px;
+            border: 2px solid #f59e0b;
+        }
+        .acesso-bloqueado .card-bloqueado .icon { font-size: 64px; display: block; margin-bottom: 15px; }
+        .acesso-bloqueado .card-bloqueado h2 { color: #78350f; margin-bottom: 10px; }
+        .acesso-bloqueado .card-bloqueado p { color: #92400e; margin-bottom: 15px; }
+        .acesso-bloqueado .card-bloqueado .valor { 
+            color: #78350f; 
+            font-weight: 700; 
+            margin-bottom: 20px; 
+            font-size: 24px;
+            background: white;
+            padding: 10px 20px;
+            border-radius: 12px;
+            display: inline-block;
+        }
+        .acesso-bloqueado .card-bloqueado .btn-pagar {
+            display: inline-block;
+            padding: 14px 40px;
+            background: linear-gradient(135deg, #4f46e5, #7c3aed);
+            color: white;
+            border-radius: 12px;
+            text-decoration: none;
+            font-weight: 700;
+            transition: 0.3s;
+        }
+        .acesso-bloqueado .card-bloqueado .btn-pagar:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(79,70,229,0.3);
+        }
+        .acesso-bloqueado .card-bloqueado .info {
+            margin-top: 15px;
+            font-size: 12px;
+            color: #92400e;
+        }
+        .acesso-bloqueado .card-bloqueado .info i { margin-right: 5px; }
+        
+        .livros-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        .livro-card {
+            background: white;
+            border-radius: 16px;
+            padding: 20px;
+            border: 1px solid #e2e8f0;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+        .livro-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+        .livro-card .capa {
+            width: 100%;
+            height: 150px;
+            background: linear-gradient(135deg, #fef3c7, #f59e0b);
+            margin: 0 auto 15px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+            color: #78350f;
+        }
+        .livro-card .titulo {
+            font-weight: 700;
+            color: #1a1a2e;
+            font-size: 15px;
+            margin-bottom: 5px;
+        }
+        .livro-card .autor {
+            font-size: 13px;
+            color: #6b7280;
+            margin-bottom: 10px;
+        }
+        .livro-card .preco {
+            font-size: 18px;
+            font-weight: 900;
+            color: #4f46e5;
+            margin-bottom: 10px;
+        }
+        .livro-card .badge-comprado {
+            display: inline-block;
+            background: #dcfce7;
+            color: #166534;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+        .btn-comprar {
+            background: linear-gradient(135deg, #4f46e5, #7c3aed);
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 10px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: 0.3s;
+            width: 100%;
+        }
+        .btn-comprar:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(79,70,229,0.3);
+        }
+        .btn-ler {
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 10px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: 0.3s;
+            width: 100%;
+            text-decoration: none;
+            display: inline-block;
+        }
+        .btn-ler:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(16,185,129,0.3);
+        }
+        
+        .footer {
+            text-align: center;
+            margin-top: 25px;
+            padding-top: 20px;
+            border-top: 1px solid #e2e8f0;
+            color: #9ca3af;
+            font-size: 12px;
+        }
+        .footer strong { color: #4b5563; }
+        .footer .gold { color: #f59e0b; }
+        
+        @media (max-width: 768px) {
+            .container { padding: 15px; }
+            .header { flex-direction: column; align-items: stretch; text-align: center; }
+            .header-left { flex-wrap: wrap; justify-content: center; }
+            .header-title { border-left: none; padding-left: 0; }
+            .livros-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+        @media (max-width: 480px) {
+            .livros-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+
+    <!-- ===== HEADER ===== -->
+    <div class="header">
+        <div class="header-left">
+            <div class="logo-icon">📚</div>
+            <span class="logo-text">VIRTUS</span>
+            <div class="header-title">
+                Biblioteca Digital
+                <span class="sub"><i class="fas fa-book-open"></i> Acesso a livros e materiais de estudo</span>
+            </div>
+        </div>
+        <div>
+            <a href="/aluno/dashboard" class="btn-voltar"><i class="fas fa-arrow-left"></i> Voltar</a>
+        </div>
+    </div>
+
+    <!-- ===== VERIFICAÇÃO DE ACESSO ===== -->
+    {% if not acesso_biblioteca %}
+    <div class="acesso-bloqueado">
+        <div class="card-bloqueado">
+            <span class="icon">📚</span>
+            <h2>Acesso Bloqueado</h2>
+            <p>Para aceder à Biblioteca Digital, precisa pagar o acesso.</p>
+            <div class="valor">💰 {{ "%.2f"|format(valor_biblioteca) }} MT</div>
+            <br>
+            <a href="/aluno/pagar-acesso/biblioteca" class="btn-pagar">
+                <i class="fas fa-lock-open"></i> Pagar e Aceder
+            </a>
+            <p class="info">
+                <i class="fas fa-info-circle"></i> Após o pagamento, o acesso é liberado imediatamente.
+            </p>
+        </div>
+    </div>
+    {% else %}
+
+    <!-- ===== CONTEÚDO NORMAL DA BIBLIOTECA ===== -->
+    <h2 style="color: #1a1a2e; margin-bottom: 5px;">
+        <i class="fas fa-book" style="color: #f59e0b;"></i> 
+        Livros Disponíveis
+    </h2>
+    <p style="color: #6b7280; margin-bottom: 20px;">
+        <i class="fas fa-check-circle" style="color: #10b981;"></i> 
+        Acesso à biblioteca liberado ✅
+    </p>
+
+    <div class="livros-grid">
+        {% for livro in livros %}
+        <div class="livro-card">
+            <div class="capa">
+                <i class="fas fa-book"></i>
+            </div>
+            <div class="titulo">{{ livro[1] }}</div>
+            <div class="autor">{{ livro[2] }}</div>
+            <div class="preco">{{ "%.2f"|format(livro[5]) }} MT</div>
+            
+            {% if livro[0] in comprados %}
+                <div class="badge-comprado">✅ Comprado</div>
+                <a href="/biblioteca/ler/{{ livro[0] }}" class="btn-ler">
+                    <i class="fas fa-book-open"></i> Ler Agora
+                </a>
+            {% else %}
+                <form action="/biblioteca/comprar/{{ livro[0] }}" method="POST">
+                    <button type="submit" class="btn-comprar">
+                        <i class="fas fa-shopping-cart"></i> Comprar
+                    </button>
+                </form>
+            {% endif %}
+        </div>
+        {% endfor %}
+    </div>
+
+    {% endif %}
+
+    <!-- ===== FOOTER ===== -->
+    <div class="footer">
+        Desenvolvido por <strong>Klésio Yannick Cassamo</strong> <span class="gold">✦</span>
+        <br>
+        VIRTUS © 2026 — Todos os direitos reservados
+    </div>
+
+</div>
+
+</body>
+</html>

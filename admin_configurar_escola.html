@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VIRTUS - Configurar Escola</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', Arial, sans-serif; background: linear-gradient(135deg, #1a1a2e, #2d1b3d); padding: 25px; min-height: 100vh; display: flex; justify-content: center; align-items: center; }
+        .container { max-width: 650px; margin: auto; background: rgba(255,255,255,0.95); backdrop-filter: blur(10px); padding: 35px; border-radius: 18px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); width: 100%; }
+        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding-bottom: 15px; border-bottom: 2px solid rgba(255,215,0,0.2); flex-wrap: wrap; gap: 10px; }
+        .logo { display: flex; align-items: center; gap: 10px; }
+        .logo .icon { width: 40px; height: 40px; background: linear-gradient(135deg, #ffd700, #f59e0b); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 18px; font-weight: 900; color: #0f0c29; font-family: 'Georgia', serif; }
+        .logo .text { font-size: 20px; font-weight: 900; letter-spacing: 4px; background: linear-gradient(135deg, #ffd700, #f59e0b); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-family: 'Georgia', serif; }
+        h1 { color: #1a1a2e; text-align: center; margin-bottom: 5px; }
+        h1 .gold { color: #f59e0b; }
+        .subtitle { text-align: center; color: #6c757d; margin-bottom: 25px; font-size: 14px; }
+        .form-group { margin-bottom: 20px; }
+        label { display: block; margin-bottom: 5px; font-weight: 600; color: #2d3748; font-size: 14px; }
+        input, textarea { width: 100%; padding: 12px 16px; border: 2px solid #e2e8f0; border-radius: 10px; font-size: 14px; transition: all 0.3s ease; background: #f7fafc; }
+        input:focus, textarea:focus { border-color: #4f46e5; outline: none; box-shadow: 0 0 0 3px rgba(79,70,229,0.1); background: white; }
+        textarea { resize: vertical; min-height: 80px; font-family: inherit; }
+        .info { background: #e3f2fd; padding: 15px; border-radius: 8px; margin-bottom: 20px; border-left: 4px solid #2196f3; font-size: 14px; }
+        .info strong { display: block; margin-bottom: 5px; }
+        button { width: 100%; padding: 14px; background: linear-gradient(135deg, #4f46e5, #7c3aed); color: white; border: none; border-radius: 10px; font-size: 16px; font-weight: 700; cursor: pointer; transition: all 0.3s ease; }
+        button:hover { transform: translateY(-2px); box-shadow: 0 10px 30px rgba(79,70,229,0.3); }
+        .btn-voltar { background: #6c757d; margin-top: 10px; width: 100%; padding: 14px; border: none; border-radius: 10px; font-size: 16px; font-weight: 700; cursor: pointer; transition: all 0.3s ease; color: white; text-decoration: none; display: inline-block; text-align: center; }
+        .btn-voltar:hover { background: #5a6268; transform: translateY(-2px); }
+        .erro { color: #721c24; background: #f8d7da; padding: 12px; border-radius: 8px; margin-bottom: 15px; border: 1px solid #f5c6cb; }
+        .sucesso { color: #155724; background: #d4edda; padding: 12px; border-radius: 8px; margin-bottom: 15px; border: 1px solid #c3e6cb; }
+        .senha-info { background: #fef3c7; border: 2px solid #f59e0b; padding: 20px; border-radius: 10px; margin: 15px 0; text-align: center; }
+        .senha-info .label { font-size: 16px; font-weight: 600; color: #92400e; }
+        .senha-info .senha { font-size: 36px; font-weight: 900; color: #1a1a2e; background: white; padding: 8px 25px; border-radius: 8px; display: inline-block; letter-spacing: 8px; border: 3px solid #4f46e5; font-family: 'Courier New', monospace; margin: 5px 0; }
+        .footer { text-align: center; margin-top: 20px; padding-top: 15px; border-top: 1px solid rgba(0,0,0,0.05); color: #6c757d; font-size: 12px; }
+        @media (max-width: 768px) { .header { flex-direction: column; align-items: stretch; } .senha-info .senha { font-size: 28px; letter-spacing: 5px; padding: 8px 15px; } }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo">
+                <div class="icon">V</div>
+                <span class="text">VIRTUS</span>
+            </div>
+            <a href="/super-admin" class="btn-voltar" style="width: auto; padding: 8px 20px; background: #6c757d; color: white; border: none; border-radius: 8px; cursor: pointer; font-size: 14px; text-decoration: none;">← Voltar</a>
+        </div>
+
+        <h1>🏫 Configurar <span class="gold">Escola</span></h1>
+        <p class="subtitle">Preencha os dados da escola para criar uma nova licença</p>
+
+        {% if erro %}
+        <div class="erro">{{ erro }}</div>
+        {% endif %}
+
+        {% if sucesso and not erro %}
+        <div class="sucesso">{{ sucesso }}</div>
+        
+        <div class="senha-info">
+            {% if senha_admin_gerada %}
+            <p class="label" style="color: #4f46e5;">👑 SENHA DO ADMIN DA ESCOLA:</p>
+            <p class="senha">{{ senha_admin_gerada }}</p>
+            <p style="font-size: 13px; color: #6c757d; margin-top: 5px;">
+                👤 Usuário: <strong>admin</strong> | Senha: <strong>{{ senha_admin_gerada }}</strong>
+            </p>
+            <p style="font-size: 12px; color: #dc2626; font-weight: 600;">
+                ⚠️ O admin deve alterar esta senha no primeiro acesso!
+            </p>
+            {% endif %}
+
+            <div style="border-top: 1px dashed #f59e0b; margin: 15px 0;"></div>
+            <p style="font-size: 13px; color: #6c757d;">
+                🔗 <a href="/login" style="color: #4f46e5; font-weight: 600;">Clique aqui para fazer login</a>
+            </p>
+        </div>
+        {% endif %}
+
+        <div class="info">
+            <strong>📌 Informação:</strong>
+            Ao criar uma escola, serão geradas automaticamente:
+            <ul style="margin-top: 5px; padding-left: 20px; color: #495057;">
+                <li>🔑 Chave de licença válida por 1 ano</li>
+                <li>👑 Senha única para o administrador</li>
+            </ul>
+        </div>
+
+        <form method="POST">
+            <div class="form-group">
+                <label>🏫 Nome da Escola *</label>
+                <input type="text" name="nome" placeholder="Ex: Escola Secundária de Nampula" required>
+            </div>
+
+            <div class="form-group">
+                <label>📧 Email</label>
+                <input type="email" name="email" placeholder="Ex: escola@email.com">
+            </div>
+
+            <div class="form-group">
+                <label>📞 Telefone</label>
+                <input type="text" name="telefone" placeholder="Ex: 84 123 4567">
+            </div>
+
+            <div class="form-group">
+                <label>📍 Endereço</label>
+                <textarea name="endereco" placeholder="Ex: Bairro Central, Nampula"></textarea>
+            </div>
+
+            <button type="submit">✅ Criar Escola</button>
+        </form>
+
+        <div class="footer">
+            Desenvolvido por <strong>Klésio Yannick Cassamo</strong> ✦<br>
+            <span style="font-size: 10px;">VIRTUS © 2026 — Todos os direitos reservados</span>
+        </div>
+    </div>
+</body>
+</html>

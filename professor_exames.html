@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <title>Lançar Notas de Exame</title>
+    <style>
+        body { font-family: Arial; background: linear-gradient(135deg, #667eea, #764ba2); padding: 20px; }
+        .container { max-width: 1200px; margin: auto; background: white; padding: 25px; border-radius: 15px; box-shadow: 0 5px 20px rgba(0,0,0,0.2); }
+        h1 { color: #1e3a8a; text-align: center; }
+        h2 { color: #2563eb; text-align: center; margin-bottom: 20px; }
+        .info { background: #e3f2fd; padding: 15px; border-radius: 8px; margin-bottom: 20px; text-align: center; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { border: 1px solid #ddd; padding: 12px; text-align: center; }
+        th { background: #2563eb; color: white; }
+        tr:nth-child(even) { background: #f9f9f9; }
+        input { width: 80px; padding: 8px; text-align: center; font-size: 14px; border: 1px solid #ddd; border-radius: 5px; }
+        button { background: #10b981; color: white; padding: 8px 16px; border: none; border-radius: 5px; cursor: pointer; }
+        button:hover { background: #059669; }
+        .aprovado { background: #dcfce7; }
+        .reprovado { background: #fee2e2; }
+        .btn-voltar { background: #6c757d; margin-top: 20px; padding: 12px 24px; }
+        .botoes { text-align: center; margin-top: 20px; }
+        .form-exame { display: inline-block; }
+        .form-exame input { margin-right: 5px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📝 Lançar Notas de Exame</h1>
+        <h2>{{ disciplina_nome }} - {{ turma_nome }}</h2>
+        
+        <div class="info">
+            <strong>📌 Fórmula de cálculo:</strong> Média Final = (2 × Média de Frequência + Nota do Exame) / 3
+            <br>
+            <strong>✅ Aprovação:</strong> Média Final ≥ 10
+            <br>
+            <strong>⚠️ Notas devem ser entre 0 e 20</strong>
+        </div>
+
+        <div style="overflow-x: auto;">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Aluno</th>
+                        <th>Média de Frequência</th>
+                        <th>Nota do Exame</th>
+                        <th>Média Final</th>
+                        <th>Status</th>
+                        <th>Ação</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for aluno in alunos %}
+                    <tr class="{% if aluno.media_final >= 10 %}aprovado{% else %}reprovado{% endif %}">
+                        <td><strong>{{ aluno.nome }}</strong></td>
+                        <td>{{ aluno.media_frequencia }}</td>
+                        <td>
+                            {% if aluno.nota_exame > 0 %}
+                                <strong>{{ aluno.nota_exame }}</strong>
+                            {% else %}
+                                —
+                            {% endif %}
+                        </td>
+                        <td><strong>{{ aluno.media_final }}</strong></td>
+                        <td>
+                            {% if aluno.media_final >= 10 %}
+                                ✅ Aprovado
+                            {% else %}
+                                ❌ Reprovado
+                            {% endif %}
+                        </td>
+                        <td>
+                            <form method="POST" action="/professor/salvar-exame/{{ aluno.id }}" class="form-exame">
+                                <input type="hidden" name="disciplina_id" value="{{ disciplina_id }}">
+                                <input type="number" name="nota_exame" step="0.5" min="0" max="20" 
+                                       value="{{ aluno.nota_exame if aluno.nota_exame > 0 else '' }}"
+                                       placeholder="0-20" style="width: 80px;">
+                                <button type="submit">💾 Salvar</button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        
+        <div class="botoes">
+            <a href="/professor"><button type="button" class="btn-voltar">← Voltar para Minhas Disciplinas</button></a>
+        </div>
+    </div>
+</body>
+</html>

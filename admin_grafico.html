@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Gráfico Geral - Admin</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: Arial, sans-serif;
+            background: #f5f5f5;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: auto;
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 2px 20px rgba(0,0,0,0.1);
+        }
+        h1 { 
+            text-align: center; 
+            color: #1e3a8a;
+            margin-bottom: 30px;
+        }
+        canvas { 
+            max-width: 100%; 
+            margin: 30px 0;
+            max-height: 500px;
+        }
+        table { 
+            width: 100%; 
+            border-collapse: collapse; 
+            margin-top: 30px;
+        }
+        th, td { 
+            border: 1px solid #ddd; 
+            padding: 12px; 
+            text-align: center; 
+        }
+        th { 
+            background: #2563eb; 
+            color: white; 
+        }
+        tr:nth-child(even) {
+            background: #f9fafb;
+        }
+        button { 
+            padding: 12px 24px; 
+            margin-top: 20px; 
+            cursor: pointer;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: bold;
+        }
+        .btn-voltar { 
+            background: #6c757d; 
+            color: white;
+        }
+        .btn-voltar:hover {
+            background: #5a6268;
+        }
+        .barra-progresso {
+            background: #e5e7eb;
+            border-radius: 10px;
+            overflow: hidden;
+            margin-top: 8px;
+        }
+        .barra {
+            height: 20px;
+            border-radius: 10px;
+            transition: width 0.3s;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📊 Aproveitamento Geral por Turma</h1>
+        
+        {% if dados %}
+        <canvas id="grafico"></canvas>
+        
+        <table>
+            <thead>
+                <tr>
+                    <th>Turma</th>
+                    <th>Média Geral</th>
+                    <th>Aprovação</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for d in dados %}
+                <tr>
+                    <td><strong>{{ d.turma }}</strong></td>
+                    <td>{{ d.media }}</td>
+                    <td>
+                        {{ d.percentagem }}%
+                        <div class="barra-progresso">
+                            <div class="barra" style="
+                                width: {{ d.percentagem }}%;
+                                background: {% if d.percentagem >= 70 %}#4CAF50{% elif d.percentagem >= 50 %}#FF9800{% else %}#F44336{% endif %};
+                            "></div>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <p style="text-align:center; color:#666;">Nenhum dado disponível para exibir</p>
+        {% endif %}
+        
+        <div style="text-align: center;">
+            <button class="btn-voltar" onclick="window.location.href='/admin'">← Voltar ao Painel</button>
+        </div>
+    </div>
+    
+    {% if dados %}
+    <script>
+        const ctx = document.getElementById('grafico').getContext('2d');
+        const dados = {{ dados|tojson }};
+        
+        new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: dados.map(d => d.turma),
+                datasets: [{
+                    label: 'Percentagem de Aprovação (%)',
+                    data: dados.map(d => d.percentagem),
+                    backgroundColor: dados.map(d => d.percentagem >= 70 ? '#4CAF50' : (d.percentagem >= 50 ? '#FF9800' : '#F44336')),
+                    borderRadius: 8,
+                    borderWidth: 0
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: true,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                return `Aprovação: ${context.raw}%`;
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    y: { 
+                        beginAtZero: true, 
+                        max: 100,
+                        title: { 
+                            display: true, 
+                            text: 'Taxa de Aprovação (%)',
+                            font: { weight: 'bold' }
+                        },
+                        ticks: {
+                            callback: function(value) {
+                                return value + '%';
+                            }
+                        }
+                    },
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Turmas',
+                            font: { weight: 'bold' }
+                        }
+                    }
+                }
+            }
+        });
+    </script>
+    {% endif %}
+</body>
+</html>

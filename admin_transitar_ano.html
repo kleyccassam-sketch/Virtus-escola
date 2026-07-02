@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <title>Transitar de Ano Letivo</title>
+    <style>
+        body { font-family: Arial; background: linear-gradient(135deg, #667eea, #764ba2); padding: 20px; }
+        .container { max-width: 1000px; margin: auto; background: white; padding: 25px; border-radius: 15px; box-shadow: 0 5px 20px rgba(0,0,0,0.2); }
+        h1 { color: #1e3a8a; text-align: center; }
+        h2 { color: #2563eb; text-align: center; margin-bottom: 20px; }
+        .info { background: #fef3c7; padding: 15px; border-radius: 8px; margin-bottom: 20px; border-left: 4px solid #f59e0b; }
+        .alerta { background: #fee2e2; padding: 15px; border-radius: 8px; margin-bottom: 20px; border-left: 4px solid #dc2626; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { border: 1px solid #ddd; padding: 12px; text-align: center; }
+        th { background: #2563eb; color: white; }
+        tr:nth-child(even) { background: #f9f9f9; }
+        button { background: #dc2626; color: white; padding: 12px 24px; border: none; border-radius: 8px; cursor: pointer; font-size: 16px; margin-right: 10px; }
+        button:hover { background: #b91c1c; }
+        .btn-voltar { background: #6c757d; }
+        .btn-voltar:hover { background: #5a6268; }
+        .botoes { text-align: center; margin-top: 30px; }
+        .confirmacao { background: #f0f2f5; padding: 15px; border-radius: 8px; margin-bottom: 20px; text-align: center; }
+        .ano-destaque { font-size: 24px; font-weight: bold; color: #1e3a8a; }
+    </style>
+    <script>
+        function confirmarTransicao() {
+            return confirm("⚠️ ATENÇÃO! Esta ação irá:\n\n" +
+                          "1️⃣ Criar novas turmas para o próximo ano\n" +
+                          "2️⃣ Transferir todos os alunos para as turmas seguintes\n" +
+                          "3️⃣ Manter o histórico de notas\n" +
+                          "4️⃣ Avançar o ano letivo\n\n" +
+                          "Esta ação NÃO pode ser desfeita!\n\n" +
+                          "Deseja continuar?");
+        }
+    </script>
+</head>
+<body>
+    <div class="container">
+        <h1>🔄 Transição de Ano Letivo</h1>
+        
+        <div class="confirmacao">
+            <span class="ano-destaque">{{ ano_atual }}</span> → <span class="ano-destaque">{{ ano_novo }}</span>
+        </div>
+        
+        <div class="info">
+            <strong>📌 O que acontece na transição?</strong>
+            <ul>
+                <li>✅ Alunos aprovados são transferidos para o próximo ano</li>
+                <li>✅ Novas turmas são criadas automaticamente</li>
+                <li>✅ Histórico de notas é mantido</li>
+                <li>✅ Ano letivo é atualizado para {{ ano_novo }}</li>
+            </ul>
+        </div>
+        
+        <div class="alerta">
+            <strong>⚠️ ATENÇÃO! Esta ação é irreversível!</strong>
+            <br>
+            Antes de transitar, certifique-se de que:
+            <ul>
+                <li>Todas as notas do ano letivo {{ ano_atual }} estão lançadas</li>
+                <li>Todos os exames foram realizados</li>
+                <li>Fez backup do banco de dados</li>
+            </ul>
+        </div>
+        
+        <h2>📊 Turmas Atuais</h2>
+        
+        <div style="overflow-x: auto;">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Turma</th>
+                        <th>Total de Alunos</th>
+                        <th>Nova Turma ({{ ano_novo }})</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for turma in turmas %}
+                    <tr>
+                        <td><strong>{{ turma[1] }}ª {{ turma[2] }}</strong></td>
+                        <td>{{ turma[3] }} alunos</td>
+                        <td>{{ turma[1]|int + 1 }}ª {{ turma[2] }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        
+        <div class="botoes">
+            <form method="POST" action="/admin/executar-transicao" onsubmit="return confirmarTransicao()" style="display: inline;">
+                <button type="submit">🔄 Executar Transição de Ano</button>
+            </form>
+            <a href="/admin"><button type="button" class="btn-voltar">← Voltar ao Painel</button></a>
+        </div>
+    </div>
+</body>
+</html>

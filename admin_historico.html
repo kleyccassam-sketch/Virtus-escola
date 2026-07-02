@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VIRTUS - Notas Qualitativas</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', Arial, sans-serif; background: linear-gradient(135deg, #1a1a2e, #2d1b3d); padding: 25px; min-height: 100vh; }
+        .container { max-width: 1100px; margin: auto; background: rgba(255,255,255,0.95); backdrop-filter: blur(10px); padding: 25px; border-radius: 18px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
+        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding-bottom: 15px; border-bottom: 2px solid rgba(255,215,0,0.2); flex-wrap: wrap; gap: 10px; }
+        .logo { display: flex; align-items: center; gap: 10px; }
+        .logo .icon { width: 40px; height: 40px; background: linear-gradient(135deg, #ffd700, #f59e0b); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 18px; font-weight: 900; color: #0f0c29; font-family: 'Georgia', serif; }
+        .logo .text { font-size: 20px; font-weight: 900; letter-spacing: 4px; background: linear-gradient(135deg, #ffd700, #f59e0b); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-family: 'Georgia', serif; }
+        h1 { color: #1a1a2e; text-align: center; }
+        h1 .gold { color: #f59e0b; }
+        .subtitle { text-align: center; color: #6c757d; margin-bottom: 20px; font-size: 14px; }
+        .info { background: #e3f2fd; padding: 15px; border-radius: 8px; margin-bottom: 20px; border-left: 4px solid #2196f3; font-size: 14px; }
+        .info ul { margin: 10px 0 0 20px; }
+        .legenda { display: flex; gap: 20px; justify-content: center; flex-wrap: wrap; margin: 15px 0; }
+        .legenda-item { display: flex; align-items: center; gap: 8px; font-size: 13px; padding: 4px 12px; border-radius: 6px; }
+        .mb { background: #dcfce7; color: #166534; }
+        .b { background: #dbeafe; color: #1e40af; }
+        .s { background: #fef9c3; color: #854d0e; }
+        .i { background: #fee2e2; color: #991b1b; }
+        .checkbox-group { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 10px; margin-top: 15px; }
+        .checkbox-item { display: flex; align-items: center; gap: 10px; padding: 10px 15px; background: #f8fafc; border-radius: 8px; border: 1px solid #e2e8f0; transition: all 0.2s ease; cursor: pointer; }
+        .checkbox-item:hover { background: #edf2f7; border-color: #4f46e5; }
+        .checkbox-item input { width: 18px; height: 18px; accent-color: #4f46e5; }
+        .checkbox-item label { margin: 0; font-size: 14px; cursor: pointer; }
+        .badge { display: inline-block; padding: 2px 10px; border-radius: 12px; font-size: 11px; font-weight: 600; }
+        .badge-qualitativa { background: #dbeafe; color: #1e40af; }
+        .badge-quantitativa { background: #f3f4f6; color: #6c757d; }
+        .btn { padding: 12px 24px; border: none; border-radius: 10px; font-size: 16px; font-weight: 700; cursor: pointer; transition: all 0.3s ease; text-decoration: none; display: inline-block; }
+        .btn-primary { background: linear-gradient(135deg, #4f46e5, #7c3aed); color: white; }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 10px 30px rgba(79,70,229,0.3); }
+        .btn-secondary { background: #6c757d; color: white; }
+        .btn-secondary:hover { background: #5a6268; transform: translateY(-2px); }
+        .botoes { text-align: center; margin-top: 20px; display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+        .footer { text-align: center; margin-top: 20px; padding-top: 15px; border-top: 1px solid rgba(0,0,0,0.05); color: #6c757d; font-size: 12px; }
+        .header-actions { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+        .erro { color: #721c24; background: #f8d7da; padding: 12px; border-radius: 8px; margin-bottom: 15px; border: 1px solid #f5c6cb; }
+        .sucesso { color: #155724; background: #d4edda; padding: 12px; border-radius: 8px; margin-bottom: 15px; border: 1px solid #c3e6cb; }
+        @media (max-width: 768px) { .header { flex-direction: column; align-items: stretch; } .botoes { flex-direction: column; align-items: stretch; } }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo">
+                <div class="icon">V</div>
+                <span class="text">VIRTUS</span>
+            </div>
+            <div>
+                <h1>📝 Notas <span class="gold">Qualitativas</span></h1>
+                <p class="subtitle" style="margin-bottom: 0;">Selecione as disciplinas que usarão avaliação qualitativa</p>
+            </div>
+            <div class="header-actions">
+                <a href="/admin" class="btn btn-secondary" style="padding: 8px 20px;">← Voltar</a>
+            </div>
+        </div>
+
+        {% if erro %}
+        <div class="erro">{{ erro }}</div>
+        {% endif %}
+
+        {% if sucesso %}
+        <div class="sucesso">{{ sucesso }}</div>
+        {% endif %}
+
+        <div class="info">
+            <strong>📌 Escalas Qualitativas:</strong>
+            <ul>
+                <li><span style="color:#166534;">🟢 Muito Bom (MB)</span> — Excelente desempenho</li>
+                <li><span style="color:#1e40af;">🔵 Bom (B)</span> — Bom desempenho</li>
+                <li><span style="color:#854d0e;">🟡 Suficiente (S)</span> — Desempenho mínimo</li>
+                <li><span style="color:#991b1b;">🔴 Insuficiente (I)</span> — Abaixo do esperado</li>
+            </ul>
+        </div>
+
+        <div class="legenda">
+            <div class="legenda-item mb">🟢 Muito Bom (MB)</div>
+            <div class="legenda-item b">🔵 Bom (B)</div>
+            <div class="legenda-item s">🟡 Suficiente (S)</div>
+            <div class="legenda-item i">🔴 Insuficiente (I)</div>
+        </div>
+
+        <!-- 🔥 CORRIGIDO: REMOVI O action="/admin/salvar-qualitativas" -->
+        <form method="POST">
+            <div class="checkbox-group">
+                {% for disc in disciplinas %}
+                <div class="checkbox-item">
+                    <input type="checkbox" name="qualitativas" 
+                           value="{{ disc[0] }}"
+                           {% if disc[4] == 1 %}checked{% endif %}>
+                    <label>
+                        <strong>{{ disc[1] }}</strong>
+                        <br>
+                        <small style="color: #6c757d;">{{ disc[2] }}ª {{ disc[3] }}</small>
+                        <br>
+                        {% if disc[4] == 1 %}
+                            <span class="badge badge-qualitativa">✅ Qualitativa</span>
+                        {% else %}
+                            <span class="badge badge-quantitativa">📊 Quantitativa</span>
+                        {% endif %}
+                    </label>
+                </div>
+                {% endfor %}
+            </div>
+            
+            <div class="botoes">
+                <button type="submit" class="btn btn-primary">💾 Salvar Configuração</button>
+                <a href="/admin" class="btn btn-secondary">← Voltar ao Painel</a>
+            </div>
+        </form>
+
+        <div class="footer">
+            Desenvolvido por <strong>Klésio Yannick Cassamo</strong> ✦<br>
+            <span style="font-size: 10px;">VIRTUS © 2026 — Todos os direitos reservados</span>
+        </div>
+    </div>
+</body>
+</html>

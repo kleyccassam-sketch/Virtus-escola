@@ -1,0 +1,90 @@
+<!-- templates/historico_ano.html -->
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <title>Histórico - {{ ano_letivo }}</title>
+    <style>
+        body { font-family: Arial; background: #f3f4f6; padding: 20px; }
+        .container { max-width: 1400px; margin: auto; background: white; padding: 20px; border-radius: 12px; }
+        h1 { color: #1e3a8a; text-align: center; }
+        .alerta { background: #fef3c7; padding: 15px; border-radius: 8px; margin-bottom: 20px; text-align: center; border-left: 4px solid #f59e0b; }
+        .readonly { background: #f0f2f5; padding: 5px 10px; border-radius: 5px; display: inline-block; color: #6c757d; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: center; font-size: 12px; }
+        th { background: #2563eb; color: white; }
+        .aprovado { background: #dcfce7; }
+        .reprovado { background: #fee2e2; }
+        .btn-voltar { background: #6c757d; color: white; padding: 10px 20px; border: none; border-radius: 8px; cursor: pointer; margin-top: 20px; }
+        .seletor-ano { margin-bottom: 20px; text-align: center; }
+        .seletor-ano select { padding: 10px; font-size: 16px; border-radius: 8px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📚 Histórico Escolar - {{ ano_letivo }}</h1>
+        
+        <div class="alerta">
+            🔒 <strong>MODO APENAS LEITURA</strong> 🔒
+            <br>
+            Este é um ano letivo arquivado. Os dados são apenas para consulta.
+        </div>
+        
+        <div class="seletor-ano">
+            <label>Selecionar Ano: </label>
+            <select onchange="location = this.value">
+                {% for ano in anos_disponiveis %}
+                <option value="/admin/historico/{{ ano[0] }}" {% if ano[0] == ano_letivo %}selected{% endif %}>
+                    {{ ano[0] }} (Arquivado em {{ ano[1]|datetimeformat }})
+                </option>
+                {% endfor %}
+            </select>
+        </div>
+        
+        <h2>📖 Alunos</h2>
+        <div style="overflow-x: auto;">
+            <table>
+                <thead>
+                    <tr><th>Nome</th><th>Turma</th><th>Status Pagamento</th></tr>
+                </thead>
+                <tbody>
+                    {% for aluno in alunos %}
+                    <tr><td>{{ aluno[0] }}</td><td>{{ aluno[1] }}</td><td>{{ aluno[2] }}</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        
+        <h2>📝 Notas e Resultados</h2>
+        <div style="overflow-x: auto;">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Aluno</th><th>Disciplina</th>
+                        <th>1º Trim</th><th>2º Trim</th><th>3º Trim</th>
+                        <th>Média Final</th><th>Nota Exame</th><th>Média com Exame</th><th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for nota in notas %}
+                    <tr class="{% if nota[13] %}aprovado{% else %}reprovado{% endif %}">
+                        <td>{{ nota[0] }}</td><td>{{ nota[1] }}</td>
+                        <td>{{ (nota[2] + nota[3] + nota[4]) / 3 if (nota[2] > 0 or nota[3] > 0 or nota[4] > 0) else '-' }}</td>
+                        <td>{{ (nota[5] + nota[6] + nota[7]) / 3 if (nota[5] > 0 or nota[6] > 0 or nota[7] > 0) else '-' }}</td>
+                        <td>{{ (nota[8] + nota[9] + nota[10]) / 3 if (nota[8] > 0 or nota[9] > 0 or nota[10] > 0) else '-' }}</td>
+                        <td>{{ nota[11] if nota[11] > 0 else '-' }}</td>
+                        <td>{{ nota[12] if nota[12] > 0 else '-' }}</td>
+                        <td>{{ nota[13] }}</td>
+                        <td>{% if nota[14] %}✅ Aprovado{% else %}❌ Reprovado{% endif %}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        
+        <div style="text-align: center;">
+            <a href="/admin"><button class="btn-voltar">← Voltar ao Painel</button></a>
+        </div>
+    </div>
+</body>
+</html>
