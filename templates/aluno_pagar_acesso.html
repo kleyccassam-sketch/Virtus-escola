@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VIRTUS - Pagar Acesso</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background: linear-gradient(135deg, #1a0a2e, #2d1b3d);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        .container {
+            max-width: 480px;
+            width: 100%;
+            background: rgba(255,255,255,0.95);
+            padding: 35px 30px;
+            border-radius: 24px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+            animation: fadeIn 0.5s ease;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+        .logo {
+            font-size: 28px;
+            font-weight: 900;
+            letter-spacing: 4px;
+            background: linear-gradient(135deg, #ffd700, #f59e0b);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-family: 'Georgia', serif;
+        }
+        .sub {
+            color: #6b7280;
+            font-size: 14px;
+            margin-top: 5px;
+            display: block;
+        }
+        .card {
+            background: #f8f6f2;
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border: 1px solid rgba(255,215,0,0.1);
+        }
+        .card h3 {
+            color: #1a1a2e;
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 12px;
+            border-left: 4px solid #ffd700;
+            padding-left: 12px;
+        }
+        .card h3 i { color: #f59e0b; margin-right: 8px; }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            color: #1a1a2e;
+            margin-bottom: 5px;
+            font-size: 14px;
+        }
+        .form-group input {
+            width: 100%;
+            padding: 12px 14px;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: 0.3s;
+            background: white;
+        }
+        .form-group input:focus {
+            border-color: #f59e0b;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(245,158,11,0.1);
+        }
+        .form-group small {
+            display: block;
+            color: #6b7280;
+            font-size: 12px;
+            margin-top: 4px;
+        }
+        
+        .valor-box {
+            background: linear-gradient(135deg, #1a0a2e, #2d1b3d);
+            padding: 15px;
+            border-radius: 12px;
+            text-align: center;
+            margin: 15px 0;
+        }
+        .valor-box .valor {
+            font-size: 32px;
+            font-weight: 900;
+            color: #ffd700;
+        }
+        .valor-box .label {
+            color: #9ca3af;
+            font-size: 13px;
+        }
+        
+        .btn-pagar {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #4f46e5, #7c3aed);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 18px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .btn-pagar:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(79,70,229,0.3);
+        }
+        .btn-pagar i { margin-right: 10px; }
+        
+        .alert-danger {
+            background: #fee2e2;
+            color: #991b1b;
+            padding: 12px 16px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            font-size: 14px;
+            border-left: 4px solid #dc2626;
+        }
+        .alert-info {
+            background: #dbeafe;
+            color: #1e40af;
+            padding: 12px 16px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            font-size: 14px;
+            border-left: 4px solid #3b82f6;
+        }
+        
+        .metodos {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin: 15px 0;
+            flex-wrap: wrap;
+        }
+        .metodos .badge {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            background: #e2e8f0;
+            color: #4b5563;
+        }
+        .metodos .badge.mpesa { background: #dbeafe; color: #1e40af; }
+        .metodos .badge.emola { background: #dcfce7; color: #166534; }
+        .metodos .badge.mkesh { background: #fef3c7; color: #78350f; }
+        
+        .footer {
+            text-align: center;
+            margin-top: 20px;
+            color: #9ca3af;
+            font-size: 12px;
+        }
+        .footer strong { color: #4b5563; }
+        
+        .btn-voltar {
+            display: inline-block;
+            margin-top: 10px;
+            color: #6b7280;
+            text-decoration: none;
+            font-size: 14px;
+        }
+        .btn-voltar:hover { color: #4b5563; }
+        
+        @media (max-width: 480px) {
+            .container { padding: 20px 15px; }
+            .valor-box .valor { font-size: 28px; }
+            .btn-pagar { font-size: 16px; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header">
+        <span class="logo">VIRTUS</span>
+        <span class="sub">💰 Pagar Acesso</span>
+    </div>
+
+    {% if erro %}
+    <div class="alert-danger">{{ erro }}</div>
+    {% endif %}
+
+    <div class="alert-info">
+        <i class="fas fa-info-circle"></i> 
+        Após o pagamento, o acesso é liberado imediatamente.
+    </div>
+
+    <div class="metodos">
+        <span class="badge mpesa"><i class="fas fa-mobile-alt"></i> M-PESA</span>
+        <span class="badge emola"><i class="fas fa-mobile-alt"></i> E-Mola</span>
+        <span class="badge mkesh"><i class="fas fa-mobile-alt"></i> M-Kesh</span>
+    </div>
+
+    <div class="valor-box">
+        <div class="label">Valor a pagar</div>
+        <div class="valor">{{ "%.2f"|format(valor) }} MT</div>
+    </div>
+
+    <form method="POST" action="/aluno/pagar-acesso/{{ tipo }}">
+        <div class="card">
+            <h3><i class="fas fa-user"></i> Dados do Aluno</h3>
+            <p style="color: #1a1a2e; font-weight: 600;">{{ aluno_nome }}</p>
+        </div>
+
+        <div class="form-group">
+            <label><i class="fas fa-phone"></i> Número de Telefone</label>
+            <input type="tel" name="telefone" placeholder="Ex: 84 123 4567" required>
+            <small>Digite o número onde receberá a notificação de pagamento</small>
+        </div>
+
+        <button type="submit" class="btn-pagar">
+            <i class="fas fa-credit-card"></i> Pagar e Aceder
+        </button>
+    </form>
+
+    <a href="/aluno/dashboard" class="btn-voltar">
+        <i class="fas fa-arrow-left"></i> Voltar
+    </a>
+
+    <div class="footer">
+        Desenvolvido por <strong>Klésio Yannick Cassano</strong><br>
+        VIRTUS © 2026 — Todos os direitos reservados
+    </div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VIRTUS - Painel Administrativo</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', Arial, sans-serif; background: linear-gradient(135deg, #1a1a2e, #2d1b3d, #1a0a2e); min-height: 100vh; padding: 25px; position: relative; }
+        body::before { content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: radial-gradient(2px 2px at 20% 30%, rgba(255,215,0,0.08), transparent), radial-gradient(2px 2px at 40% 70%, rgba(255,215,0,0.05), transparent); pointer-events: none; z-index: 0; }
+        .container { max-width: 1400px; margin: auto; position: relative; z-index: 1; animation: fadeInUp 0.6s ease forwards; }
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+        
+        .header { background: rgba(255,255,255,0.95); backdrop-filter: blur(10px); padding: 20px 30px; border-radius: 20px; margin-bottom: 25px; box-shadow: 0 15px 40px rgba(0,0,0,0.3); border: 1px solid rgba(255,215,0,0.08); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px; }
+        .header-left { display: flex; align-items: center; gap: 20px; }
+        .logo-virtus { display: flex; align-items: center; gap: 12px; }
+        .logo-virtus .logo-icon { width: 50px; height: 50px; background: linear-gradient(135deg, #ffd700, #f59e0b); border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 22px; font-weight: 900; color: #0f0c29; font-family: 'Georgia', serif; box-shadow: 0 4px 15px rgba(255,215,0,0.25); }
+        .logo-virtus .logo-text { font-size: 24px; font-weight: 900; letter-spacing: 5px; background: linear-gradient(135deg, #ffd700, #f59e0b); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; font-family: 'Georgia', serif; }
+        .header-title { color: #1a1a2e; font-size: 20px; font-weight: 700; border-left: 2px solid rgba(255,215,0,0.2); padding-left: 18px; }
+        .header-title .sub { font-size: 13px; font-weight: 400; color: #6c757d; display: block; }
+        .header-right { display: flex; align-items: center; gap: 12px; }
+        .user-info { background: rgba(79,70,229,0.08); padding: 8px 16px; border-radius: 10px; font-size: 14px; font-weight: 600; color: #4f46e5; }
+        .btn-sair { background: #dc2626; color: white; padding: 10px 22px; border-radius: 12px; text-decoration: none; font-weight: 600; font-size: 14px; transition: all 0.3s ease; display: inline-flex; align-items: center; gap: 8px; border: none; cursor: pointer; }
+        .btn-sair:hover { background: #b91c1c; transform: translateY(-2px); box-shadow: 0 8px 20px rgba(220,38,38,0.3); }
+        
+        .card { background: rgba(255,255,255,0.95); backdrop-filter: blur(10px); padding: 20px 25px; border-radius: 18px; margin-bottom: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); border: 1px solid rgba(255,215,0,0.04); transition: all 0.3s ease; }
+        .card:hover { box-shadow: 0 15px 40px rgba(0,0,0,0.15); }
+        h2 { color: #1a1a2e; font-size: 18px; font-weight: 700; border-left: 4px solid #ffd700; padding-left: 12px; margin-bottom: 15px; }
+        h2 .gold { color: #f59e0b; }
+        
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; }
+        .stats-grid ul { list-style: none; padding: 0; margin: 0; display: contents; }
+        .stats-grid li { background: rgba(255,255,255,0.95); padding: 15px 18px; border-radius: 14px; text-align: center; border: 1px solid rgba(255,215,0,0.06); box-shadow: 0 5px 15px rgba(0,0,0,0.06); transition: all 0.3s ease; font-size: 14px; font-weight: 500; color: #1a1a2e; list-style: none; }
+        .stats-grid li:hover { transform: translateY(-5px); box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
+        .stats-grid li strong { display: block; font-size: 28px; font-weight: 900; background: linear-gradient(135deg, #ffd700, #f59e0b); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; margin-bottom: 4px; }
+        
+        input, select { width: 100%; padding: 12px 14px; margin-bottom: 12px; border: 2px solid #e2e8f0; border-radius: 10px; font-size: 14px; transition: all 0.3s ease; background: #f7fafc; color: #2d3748; font-family: 'Segoe UI', Arial, sans-serif; }
+        input:focus, select:focus { border-color: #4f46e5; outline: none; box-shadow: 0 0 0 4px rgba(79,70,229,0.08); background: white; }
+        select { appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%234f46e5' d='M6 8L1 3h10z'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 14px center; padding-right: 40px; cursor: pointer; }
+        
+        .checkbox-group { margin: 10px 0 15px; display: flex; flex-wrap: wrap; gap: 8px; }
+        .checkbox-group label { display: inline-flex; align-items: center; gap: 6px; cursor: pointer; font-size: 14px; color: #2d3748; background: #f7fafc; padding: 6px 14px; border-radius: 8px; border: 1px solid #e2e8f0; transition: all 0.2s ease; }
+        .checkbox-group label:hover { background: #edf2f7; border-color: #4f46e5; }
+        .checkbox-group input { width: auto; margin: 0; accent-color: #4f46e5; }
+        
+        .checkbox-vertical { max-height: 250px; overflow-y: auto; border: 2px solid #e2e8f0; border-radius: 10px; padding: 10px; margin-bottom: 12px; background: white; }
+        .checkbox-vertical label { display: block; padding: 8px 12px; margin: 2px 0; border-radius: 8px; transition: all 0.2s ease; cursor: pointer; font-size: 14px; color: #2d3748; }
+        .checkbox-vertical label:hover { background: #f5f3ff; border-color: #4f46e5; }
+        .checkbox-vertical label input { margin-right: 10px; accent-color: #4f46e5; width: 16px; height: 16px; cursor: pointer; }
+        .checkbox-vertical label .badge-prof { font-size: 11px; color: #10b981; font-weight: 600; margin-left: 8px; }
+        .checkbox-vertical label .badge-sem { font-size: 11px; color: #ef4444; font-weight: 600; margin-left: 8px; }
+        .checkbox-vertical::-webkit-scrollbar { width: 6px; }
+        .checkbox-vertical::-webkit-scrollbar-track { background: #f1f1f1; border-radius: 10px; }
+        .checkbox-vertical::-webkit-scrollbar-thumb { background: linear-gradient(135deg, #ffd700, #f59e0b); border-radius: 10px; }
+        
+        .btn { padding: 12px 24px; border: none; border-radius: 10px; font-size: 14px; font-weight: 700; cursor: pointer; transition: all 0.3s ease; font-family: 'Segoe UI', Arial, sans-serif; text-decoration: none; display: inline-block; }
+        .btn:hover { transform: translateY(-2px); }
+        .btn-primary { background: linear-gradient(135deg, #4f46e5, #7c3aed); color: white; }
+        .btn-primary:hover { box-shadow: 0 10px 30px rgba(79,70,229,0.3); }
+        .btn-periodos { background: linear-gradient(135deg, #9333ea, #7c3aed); color: white; }
+        .btn-periodos:hover { box-shadow: 0 10px 30px rgba(147,51,234,0.3); }
+        .btn-logs { background: linear-gradient(135deg, #2c3e50, #1a252f); color: white; }
+        .btn-logs:hover { box-shadow: 0 10px 30px rgba(44,62,80,0.3); }
+        .btn-backup { background: linear-gradient(135deg, #10b981, #059669); color: white; }
+        .btn-backup:hover { box-shadow: 0 10px 30px rgba(16,185,129,0.3); }
+        .btn-grafico { background: linear-gradient(135deg, #f59e0b, #d97706); color: white; }
+        .btn-grafico:hover { box-shadow: 0 10px 30px rgba(245,158,11,0.3); }
+        .btn-trimestre { background: linear-gradient(135deg, #9c27b0, #7b1fa2); color: white; }
+        .btn-trimestre:hover { box-shadow: 0 10px 30px rgba(156,39,176,0.3); }
+        .btn-exames { background: linear-gradient(135deg, #8b5cf6, #7c3aed); color: white; }
+        .btn-exames:hover { box-shadow: 0 10px 30px rgba(139,92,246,0.3); }
+        .btn-transitar { background: linear-gradient(135deg, #f59e0b, #d97706); color: white; }
+        .btn-transitar:hover { box-shadow: 0 10px 30px rgba(245,158,11,0.3); }
+        .btn-reabrir { background: linear-gradient(135deg, #06b6d4, #0891b2); color: white; }
+        .btn-reabrir:hover { box-shadow: 0 10px 30px rgba(6,182,212,0.3); }
+        .btn-pagamentos { background: linear-gradient(135deg, #10b981, #059669); color: white; }
+        .btn-pagamentos:hover { box-shadow: 0 10px 30px rgba(16,185,129,0.3); }
+        .btn-qualitativas { background: linear-gradient(135deg, #8b5cf6, #7c3aed); color: white; }
+        .btn-qualitativas:hover { box-shadow: 0 10px 30px rgba(139,92,246,0.3); }
+        .btn-historico { background: linear-gradient(135deg, #6366f1, #4f46e5); color: white; }
+        .btn-historico:hover { box-shadow: 0 10px 30px rgba(99,102,241,0.3); }
+        .btn-ordem { background: linear-gradient(135deg, #f59e0b, #d97706); color: white; border: 2px solid #f59e0b; }
+        .btn-ordem:hover { box-shadow: 0 10px 30px rgba(245,158,11,0.4); background: linear-gradient(135deg, #fbbf24, #f59e0b); }
+        .btn-ordem .badge { background: white; color: #f59e0b; font-size: 10px; padding: 2px 8px; border-radius: 12px; margin-left: 6px; font-weight: 700; }
+        .btn-super { background: linear-gradient(135deg, #f59e0b, #d97706); color: white; border: 2px solid #f59e0b; }
+        .btn-super:hover { box-shadow: 0 10px 30px rgba(245,158,11,0.4); background: linear-gradient(135deg, #fbbf24, #f59e0b); transform: translateY(-2px); }
+        .btn-multiplas { background: linear-gradient(135deg, #8b5cf6, #7c3aed); color: white; border: 2px solid #8b5cf6; }
+        .btn-multiplas:hover { box-shadow: 0 10px 30px rgba(139,92,246,0.4); background: linear-gradient(135deg, #a78bfa, #7c3aed); transform: translateY(-2px); }
+        
+        .flex-buttons { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 15px; }
+        .flex-buttons a { text-decoration: none; }
+        .flex-buttons .btn { padding: 10px 20px; font-size: 13px; }
+        
+        .tabela-container { overflow-x: auto; margin-top: 15px; border-radius: 12px; border: 1px solid rgba(0,0,0,0.04); }
+        table { width: 100%; border-collapse: collapse; font-size: 13px; }
+        th, td { padding: 10px 12px; border: 1px solid #e2e8f0; text-align: left; }
+        th { background: linear-gradient(135deg, #1a1a2e, #2d1b3d); color: white; font-weight: 700; font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 2px solid #ffd700; }
+        tr:nth-child(even) { background: #faf8f5; }
+        tr:hover { background: #f5f3ff; }
+        .badge { display: inline-block; padding: 3px 12px; border-radius: 20px; font-size: 11px; font-weight: 600; }
+        .badge-atribuido { background: #dcfce7; color: #166534; }
+        .badge-ordenado { background: #dbeafe; color: #1e40af; }
+        .badge-pendente { background: #fef3c7; color: #78350f; }
+        
+        .footer { text-align: center; margin-top: 25px; padding: 15px; }
+        .footer .dev { color: rgba(255,255,255,0.25); font-size: 12px; letter-spacing: 1px; }
+        .footer .dev strong { color: rgba(255,215,0,0.35); font-weight: 600; }
+        .footer .dev .gold { color: rgba(255,215,0,0.25); }
+        
+        .card-destaque { background: rgba(255,255,255,0.95); border: 2px solid #f59e0b; }
+        .card-destaque h2 i { color: #f59e0b; }
+        
+        .info-texto { color: #6c757d; font-size: 14px; margin-bottom: 10px; }
+        .info-texto i { margin-right: 6px; }
+        
+        @media (max-width: 768px) { 
+            .header { flex-direction: column; align-items: stretch; } 
+            .header-left { flex-wrap: wrap; justify-content: center; } 
+            .header-title { border-left: none; padding-left: 0; text-align: center; } 
+            .header-right { justify-content: center; flex-wrap: wrap; } 
+            .stats-grid { grid-template-columns: repeat(2, 1fr); } 
+            .flex-buttons { flex-direction: column; align-items: stretch; } 
+            .flex-buttons .btn { width: 100%; text-align: center; } 
+            .checkbox-group label { font-size: 12px; padding: 4px 10px; }
+            .checkbox-vertical label { font-size: 13px; padding: 6px 10px; }
+        }
+        @media (max-width: 480px) { 
+            .logo-virtus .logo-text { font-size: 18px; letter-spacing: 3px; } 
+            .header-title { font-size: 16px; } 
+            .stats-grid { grid-template-columns: 1fr; } 
+            .stats-grid li strong { font-size: 22px; } 
+            table { font-size: 12px; } 
+            th, td { padding: 6px 8px; } 
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- ===== HEADER ===== -->
+        <div class="header">
+            <div class="header-left">
+                <div class="logo-virtus">
+                    <div class="logo-icon">V</div>
+                    <span class="logo-text">VIRTUS</span>
+                </div>
+                <div class="header-title">
+                    👑 Painel Administrativo
+                    <span class="sub">Sistema de Gestão Escolar</span>
+                </div>
+            </div>
+            <div class="header-right">
+                <span class="user-info">👤 {{ session.user }}</span>
+                <a href="/logout" class="btn-sair">🚪 Sair</a>
+            </div>
+        </div>
+
+        <!-- ===== ESTATÍSTICAS ===== -->
+        <div class="card">
+            <h2>📊 Estatísticas</h2>
+            <div class="stats-grid">
+                <ul>
+                    <li><strong>{{ alunos }}</strong>👨‍🎓 Alunos</li>
+                    <li><strong>{{ professores }}</strong>👨‍🏫 Professores</li>
+                    <li><strong>{{ turmas|length }}</strong>🏫 Turmas</li>
+                    <li><strong>{{ disciplinas|length }}</strong>📚 Disciplinas</li>
+                    <li><strong>{{ secretarias }}</strong>🏢 Secretarias</li>
+                    <li><strong>{{ diretores|length }}</strong>👔 Diretores</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- ===== ORDENAR DISCIPLINAS ===== -->
+        <div class="card card-destaque">
+            <h2><i class="fas fa-sort"></i> Ordenar <span class="gold">Disciplinas</span></h2>
+            <p class="info-texto">
+                <i class="fas fa-arrows-alt" style="color: #f59e0b;"></i>
+                Arraste e organize a ordem das disciplinas na pauta para cada turma ou classe.
+                {% if tem_ordem %}
+                <span class="badge badge-ordenado" style="margin-left: 8px;">✅ Ordenado</span>
+                {% else %}
+                <span class="badge badge-pendente" style="margin-left: 8px;">⚠️ Pendente</span>
+                {% endif %}
+            </p>
+            <div class="flex-buttons">
+                <a href="/admin/ordenar-disciplinas" class="btn btn-ordem">
+                    <i class="fas fa-arrows-alt"></i> Ordenar Agora
+                    {% if tem_ordem %}
+                    <span class="badge">✅</span>
+                    {% else %}
+                    <span class="badge">⚠️</span>
+                    {% endif %}
+                </a>
+            </div>
+        </div>
+
+        <!-- ===== 🔥 SUPER RELEVANTES ===== -->
+        <div class="card" style="border: 2px solid #f59e0b; background: #fffbeb;">
+            <h2><i class="fas fa-star" style="color: #f59e0b;"></i> Disciplinas <span class="gold">Super Relevantes</span></h2>
+            <p class="info-texto">
+                <i class="fas fa-exclamation-triangle" style="color: #f59e0b;"></i>
+                Configure disciplinas que reprovam automaticamente se a nota do exame for inferior a <strong>8</strong>.
+            </p>
+            <div class="flex-buttons">
+                <a href="/admin/super-relevantes" class="btn btn-super">
+                    <i class="fas fa-star"></i> Configurar Super Relevantes
+                </a>
+            </div>
+        </div>
+
+        <!-- ===== CRIAR TURMA ===== -->
+        <div class="card">
+            <h2>📚 Criar <span class="gold">Turma</span></h2>
+            <form action="/admin/criar-turma" method="POST">
+                <select name="ano" required>
+                    <option value="">Classe</option>
+                    {% for i in range(1, 13) %}
+                    <option value="{{ i }}">{{ i }}ª Classe</option>
+                    {% endfor %}
+                </select>
+                <input type="text" name="nome" placeholder="Turma (A, B, C...)" required>
+                <button type="submit" class="btn btn-primary">➕ Criar Turma</button>
+            </form>
+        </div>
+
+        <!-- ===== CRIAR DISCIPLINA ===== -->
+        <div class="card">
+            <h2>📖 Criar <span class="gold">Disciplina</span></h2>
+            <form action="/admin/criar-disciplina" method="POST">
+                <input type="text" name="nome" placeholder="Nome da disciplina" required>
+                <select name="turma_id" required>
+                    <option value="">Selecionar turma</option>
+                    {% for t in turmas %}
+                    <option value="{{ t.id }}">{{ t.nome_completo }}</option>
+                    {% endfor %}
+                </select>
+                <button type="submit" class="btn btn-primary">📝 Criar</button>
+            </form>
+        </div>
+
+        <!-- ===== DISCIPLINA EM VÁRIAS TURMAS ===== -->
+        <div class="card">
+            <h2>📚 Disciplina em <span class="gold">Várias Turmas</span></h2>
+            <form action="/admin/criar-disciplina-multiplas" method="POST">
+                <input type="text" name="nome" placeholder="Nome da disciplina" required>
+                <div class="checkbox-group">
+                    {% for t in turmas %}
+                    <label>
+                        <input type="checkbox" name="turmas_ids" value="{{ t.id }}">
+                        {{ t.nome_completo }}
+                    </label>
+                    {% endfor %}
+                </div>
+                <button type="submit" class="btn btn-primary">📝 Adicionar a todas selecionadas</button>
+            </form>
+        </div>
+
+        <!-- ===== NOTAS QUALITATIVAS ===== -->
+        <div class="card">
+            <h2>📝 <span class="gold">Notas Qualitativas</span></h2>
+            <p class="info-texto">
+                Configure disciplinas que usarão avaliação qualitativa (MB, B, S, I) para classes iniciais.
+            </p>
+            <a href="/admin/qualitativas"><button class="btn btn-qualitativas">📝 Configurar Qualitativas</button></a>
+        </div>
+
+        <!-- ===== EXAMES E TRANSFERÊNCIA ===== -->
+        <div class="card">
+            <h2>⚙️ <span class="gold">Exames e Transferência</span></h2>
+            <div class="flex-buttons">
+                <a href="/admin/configurar-exames"><button class="btn btn-exames">📝 Configurar Exames</button></a>
+                <a href="/admin/transitar-ano"><button class="btn btn-transitar">🔄 Transitar de Ano</button></a>
+                <a href="/admin/historico"><button class="btn btn-historico">📚 Histórico Escolar</button></a>
+            </div>
+        </div>
+
+        <!-- ===== CONFIGURAR PAGAMENTOS ===== -->
+        <div class="card">
+            <h2>💰 <span class="gold">Configurar Pagamentos</span></h2>
+            <p class="info-texto">
+                Defina os valores para Matrícula, Mensalidade e Testes por turma.
+            </p>
+            <a href="/admin/configurar-pagamentos"><button class="btn btn-pagamentos">💰 Configurar Valores</button></a>
+        </div>
+
+        <!-- ===== ATRIBUIR PROFESSOR ===== -->
+        <div class="card">
+            <h2>👨‍🏫 Atribuir <span class="gold">Professor</span></h2>
+            <form action="/admin/atribuir-professor" method="POST">
+                <select name="disciplina_id" required>
+                    <option value="">Selecione uma disciplina</option>
+                    {% for d in disciplinas %}
+                    <option value="{{ d.id }}">{{ d.nome }} - {{ d.nome_turma }}</option>
+                    {% endfor %}
+                </select>
+                <input type="text" name="professor_nome" placeholder="Nome do professor" required>
+                <button type="submit" class="btn btn-primary">👨‍🏫 Atribuir</button>
+            </form>
+        </div>
+
+        <!-- ===== 🔥 ATRIBUIR PROFESSOR A VÁRIAS DISCIPLINAS ===== -->
+        <div class="card" style="border: 2px solid #8b5cf6; background: #f5f3ff;">
+            <h2><i class="fas fa-users" style="color: #8b5cf6;"></i> Atribuir Professor a <span class="gold">Várias Disciplinas</span></h2>
+            <p class="info-texto">
+                <i class="fas fa-check-circle" style="color: #8b5cf6;"></i>
+                Selecione várias disciplinas e atribua o mesmo professor a todas elas de uma só vez.
+            </p>
+            <form action="/admin/atribuir-professor-multiplas" method="POST">
+                <div class="checkbox-vertical">
+                    {% for d in disciplinas %}
+                    <label>
+                        <input type="checkbox" name="disciplinas_ids" value="{{ d.id }}">
+                        {{ d.nome }} - {{ d.nome_turma }}
+                        {% if d.professor_nome and d.professor_nome != 'Não atribuído' %}
+                        <span class="badge-prof">✅ {{ d.professor_nome }}</span>
+                        {% else %}
+                        <span class="badge-sem">⚠️ Sem professor</span>
+                        {% endif %}
+                    </label>
+                    {% endfor %}
+                </div>
+                <input type="text" name="professor_nome" placeholder="Nome do professor" required>
+                <button type="submit" class="btn btn-multiplas">
+                    <i class="fas fa-user-plus"></i> Atribuir a Selecionados
+                </button>
+            </form>
+        </div>
+
+        <!-- ===== PROFESSORES E DISCIPLINAS ===== -->
+        <div class="card">
+            <h2>👨‍🏫 Professores e <span class="gold">Disciplinas</span></h2>
+            <div class="tabela-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Professor</th>
+                            <th>Disciplina</th>
+                            <th>Turma</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% set professores_encontrados = [] %}
+                        {% for d in disciplinas %}
+                            {% if d.professor_nome and d.professor_nome != 'Não atribuído' and d.professor_nome not in professores_encontrados %}
+                                {% set _ = professores_encontrados.append(d.professor_nome) %}
+                            {% endif %}
+                        {% endfor %}
+                        
+                        {% if professores_encontrados %}
+                            {% for prof in professores_encontrados %}
+                            <tr>
+                                <td><strong>{{ prof }}</strong></td>
+                                <td>
+                                    {% for d in disciplinas %}
+                                        {% if d.professor_nome == prof %}
+                                            {{ d.nome }}{% if not loop.last %}, {% endif %}
+                                        {% endif %}
+                                    {% endfor %}
+                                </td>
+                                <td>
+                                    {% for d in disciplinas %}
+                                        {% if d.professor_nome == prof %}
+                                            {{ d.nome_turma }}{% if not loop.last %}, {% endif %}
+                                        {% endif %}
+                                    {% endfor %}
+                                </td>
+                                <td><span class="badge badge-atribuido">✅ Atribuído</span></td>
+                            </tr>
+                            {% endfor %}
+                        {% else %}
+                            <tr>
+                                <td colspan="4" style="text-align:center; padding:20px; color:#6c757d;">
+                                    Nenhum professor atribuído ainda.
+                                </td>
+                            </tr>
+                        {% endif %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- ===== CRIAR DIRETOR ===== -->
+        <div class="card">
+            <h2>📋 Criar <span class="gold">Diretor de Turma</span></h2>
+            <form action="/admin/criar-diretor" method="POST">
+                <input type="text" name="nome" placeholder="Nome do diretor" required>
+                <select name="turma_id" required>
+                    <option value="">Selecionar turma</option>
+                    {% for t in turmas %}
+                    <option value="{{ t.id }}">{{ t.nome_completo }}</option>
+                    {% endfor %}
+                </select>
+                <button type="submit" class="btn btn-primary">📋 Criar Diretor</button>
+            </form>
+        </div>
+
+        <!-- ===== DIRETORES DE TURMA ===== -->
+        <div class="card">
+            <h2>📋 Diretores de <span class="gold">Turma</span></h2>
+            <div class="tabela-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Diretor</th>
+                            <th>Turma</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% if diretores %}
+                            {% for diretor in diretores %}
+                            <tr>
+                                <td><strong>{{ diretor.nome }}</strong></td>
+                                <td>{{ diretor.turma_nome }}</td>
+                                <td><span class="badge badge-atribuido">✅ Ativo</span></td>
+                            </tr>
+                            {% endfor %}
+                        {% else %}
+                            <tr>
+                                <td colspan="3" style="text-align:center; padding:20px; color:#6c757d;">
+                                    Nenhum diretor de turma cadastrado ainda.
+                                </td>
+                            </tr>
+                        {% endif %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- ===== CRIAR SECRETARIA ===== -->
+        <div class="card">
+            <h2>🏢 Criar <span class="gold">Secretaria</span></h2>
+            <form action="/admin/criar-secretaria" method="POST">
+                <input type="text" name="nome" placeholder="Nome da secretária" required>
+                <button type="submit" class="btn btn-primary">🏢 Criar Secretaria</button>
+            </form>
+        </div>
+
+        <!-- ===== PERÍODOS E CONFIGURAÇÕES ===== -->
+        <div class="card">
+            <h2>📅 Períodos e <span class="gold">Configurações</span></h2>
+            <div class="flex-buttons">
+                <a href="/admin/periodos"><button class="btn btn-periodos">📅 Gerir Períodos</button></a>
+                <a href="/admin/reabrir-periodo"><button class="btn btn-reabrir">🔓 Reabrir Período</button></a>
+                <a href="/admin/trimestre-ativo"><button class="btn btn-trimestre">🎯 Configurar Trimestre Ativo</button></a>
+            </div>
+        </div>
+
+        <!-- ===== 🔥 REMOVIDO: TROCAR SENHA DA ESCOLA (NÃO EXISTE) ===== -->
+
+        <!-- ===== BACKUP ===== -->
+        <div class="card">
+            <h2>💾 <span class="gold">Backup</span> do Sistema</h2>
+            <a href="/admin/backups"><button class="btn btn-backup">💾 Gerenciar Backups</button></a>
+        </div>
+
+        <!-- ===== GRÁFICOS ===== -->
+        <div class="card">
+            <h2>📊 <span class="gold">Gráficos</span></h2>
+            <a href="/admin/grafico"><button class="btn btn-grafico">📊 Gráfico Geral</button></a>
+        </div>
+
+        <!-- ===== LOGS ===== -->
+        <div class="card">
+            <h2>📜 <span class="gold">Logs</span> do Sistema</h2>
+            <a href="/admin/logs"><button class="btn btn-logs">📜 Ver Logs</button></a>
+        </div>
+
+        <!-- ===== FOOTER ===== -->
+        <div class="footer">
+            <div class="dev">
+                Desenvolvido por <strong>Klésio Yannick Cassamo</strong> <span class="gold">✦</span>
+                <br>
+                <span style="font-size: 10px; color: rgba(255,255,255,0.2);">
+                    VIRTUS © 2026 — Todos os direitos reservados
+                </span>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

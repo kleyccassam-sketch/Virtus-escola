@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VIRTUS - Boletim do Aluno</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea, #764ba2, #8b5cf6);
+            min-height: 100vh;
+            padding: 25px;
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(2px 2px at 20% 30%, rgba(255, 215, 0, 0.12), transparent),
+                radial-gradient(2px 2px at 40% 70%, rgba(255, 215, 0, 0.08), transparent),
+                radial-gradient(2px 2px at 60% 20%, rgba(255, 215, 0, 0.12), transparent),
+                radial-gradient(2px 2px at 80% 80%, rgba(255, 215, 0, 0.08), transparent);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: auto;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 25px;
+            border-radius: 24px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            position: relative;
+            z-index: 1;
+            animation: fadeInUp 0.6s ease forwards;
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ===== HEADER ===== */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid rgba(102, 126, 234, 0.2);
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .logo-virtus {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo-virtus .logo-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #ffd700, #f59e0b);
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            font-weight: 900;
+            color: #0f0c29;
+            font-family: 'Georgia', serif;
+            box-shadow: 0 4px 15px rgba(255, 215, 0, 0.3);
+        }
+
+        .logo-virtus .logo-text {
+            font-size: 24px;
+            font-weight: 900;
+            letter-spacing: 5px;
+            background: linear-gradient(135deg, #ffd700, #f59e0b);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-family: 'Georgia', serif;
+        }
+
+        .header-title {
+            color: #1a1a2e;
+            font-size: 20px;
+            font-weight: 700;
+            border-left: 2px solid rgba(102, 126, 234, 0.3);
+            padding-left: 18px;
+        }
+
+        .header-title .sub {
+            font-size: 13px;
+            font-weight: 400;
+            color: #6c757d;
+            display: block;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .btn-sair {
+            background: #dc2626;
+            color: white;
+            padding: 10px 22px;
+            border-radius: 12px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-sair:hover {
+            background: #b91c1c;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(220, 38, 38, 0.3);
+        }
+
+        h1 {
+            text-align: center;
+            color: #1a1a2e;
+            font-size: 28px;
+            margin-bottom: 5px;
+        }
+
+        h1 .gold {
+            color: #f59e0b;
+        }
+
+        .subtitle-boletim {
+            text-align: center;
+            color: #6c757d;
+            font-size: 14px;
+            margin-bottom: 20px;
+        }
+
+        /* ===== ACESSO BLOQUEADO ===== */
+        .acesso-bloqueado {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 50vh;
+            padding: 20px;
+        }
+        .acesso-bloqueado .card-bloqueado {
+            text-align: center;
+            max-width: 500px;
+            padding: 40px;
+            background: #fef3c7;
+            border-radius: 20px;
+            border: 2px solid #f59e0b;
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.3); }
+            70% { box-shadow: 0 0 0 15px rgba(245, 158, 11, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(245, 158, 11, 0); }
+        }
+        .acesso-bloqueado .card-bloqueado .icon { font-size: 64px; display: block; margin-bottom: 15px; }
+        .acesso-bloqueado .card-bloqueado h2 { color: #78350f; margin-bottom: 10px; }
+        .acesso-bloqueado .card-bloqueado p { color: #92400e; margin-bottom: 15px; }
+        .acesso-bloqueado .card-bloqueado .valor { 
+            color: #78350f; 
+            font-weight: 700; 
+            margin-bottom: 20px; 
+            font-size: 24px;
+            background: white;
+            padding: 10px 20px;
+            border-radius: 12px;
+            display: inline-block;
+        }
+        .acesso-bloqueado .card-bloqueado .btn-pagar {
+            display: inline-block;
+            padding: 14px 40px;
+            background: linear-gradient(135deg, #4f46e5, #7c3aed);
+            color: white;
+            border-radius: 12px;
+            text-decoration: none;
+            font-weight: 700;
+            transition: 0.3s;
+        }
+        .acesso-bloqueado .card-bloqueado .btn-pagar:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(79,70,229,0.3);
+        }
+        .acesso-bloqueado .card-bloqueado .info {
+            margin-top: 15px;
+            font-size: 12px;
+            color: #92400e;
+        }
+        .acesso-bloqueado .card-bloqueado .info i { margin-right: 5px; }
+
+        /* ===== INFO ALUNO ===== */
+        .info-aluno {
+            background: linear-gradient(135deg, #f0f4ff, #e8edf5);
+            padding: 18px 25px;
+            border-radius: 14px;
+            margin-bottom: 25px;
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 30px;
+            border-left: 4px solid #667eea;
+        }
+
+        .info-aluno p {
+            margin: 0;
+            font-size: 16px;
+            font-weight: 500;
+            color: #1a1a2e;
+        }
+
+        .info-aluno p strong {
+            color: #4f46e5;
+        }
+
+        /* ===== TABELA ===== */
+        .table-container {
+            overflow-x: auto;
+            border-radius: 16px;
+            border: 1px solid rgba(102, 126, 234, 0.1);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 1000px;
+            font-size: 14px;
+        }
+
+        thead th {
+            background: linear-gradient(135deg, #4f46e5, #7c3aed);
+            color: white;
+            padding: 14px 10px;
+            text-align: center;
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            border-bottom: 3px solid #ffd700;
+        }
+
+        thead th:first-child {
+            border-radius: 12px 0 0 0;
+        }
+
+        thead th:last-child {
+            border-radius: 0 12px 0 0;
+        }
+
+        tbody tr {
+            transition: background 0.2s ease;
+        }
+
+        tbody tr:hover {
+            background: #f5f3ff !important;
+        }
+
+        tbody tr:nth-child(even) {
+            background: #faf8f5;
+        }
+
+        tbody td {
+            padding: 12px 10px;
+            text-align: center;
+            border-bottom: 1px solid #f1f5f9;
+            font-size: 13px;
+            vertical-align: middle;
+        }
+
+        tbody td:first-child {
+            text-align: left;
+            font-weight: 700;
+            color: #1a1a2e;
+            padding-left: 18px;
+        }
+
+        .media-final {
+            background: linear-gradient(135deg, #dbeafe, #bfdbfe);
+            font-weight: 700;
+            color: #1e40af;
+            border-radius: 6px;
+            padding: 4px 8px;
+            display: inline-block;
+            min-width: 35px;
+        }
+
+        .aprovado {
+            background: #dcfce7;
+            color: #166534;
+            font-weight: 700;
+            border-radius: 6px;
+            padding: 4px 12px;
+            display: inline-block;
+        }
+
+        .recuperacao {
+            background: #fef9c3;
+            color: #854d0e;
+            font-weight: 700;
+            border-radius: 6px;
+            padding: 4px 12px;
+            display: inline-block;
+        }
+
+        .reprovado {
+            background: #fee2e2;
+            color: #991b1b;
+            font-weight: 700;
+            border-radius: 6px;
+            padding: 4px 12px;
+            display: inline-block;
+        }
+
+        .status-text {
+            font-weight: 700;
+        }
+
+        .status-aprovado { color: #166534; }
+        .status-recuperacao { color: #854d0e; }
+        .status-reprovado { color: #991b1b; }
+
+        .footer {
+            text-align: center;
+            margin-top: 25px;
+            padding-top: 20px;
+            border-top: 2px solid rgba(102, 126, 234, 0.15);
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 28px;
+            border-radius: 12px;
+            text-decoration: none;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 15px;
+            font-weight: 700;
+            transition: all 0.3s ease;
+            font-family: 'Segoe UI', Arial, sans-serif;
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+        }
+
+        .btn-voltar {
+            background: linear-gradient(135deg, #6c757d, #5a6268);
+            box-shadow: 0 4px 15px rgba(108, 117, 125, 0.3);
+        }
+
+        .btn-voltar:hover {
+            box-shadow: 0 8px 25px rgba(108, 117, 125, 0.4);
+        }
+
+        .btn-imprimir {
+            background: linear-gradient(135deg, #10b981, #059669);
+            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+        }
+
+        .btn-imprimir:hover {
+            box-shadow: 0 8px 25px rgba(16, 185, 129, 0.4);
+        }
+
+        .footer-bottom {
+            text-align: center;
+            margin-top: 20px;
+            padding-top: 15px;
+            border-top: 1px solid rgba(102, 126, 234, 0.08);
+        }
+
+        .footer-bottom .dev {
+            color: rgba(26, 10, 46, 0.35);
+            font-size: 12px;
+            letter-spacing: 1px;
+        }
+
+        .footer-bottom .dev strong {
+            color: rgba(26, 10, 46, 0.55);
+            font-weight: 600;
+        }
+
+        .footer-bottom .dev .gold {
+            color: #f59e0b;
+        }
+
+        @media (max-width: 768px) {
+            .header { flex-direction: column; align-items: stretch; }
+            .header-left { flex-wrap: wrap; justify-content: center; }
+            .header-title { border-left: none; padding-left: 0; text-align: center; }
+            .header-right { justify-content: center; }
+            .info-aluno { flex-direction: column; align-items: center; text-align: center; gap: 10px; }
+            .footer { flex-direction: column; align-items: center; }
+            .btn { width: 100%; max-width: 280px; justify-content: center; }
+            table { font-size: 12px; min-width: 800px; }
+            thead th { font-size: 10px; padding: 8px 4px; }
+            tbody td { font-size: 11px; padding: 6px 4px; }
+            .media-final, .aprovado, .recuperacao, .reprovado { font-size: 11px; padding: 2px 6px; }
+            .acesso-bloqueado .card-bloqueado { padding: 25px 20px; }
+        }
+
+        @media (max-width: 480px) {
+            .logo-virtus .logo-text { font-size: 18px; letter-spacing: 3px; }
+            .header-title { font-size: 16px; }
+            h1 { font-size: 22px; }
+            .btn { font-size: 13px; padding: 10px 18px; }
+            .info-aluno p { font-size: 14px; }
+            .acesso-bloqueado .card-bloqueado .icon { font-size: 48px; }
+            .acesso-bloqueado .card-bloqueado h2 { font-size: 20px; }
+            .acesso-bloqueado .card-bloqueado .valor { font-size: 20px; }
+        }
+
+        .table-container::-webkit-scrollbar {
+            height: 8px;
+        }
+
+        .table-container::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+
+        .table-container::-webkit-scrollbar-thumb {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 10px;
+        }
+
+        .table-container::-webkit-scrollbar-thumb:hover {
+            background: #764ba2;
+        }
+
+        @media print {
+            body { background: white !important; padding: 10px !important; }
+            body::before { display: none !important; }
+            .container { box-shadow: none !important; border: 1px solid #ddd !important; background: white !important; }
+            .btn { display: none !important; }
+            .btn-sair { display: none !important; }
+            .footer-bottom { display: none !important; }
+            .header { border-bottom: 2px solid #4f46e5 !important; }
+            .logo-virtus .logo-icon { background: #4f46e5 !important; color: white !important; }
+            .logo-virtus .logo-text { color: #4f46e5 !important; -webkit-text-fill-color: #4f46e5 !important; background: none !important; }
+            .info-aluno { background: #f0f4ff !important; border-left: 4px solid #4f46e5 !important; }
+            thead th { background: #4f46e5 !important; color: white !important; border-bottom: 3px solid #4f46e5 !important; }
+            .acesso-bloqueado { display: none !important; }
+        }
+    </style>
+
+</head>
+<body>
+
+    <div class="container">
+
+        <!-- ===== HEADER ===== -->
+        <div class="header">
+            <div class="header-left">
+                <div class="logo-virtus">
+                    <div class="logo-icon">V</div>
+                    <span class="logo-text">VIRTUS</span>
+                </div>
+                <div class="header-title">
+                    👤 Aluno
+                    <span class="sub">Sistema de Gestão Escolar</span>
+                </div>
+            </div>
+            <div class="header-right">
+                <a href="/logout" class="btn-sair">🚪 Sair</a>
+            </div>
+        </div>
+
+        <!-- ===== VERIFICAÇÃO DE ACESSO ===== -->
+        {% if not acesso_notas %}
+        <div class="acesso-bloqueado">
+            <div class="card-bloqueado">
+                <span class="icon">🔒</span>
+                <h2>Acesso Bloqueado</h2>
+                <p>Para ver as suas notas, precisa pagar o acesso.</p>
+                <div class="valor">💰 {{ "%.2f"|format(valor) }} MT</div>
+                <br>
+                <a href="/aluno/pagar-acesso/notas" class="btn-pagar">
+                    <i class="fas fa-lock-open"></i> Pagar e Aceder
+                </a>
+                <p class="info">
+                    <i class="fas fa-info-circle"></i> Após o pagamento, o acesso é liberado imediatamente.
+                </p>
+            </div>
+        </div>
+        {% else %}
+
+        <!-- ===== CONTEÚDO NORMAL DO BOLETIM ===== -->
+        <h1>📊 <span class="gold">Boletim Escolar</span></h1>
+        <p class="subtitle-boletim">Acompanhe seu desempenho acadêmico</p>
+
+        <!-- ===== INFO ALUNO ===== -->
+        <div class="info-aluno">
+            <p><strong>👨‍🎓 Nome:</strong> {{ nome }}</p>
+            <p><strong>🏫 Turma:</strong> {{ turma }}</p>
+            <!-- 🔥 REMOVIDO O STATUS DE PAGAMENTO -->
+        </div>
+
+        <!-- ===== TABELA ===== -->
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th rowspan="3">Disciplina</th>
+                        <th colspan="4">1º Trimestre</th>
+                        <th colspan="4">2º Trimestre</th>
+                        <th colspan="4">3º Trimestre</th>
+                        <th rowspan="3">Média Final</th>
+                        <th rowspan="3">Status</th>
+                    </tr>
+                    <tr>
+                        <th colspan="3">Notas</th>
+                        <th rowspan="2">Média</th>
+                        <th colspan="3">Notas</th>
+                        <th rowspan="2">Média</th>
+                        <th colspan="3">Notas</th>
+                        <th rowspan="2">Média</th>
+                    </tr>
+                    <tr>
+                        <th>ACS1</th>
+                        <th>ACS2</th>
+                        <th>AT</th>
+                        <th>ACS1</th>
+                        <th>ACS2</th>
+                        <th>AT</th>
+                        <th>ACS1</th>
+                        <th>ACS2</th>
+                        <th>AT</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for disciplina in disciplinas %}
+                    <tr>
+                        <td>{{ disciplina.nome }}</td>
+                        <td>{{ disciplina.acs1_t1 }}</td>
+                        <td>{{ disciplina.acs2_t1 }}</td>
+                        <td>{{ disciplina.at_t1 }}</td>
+                        <td><span class="media-final">{{ disciplina.media_t1 }}</span></td>
+                        <td>{{ disciplina.acs1_t2 }}</td>
+                        <td>{{ disciplina.acs2_t2 }}</td>
+                        <td>{{ disciplina.at_t2 }}</td>
+                        <td><span class="media-final">{{ disciplina.media_t2 }}</span></td>
+                        <td>{{ disciplina.acs1_t3 }}</td>
+                        <td>{{ disciplina.acs2_t3 }}</td>
+                        <td>{{ disciplina.at_t3 }}</td>
+                        <td><span class="media-final">{{ disciplina.media_t3 }}</span></td>
+                        <td>
+                            <span class="
+                                {% if disciplina.media_final >= 14 %}aprovado
+                                {% elif disciplina.media_final >= 10 %}recuperacao
+                                {% else %}reprovado
+                                {% endif %}
+                            ">
+                                {{ disciplina.media_final }}
+                            </span>
+                        </td>
+                        <td>
+                            <span class="status-text
+                                {% if disciplina.media_final >= 14 %}status-aprovado
+                                {% elif disciplina.media_final >= 10 %}status-recuperacao
+                                {% else %}status-reprovado
+                                {% endif %}
+                            ">
+                                {% if disciplina.media_final >= 14 %}
+                                    ✅ Aprovado
+                                {% elif disciplina.media_final >= 10 %}
+                                    ⚠️ Recuperação
+                                {% else %}
+                                    ❌ Reprovado
+                                {% endif %}
+                            </span>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <!-- ===== BOTÕES ===== -->
+        <div class="footer">
+            <a href="/aluno" class="btn btn-voltar">
+                ← Nova Consulta
+            </a>
+            <button onclick="window.print()" class="btn btn-imprimir">
+                🖨️ Imprimir
+            </button>
+        </div>
+
+        {% endif %}
+
+        <!-- ===== FOOTER ===== -->
+        <div class="footer-bottom">
+            <div class="dev">
+                Desenvolvido por <strong>Klésio Yannick Cassamo</strong> <span class="gold">✦</span>
+                <br>
+                <span style="font-size: 10px; color: rgba(26, 10, 46, 0.25);">
+                    VIRTUS © 2026 — Todos os direitos reservados
+                </span>
+            </div>
+        </div>
+
+    </div>
+
+</body>
+</html>

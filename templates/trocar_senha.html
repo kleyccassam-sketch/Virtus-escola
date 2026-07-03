@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alterar Senha - Professor</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 24px;
+            width: 100%;
+            max-width: 450px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h2 {
+            color: white;
+            font-size: 28px;
+            margin-bottom: 8px;
+        }
+
+        .header p {
+            color: rgba(255,255,255,0.8);
+            font-size: 14px;
+        }
+
+        .icon {
+            font-size: 50px;
+            margin-bottom: 10px;
+        }
+
+        .content {
+            padding: 30px;
+        }
+
+        .info-box {
+            background: #f0f4ff;
+            padding: 15px;
+            border-radius: 12px;
+            margin-bottom: 25px;
+            border-left: 4px solid #667eea;
+        }
+
+        .info-box p {
+            color: #4a5568;
+            font-size: 14px;
+            margin: 0;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        .input-group label {
+            display: block;
+            font-size: 14px;
+            font-weight: 600;
+            color: #2d3748;
+            margin-bottom: 8px;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 14px 16px;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            font-size: 15px;
+            transition: all 0.3s ease;
+            outline: none;
+        }
+
+        .input-group input:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        button {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            border-radius: 12px;
+            color: white;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .alert {
+            padding: 12px 16px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .alert-error {
+            background: #fee2e2;
+            color: #dc2626;
+            border-left: 4px solid #dc2626;
+        }
+
+        .alert-success {
+            background: #dcfce7;
+            color: #16a34a;
+            border-left: 4px solid #16a34a;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid #e2e8f0;
+        }
+
+        .footer a {
+            color: #667eea;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+        }
+
+        .requirements {
+            margin-top: 20px;
+            padding: 15px;
+            background: #f7fafc;
+            border-radius: 12px;
+        }
+
+        .requirements p {
+            font-size: 12px;
+            color: #718096;
+            margin: 5px 0;
+        }
+
+        .requirements ul {
+            margin-left: 20px;
+            margin-top: 5px;
+        }
+
+        .requirements li {
+            font-size: 12px;
+            color: #718096;
+            margin: 3px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="icon">🔐</div>
+            <h2>Alterar Senha</h2>
+            <p>Segurança em primeiro lugar</p>
+        </div>
+
+        <div class="content">
+            <div class="info-box">
+                <p>📌 <strong>Primeiro acesso?</strong> É obrigatório alterar a senha para continuar.</p>
+            </div>
+
+            {% if erro %}
+                <div class="alert alert-error">
+                    ⚠️ {{ erro }}
+                </div>
+            {% endif %}
+
+            {% if sucesso %}
+                <div class="alert alert-success">
+                    ✅ {{ sucesso }}
+                </div>
+            {% endif %}
+
+            <form method="POST">
+                <div class="input-group">
+                    <label>🔑 Senha Atual</label>
+                    <input type="password" name="senha_atual" placeholder="Digite sua senha atual" required>
+                </div>
+
+                <div class="input-group">
+                    <label>✨ Nova Senha</label>
+                    <input type="password" name="nova_senha" placeholder="Digite a nova senha" required>
+                </div>
+
+                <div class="input-group">
+                    <label>✓ Confirmar Nova Senha</label>
+                    <input type="password" name="confirmar_senha" placeholder="Confirme a nova senha" required>
+                </div>
+
+                <button type="submit">Salvar nova senha</button>
+            </form>
+
+            <div class="requirements">
+                <p><strong>📋 Requisitos da senha:</strong></p>
+                <ul>
+                    <li>Mínimo de 4 caracteres</li>
+                    <li>Use letras e números para mais segurança</li>
+                    <li>Evite senhas óbvias como "1234" ou "senha"</li>
+                </ul>
+            </div>
+
+            <div class="footer">
+                <a href="/professor">← Voltar ao Painel</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

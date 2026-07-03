@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VIRTUS - Relatórios Financeiros</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background: linear-gradient(135deg, #1a0a2e, #2d1b3d);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1300px;
+            margin: 0 auto;
+            background: rgba(255,255,255,0.95);
+            border-radius: 24px;
+            padding: 30px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            animation: fadeIn 0.5s ease;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid rgba(255,215,0,0.2);
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        .header-left { display: flex; align-items: center; gap: 20px; }
+        .logo-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #ffd700, #f59e0b);
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            font-weight: 900;
+            color: #0f0c29;
+            font-family: 'Georgia', serif;
+            box-shadow: 0 4px 15px rgba(255,215,0,0.3);
+        }
+        .logo-text {
+            font-size: 24px;
+            font-weight: 900;
+            letter-spacing: 5px;
+            background: linear-gradient(135deg, #ffd700, #f59e0b);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-family: 'Georgia', serif;
+        }
+        .header-title {
+            color: #1a1a2e;
+            font-size: 20px;
+            font-weight: 700;
+            border-left: 2px solid rgba(255,215,0,0.2);
+            padding-left: 18px;
+        }
+        .header-title .sub {
+            font-size: 13px;
+            font-weight: 400;
+            color: #6b7280;
+            display: block;
+        }
+        .header-right { display: flex; align-items: center; gap: 12px; }
+        .btn-voltar {
+            background: #6b7280;
+            color: white;
+            padding: 10px 22px;
+            border-radius: 12px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 14px;
+            transition: 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .btn-voltar:hover { background: #4b5563; transform: translateY(-2px); }
+        .btn-pdf {
+            background: linear-gradient(135deg, #dc2626, #b91c1c);
+            color: white;
+            padding: 10px 22px;
+            border-radius: 12px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 14px;
+            transition: 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .btn-pdf:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(220,38,38,0.3); }
+
+        .filtro {
+            background: #f8f6f2;
+            padding: 20px;
+            border-radius: 16px;
+            margin-bottom: 25px;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 15px;
+        }
+        .filtro select {
+            padding: 12px 20px;
+            border-radius: 10px;
+            border: 2px solid #e2e8f0;
+            font-size: 14px;
+            min-width: 200px;
+            background: white;
+            cursor: pointer;
+            flex: 1;
+        }
+        .filtro select:focus {
+            border-color: #f59e0b;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(245,158,11,0.1);
+        }
+        .filtro .btn-filtrar {
+            background: linear-gradient(135deg, #4f46e5, #7c3aed);
+            color: white;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .filtro .btn-filtrar:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(79,70,229,0.3);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+        .stat-card {
+            background: white;
+            padding: 20px;
+            border-radius: 16px;
+            text-align: center;
+            border: 1px solid #e2e8f0;
+            transition: all 0.3s ease;
+        }
+        .stat-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.06);
+        }
+        .stat-card .icon { font-size: 28px; display: block; margin-bottom: 8px; }
+        .stat-card .number {
+            font-size: 28px;
+            font-weight: 900;
+            color: #1a1a2e;
+        }
+        .stat-card .label {
+            font-size: 13px;
+            color: #6b7280;
+            font-weight: 500;
+            margin-top: 4px;
+        }
+        .stat-card.total .number { color: #4f46e5; }
+        .stat-card.matriculas .number { color: #10b981; }
+        .stat-card.mensalidades .number { color: #f59e0b; }
+        .stat-card.testes .number { color: #8b5cf6; }
+        .stat-card.pendentes .number { color: #ef4444; }
+        .stat-card.alunos .number { color: #3b82f6; }
+
+        .tabela-container {
+            overflow-x: auto;
+            border-radius: 16px;
+            border: 1px solid rgba(0,0,0,0.04);
+            margin-top: 10px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+            min-width: 800px;
+        }
+        th, td {
+            padding: 12px 15px;
+            border: 1px solid #e2e8f0;
+            text-align: center;
+        }
+        th {
+            background: linear-gradient(135deg, #1a0a2e, #2d1b3d);
+            color: white;
+            font-weight: 700;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        tr:nth-child(even) { background: #faf8f5; }
+        tr:hover { background: #f5f3ff; }
+        td strong { font-weight: 700; color: #1a1a2e; }
+        .total-row { background: #fef3c7 !important; font-weight: 700; }
+        .total-row td { border-top: 2px solid #f59e0b; }
+
+        .footer {
+            text-align: center;
+            margin-top: 25px;
+            padding-top: 20px;
+            border-top: 1px solid #e2e8f0;
+            color: #9ca3af;
+            font-size: 12px;
+        }
+        .footer strong { color: #4b5563; }
+        .footer .gold { color: #f59e0b; }
+
+        @media (max-width: 768px) {
+            .container { padding: 15px; }
+            .header { flex-direction: column; align-items: stretch; text-align: center; }
+            .header-left { flex-wrap: wrap; justify-content: center; }
+            .header-title { border-left: none; padding-left: 0; }
+            .header-right { justify-content: center; }
+            .filtro { flex-direction: column; }
+            .filtro select { width: 100%; }
+            .stats-grid { grid-template-columns: repeat(2, 1fr); }
+            table { font-size: 12px; min-width: 600px; }
+            th, td { padding: 8px 10px; }
+        }
+        @media (max-width: 480px) {
+            .logo-text { font-size: 18px; letter-spacing: 3px; }
+            .header-title { font-size: 16px; }
+            .stats-grid { grid-template-columns: 1fr; }
+            .stat-card .number { font-size: 22px; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+
+    <!-- ===== HEADER ===== -->
+    <div class="header">
+        <div class="header-left">
+            <div class="logo-icon">V</div>
+            <span class="logo-text">VIRTUS</span>
+            <div class="header-title">
+                📊 Relatórios Financeiros
+                <span class="sub"><i class="fas fa-coins" style="margin-right: 4px;"></i>Gestão de Pagamentos</span>
+            </div>
+        </div>
+        <div class="header-right">
+            <a href="/secretaria" class="btn-voltar"><i class="fas fa-arrow-left"></i> Voltar</a>
+            <a href="/secretaria/relatorios/pdf{% if mes_selecionado %}?mes={{ mes_selecionado }}{% endif %}{% if turma_filtro %}&turma_id={{ turma_filtro }}{% endif %}" target="_blank" class="btn-pdf">
+                <i class="fas fa-file-pdf"></i> Gerar PDF
+            </a>
+        </div>
+    </div>
+
+    <!-- ===== FILTRO ===== -->
+    <form method="GET" action="/secretaria/relatorios" class="filtro">
+        <select name="mes">
+            <option value="">Todos os Meses</option>
+            {% for num, nome in meses.items() %}
+            <option value="{{ num }}" {% if mes_selecionado == num %}selected{% endif %}>
+                {{ nome }}
+            </option>
+            {% endfor %}
+        </select>
+        <select name="turma_id">
+            <option value="">Todas as Turmas</option>
+            {% for turma in turmas %}
+            <option value="{{ turma[0] }}" {% if turma_filtro == turma[0] %}selected{% endif %}>
+                {{ turma[1] }}ª {{ turma[2] }}
+            </option>
+            {% endfor %}
+        </select>
+        <button type="submit" class="btn-filtrar"><i class="fas fa-filter"></i> Filtrar</button>
+    </form>
+
+    <!-- ===== ESTATÍSTICAS ===== -->
+    <div class="stats-grid">
+        <div class="stat-card total">
+            <span class="icon">💰</span>
+            <div class="number">{{ "%.2f"|format(total_geral[3] or 0) }} MT</div>
+            <div class="label">Total Geral</div>
+        </div>
+        <div class="stat-card matriculas">
+            <span class="icon">📝</span>
+            <div class="number">{{ "%.2f"|format(total_geral[0] or 0) }} MT</div>
+            <div class="label">Matrículas</div>
+        </div>
+        <div class="stat-card mensalidades">
+            <span class="icon">📚</span>
+            <div class="number">{{ "%.2f"|format(total_geral[1] or 0) }} MT</div>
+            <div class="label">Mensalidades</div>
+        </div>
+        <div class="stat-card testes">
+            <span class="icon">📊</span>
+            <div class="number">{{ "%.2f"|format(total_geral[2] or 0) }} MT</div>
+            <div class="label">Testes</div>
+        </div>
+        <div class="stat-card pendentes">
+            <span class="icon">⏳</span>
+            <div class="number">{{ total_geral[4] or 0 }}</div>
+            <div class="label">Pendentes</div>
+        </div>
+        <div class="stat-card alunos">
+            <span class="icon">👨‍🎓</span>
+            <div class="number">{{ total_alunos or 0 }}</div>
+            <div class="label">Total de Alunos</div>
+        </div>
+    </div>
+
+    <!-- ===== TABELA ===== -->
+    <div class="tabela-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>Turma</th>
+                    <th>Alunos</th>
+                    <th>Matrículas</th>
+                    <th>Mensalidades</th>
+                    <th>Testes</th>
+                    <th>Total Geral</th>
+                    <th>Pendentes</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% if relatorios %}
+                    {% for rel in relatorios %}
+                    <tr>
+                        <td><strong>{{ rel[1] }}</strong></td>
+                        <td>{{ rel[2] }}</td>
+                        <td>{{ "%.2f"|format(rel[3] or 0) }} MT</td>
+                        <td>{{ "%.2f"|format(rel[4] or 0) }} MT</td>
+                        <td>{{ "%.2f"|format(rel[5] or 0) }} MT</td>
+                        <td><strong>{{ "%.2f"|format(rel[6] or 0) }} MT</strong></td>
+                        <td>{{ rel[7] or 0 }}</td>
+                    </tr>
+                    {% endfor %}
+                    <!-- ===== TOTAL GERAL ===== -->
+                    <tr class="total-row">
+                        <td><strong>TOTAL GERAL</strong></td>
+                        <td>{{ total_geral[5] or 0 }}</td>
+                        <td>{{ "%.2f"|format(total_geral[0] or 0) }} MT</td>
+                        <td>{{ "%.2f"|format(total_geral[1] or 0) }} MT</td>
+                        <td>{{ "%.2f"|format(total_geral[2] or 0) }} MT</td>
+                        <td>{{ "%.2f"|format(total_geral[3] or 0) }} MT</td>
+                        <td>{{ total_geral[4] or 0 }}</td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="7" style="text-align:center; padding:40px; color:#6c757d;">
+                            <i class="fas fa-inbox" style="font-size: 40px; display: block; margin-bottom: 10px;"></i>
+                            Nenhum dado encontrado para os filtros selecionados.
+                        </td>
+                    </tr>
+                {% endif %}
+            </tbody>
+        </table>
+    </div>
+
+    <!-- ===== FOOTER ===== -->
+    <div class="footer">
+        Desenvolvido por <strong>Klésio Yannick Cassamo</strong> <span class="gold">✦</span>
+        <br>
+        VIRTUS © 2026 — Todos os direitos reservados
+    </div>
+
+</div>
+
+</body>
+</html>

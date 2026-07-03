@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <title>Disciplinas com Exame</title>
+    <style>
+        body { font-family: Arial; background: linear-gradient(135deg, #667eea, #764ba2); padding: 20px; }
+        .container { max-width: 900px; margin: auto; background: white; padding: 25px; border-radius: 15px; box-shadow: 0 5px 20px rgba(0,0,0,0.2); }
+        h1 { color: #1e3a8a; text-align: center; margin-bottom: 10px; }
+        h2 { color: #2563eb; text-align: center; margin-bottom: 20px; }
+        .info { background: #e3f2fd; padding: 15px; border-radius: 8px; margin-bottom: 20px; }
+        .checkbox-group { display: flex; flex-direction: column; gap: 10px; margin-top: 15px; max-height: 400px; overflow-y: auto; }
+        .checkbox-item { display: flex; align-items: center; gap: 10px; padding: 10px; background: #f8fafc; border-radius: 8px; border: 1px solid #e2e8f0; }
+        .checkbox-item input { width: 20px; height: 20px; margin: 0; }
+        .checkbox-item label { margin: 0; font-size: 16px; cursor: pointer; }
+        button { background: #2563eb; color: white; padding: 12px 24px; border: none; border-radius: 8px; cursor: pointer; font-size: 16px; margin-right: 10px; }
+        button:hover { background: #1d4ed8; }
+        .btn-voltar { background: #6c757d; }
+        .btn-voltar:hover { background: #5a6268; }
+        .botoes { text-align: center; margin-top: 30px; }
+        .selecionar-todos { background: #10b981; margin-bottom: 15px; }
+        .selecionar-todos:hover { background: #059669; }
+    </style>
+    <script>
+        function selecionarTodos() {
+            var checkboxes = document.querySelectorAll('input[name="disciplinas_exame"]');
+            checkboxes.forEach(cb => cb.checked = true);
+        }
+        function desmarcarTodos() {
+            var checkboxes = document.querySelectorAll('input[name="disciplinas_exame"]');
+            checkboxes.forEach(cb => cb.checked = false);
+        }
+    </script>
+</head>
+<body>
+    <div class="container">
+        <h1>📝 Configurar Disciplinas com Exame</h1>
+        <h2>Turma: {{ turma[0] }}ª {{ turma[1] }}</h2>
+        <div class="info">
+            <strong>ℹ️ Ano Letivo:</strong> {{ ano_letivo }}
+            <br>
+            Selecione as disciplinas que terão exame final.
+            <br>
+            <strong>Fórmula:</strong> Média Final = (2 × Média de Frequência + Nota do Exame) / 3
+        </div>
+
+        <form method="POST" action="/admin/salvar-disciplinas-exames">
+            <input type="hidden" name="turma_id" value="{{ turma_id }}">
+            
+            <button type="button" class="selecionar-todos" onclick="selecionarTodos()">✅ Selecionar Todas</button>
+            <button type="button" class="selecionar-todos" onclick="desmarcarTodos()" style="background: #ef4444;">❌ Desmarcar Todas</button>
+            
+            <div class="checkbox-group">
+                {% for disc in disciplinas %}
+                <div class="checkbox-item">
+                    <input type="checkbox" name="disciplinas_exame" value="{{ disc[0] }}"
+                        {% if disc[0] in exames_existentes %}checked{% endif %}>
+                    <label>{{ disc[1] }}</label>
+                </div>
+                {% endfor %}
+            </div>
+            
+            <div class="botoes">
+                <button type="submit">💾 Salvar Disciplinas com Exame</button>
+                <a href="/admin/configurar-exames"><button type="button" class="btn-voltar">← Voltar</button></a>
+            </div>
+        </form>
+    </div>
+</body>
+</html>

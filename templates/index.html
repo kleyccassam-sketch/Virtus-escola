@@ -1,0 +1,936 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VIRTUS - Lançamento de Notas</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background: linear-gradient(135deg, #0a2a1a, #1a4a2a, #0d3b2a);
+            min-height: 100vh;
+            padding: 25px;
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(2px 2px at 20% 30%, rgba(16, 185, 129, 0.15), transparent),
+                radial-gradient(2px 2px at 40% 70%, rgba(16, 185, 129, 0.10), transparent),
+                radial-gradient(2px 2px at 60% 20%, rgba(16, 185, 129, 0.15), transparent),
+                radial-gradient(2px 2px at 80% 80%, rgba(16, 185, 129, 0.10), transparent);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .container {
+            max-width: 1600px;
+            margin: auto;
+            position: relative;
+            z-index: 1;
+            animation: fadeInUp 0.6s ease forwards;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* ===== HEADER ===== */
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 25px 30px;
+            border-radius: 20px;
+            margin-bottom: 25px;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(16, 185, 129, 0.2);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .header-logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .header-logo .logo-icon {
+            width: 45px;
+            height: 45px;
+            background: linear-gradient(135deg, #ffd700, #f59e0b);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            font-weight: 900;
+            color: #0f0c29;
+            font-family: 'Georgia', serif;
+            box-shadow: 0 4px 15px rgba(255, 215, 0, 0.25);
+        }
+
+        .header-logo .logo-text {
+            font-size: 22px;
+            font-weight: 900;
+            letter-spacing: 4px;
+            background: linear-gradient(135deg, #ffd700, #f59e0b);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-family: 'Georgia', serif;
+        }
+
+        .header-title {
+            color: #1a1a2e;
+            font-size: 20px;
+            font-weight: 700;
+            border-left: 2px solid rgba(16, 185, 129, 0.3);
+            padding-left: 18px;
+        }
+
+        .header-title .sub {
+            font-size: 13px;
+            font-weight: 400;
+            color: #6c757d;
+            display: block;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .disciplina-box {
+            background: linear-gradient(135deg, #d1fae5, #a7f3d0);
+            padding: 12px 20px;
+            border-radius: 12px;
+            font-weight: 700;
+            color: #065f46;
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .disciplina-box .icon {
+            font-size: 20px;
+        }
+
+        /* ===== BADGE QUALITATIVA ===== */
+        .badge-qualitativa {
+            display: inline-block;
+            background: #8b5cf6;
+            color: white;
+            padding: 4px 14px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .status-periodo {
+            padding: 10px 20px;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 14px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .status-periodo.aberto {
+            background: #dcfce7;
+            color: #166534;
+            border: 1px solid #86efac;
+        }
+
+        .status-periodo.fechado {
+            background: #fee2e2;
+            color: #991b1b;
+            border: 1px solid #fca5a5;
+        }
+
+        .btn-sair {
+            background: #dc2626;
+            color: white;
+            padding: 10px 22px;
+            border-radius: 12px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-sair:hover {
+            background: #b91c1c;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(220, 38, 38, 0.3);
+        }
+
+        /* ===== INFO QUALITATIVA ===== */
+        .info-qualitativa {
+            background: #f5f3ff;
+            padding: 12px 20px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            border-left: 4px solid #8b5cf6;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .info-qualitativa .titulo {
+            font-weight: 700;
+            color: #5b21b6;
+        }
+
+        .info-qualitativa .legenda {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .info-qualitativa .legenda-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .info-qualitativa .legenda-item .cor {
+            width: 16px;
+            height: 16px;
+            border-radius: 4px;
+        }
+
+        .cor-mb { background: #dcfce7; border: 1px solid #166534; }
+        .cor-b { background: #dbeafe; border: 1px solid #1e40af; }
+        .cor-s { background: #fef9c3; border: 1px solid #854d0e; }
+        .cor-i { background: #fee2e2; border: 1px solid #991b1b; }
+
+        /* ===== TABELA ===== */
+        .table-container {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            overflow-x: auto;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(16, 185, 129, 0.08);
+            padding: 5px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 1100px;
+            font-size: 13px;
+        }
+
+        thead th {
+            background: linear-gradient(135deg, #0a2a1a, #1a4a2a);
+            color: white;
+            padding: 14px 10px;
+            text-align: center;
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            border-bottom: 3px solid #10b981;
+        }
+
+        thead th:first-child {
+            border-radius: 12px 0 0 0;
+        }
+
+        thead th:last-child {
+            border-radius: 0 12px 0 0;
+        }
+
+        tbody tr {
+            transition: background 0.2s ease;
+        }
+
+        tbody tr:hover {
+            background: #ecfdf5 !important;
+        }
+
+        tbody tr:nth-child(even) {
+            background: #f8fafc;
+        }
+
+        tbody td {
+            padding: 10px 8px;
+            text-align: center;
+            border-bottom: 1px solid #f1f5f9;
+            vertical-align: middle;
+            font-size: 13px;
+        }
+
+        tbody td:first-child {
+            font-weight: 700;
+            color: #1a1a2e;
+        }
+
+        tbody td strong {
+            color: #1a1a2e;
+        }
+
+        /* ===== INPUTS ===== */
+        input {
+            width: 58px;
+            padding: 6px 4px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            text-align: center;
+            font-size: 13px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            background: #f7fafc;
+            color: #1a1a2e;
+        }
+
+        input:focus {
+            border-color: #10b981;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.15);
+            background: white;
+        }
+
+        input:disabled {
+            background: #e5e7eb;
+            color: #6c757d;
+            cursor: not-allowed;
+            border-color: #d1d5db;
+        }
+
+        /* ===== SELECT PARA QUALITATIVAS ===== */
+        select.qualitativa {
+            width: 110px;
+            padding: 6px 8px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            background: #f7fafc;
+            color: #1a1a2e;
+            cursor: pointer;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%234f46e5' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 8px center;
+            padding-right: 28px;
+        }
+
+        select.qualitativa:focus {
+            border-color: #8b5cf6;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.15);
+            background: white;
+        }
+
+        select.qualitativa:disabled {
+            background: #e5e7eb;
+            color: #6c757d;
+            cursor: not-allowed;
+            border-color: #d1d5db;
+        }
+
+        select.qualitativa option {
+            padding: 4px 8px;
+        }
+
+        /* ===== MÉDIAS ===== */
+        .media {
+            font-weight: 700;
+            font-size: 14px;
+            padding: 4px 8px;
+            border-radius: 6px;
+            display: inline-block;
+            min-width: 35px;
+        }
+
+        .media.bg-green {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .media.bg-yellow {
+            background: #fef9c3;
+            color: #854d0e;
+        }
+
+        .media.bg-red {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .media.bg-gray {
+            background: #f3f4f6;
+            color: #6c757d;
+        }
+
+        .media.qualitativa-mb {
+            background: #dcfce7;
+            color: #166534;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-weight: 700;
+        }
+
+        .media.qualitativa-b {
+            background: #dbeafe;
+            color: #1e40af;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-weight: 700;
+        }
+
+        .media.qualitativa-s {
+            background: #fef9c3;
+            color: #854d0e;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-weight: 700;
+        }
+
+        .media.qualitativa-i {
+            background: #fee2e2;
+            color: #991b1b;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-weight: 700;
+        }
+
+        .media.qualitativa-none {
+            background: #f3f4f6;
+            color: #6c757d;
+            padding: 4px 12px;
+            border-radius: 20px;
+        }
+
+        /* ===== STATUS ===== */
+        .status-aprovado {
+            color: #166534;
+            font-weight: 700;
+        }
+
+        .status-recuperacao {
+            color: #854d0e;
+            font-weight: 700;
+        }
+
+        .status-reprovado {
+            color: #991b1b;
+            font-weight: 700;
+        }
+
+        .status-sem-nota {
+            color: #6c757d;
+        }
+
+        /* ===== BOTÃO SALVAR ===== */
+        .salvar {
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 700;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .salvar:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(16, 185, 129, 0.35);
+        }
+
+        .salvar:disabled {
+            background: #9ca3af;
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+
+        /* ===== FOOTER ===== */
+        .footer {
+            text-align: center;
+            margin-top: 25px;
+            padding: 20px;
+        }
+
+        .footer .dev {
+            color: rgba(255, 255, 255, 0.4);
+            font-size: 12px;
+            letter-spacing: 1px;
+        }
+
+        .footer .dev strong {
+            color: rgba(16, 185, 129, 0.6);
+            font-weight: 600;
+        }
+
+        .footer .dev .gold {
+            color: rgba(255, 215, 0, 0.5);
+        }
+
+        /* ===== RESPONSIVIDADE ===== */
+        @media (max-width: 768px) {
+            .header {
+                flex-direction: column;
+                align-items: stretch;
+                padding: 20px;
+            }
+
+            .header-left {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+
+            .header-title {
+                border-left: none;
+                padding-left: 0;
+                text-align: center;
+            }
+
+            .header-right {
+                justify-content: center;
+            }
+
+            .disciplina-box {
+                justify-content: center;
+                width: 100%;
+            }
+
+            .status-periodo {
+                justify-content: center;
+                width: 100%;
+            }
+
+            .info-qualitativa {
+                flex-direction: column;
+                align-items: stretch;
+                text-align: center;
+            }
+
+            .info-qualitativa .legenda {
+                justify-content: center;
+            }
+
+            input {
+                width: 45px;
+                font-size: 11px;
+                padding: 4px;
+            }
+
+            select.qualitativa {
+                width: 90px;
+                font-size: 11px;
+                padding: 4px 6px;
+            }
+
+            table {
+                font-size: 11px;
+                min-width: 800px;
+            }
+
+            thead th {
+                font-size: 10px;
+                padding: 10px 6px;
+            }
+
+            tbody td {
+                padding: 6px 4px;
+                font-size: 11px;
+            }
+
+            .salvar {
+                font-size: 10px;
+                padding: 5px 10px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .header-logo .logo-text {
+                font-size: 18px;
+                letter-spacing: 2px;
+            }
+
+            .header-title {
+                font-size: 16px;
+            }
+
+            input {
+                width: 38px;
+                font-size: 10px;
+            }
+
+            select.qualitativa {
+                width: 75px;
+                font-size: 10px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+
+        <!-- ===== HEADER ===== -->
+        <div class="header">
+            <div class="header-left">
+                <div class="header-logo">
+                    <div class="logo-icon">V</div>
+                    <span class="logo-text">VIRTUS</span>
+                </div>
+                <div class="header-title">
+                    📚 {{ tipo|capitalize }}
+                    <span class="sub">Sistema de Gestão Escolar</span>
+                </div>
+            </div>
+            <div class="header-right">
+                {% if tipo == "professor" and disciplina_info %}
+                <div class="disciplina-box">
+                    <span class="icon">👨‍🏫</span>
+                    {{ disciplina_info[0] }} — Turma {{ disciplina_info[1] }}
+                    {% if qualitativa %}
+                    <span class="badge-qualitativa">📝 Qualitativa</span>
+                    {% endif %}
+                </div>
+                {% endif %}
+
+                <div class="status-periodo {% if bloqueado %}fechado{% else %}aberto{% endif %}">
+                    {% if bloqueado %}
+                        🔒 Período Fechado
+                    {% else %}
+                        ✅ Período Aberto
+                    {% endif %}
+                </div>
+
+                <a href="/logout" class="btn-sair">🚪 Sair</a>
+            </div>
+        </div>
+
+        <!-- ===== INFO QUALITATIVA ===== -->
+        {% if qualitativa %}
+        <div class="info-qualitativa">
+            <div class="titulo">📝 Avaliação Qualitativa</div>
+            <div class="legenda">
+                <span class="legenda-item"><span class="cor cor-mb"></span> MB - Muito Bom</span>
+                <span class="legenda-item"><span class="cor cor-b"></span> B - Bom</span>
+                <span class="legenda-item"><span class="cor cor-s"></span> S - Suficiente</span>
+                <span class="legenda-item"><span class="cor cor-i"></span> I - Insuficiente</span>
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- ===== TABELA ===== -->
+        <div class="table-container">
+
+            <table>
+                <thead>
+                    <tr>
+                        <th rowspan="2">#</th>
+                        <th rowspan="2">Nome</th>
+                        <th rowspan="2">Turma</th>
+
+                        {% if qualitativa %}
+                            <!-- Cabeçalho para qualitativas -->
+                            <th colspan="3">1º Trimestre</th>
+                            <th colspan="3">2º Trimestre</th>
+                            <th colspan="3">3º Trimestre</th>
+                            <th rowspan="2">Status</th>
+                            {% if tipo == "professor" %}
+                            <th rowspan="2">Ação</th>
+                            {% endif %}
+                        {% else %}
+                            <!-- Cabeçalho normal -->
+                            <th colspan="4">1º Trimestre</th>
+                            <th colspan="4">2º Trimestre</th>
+                            <th colspan="4">3º Trimestre</th>
+                            <th rowspan="2">Média Final</th>
+                            <th rowspan="2">Status</th>
+                            {% if tipo == "professor" %}
+                            <th rowspan="2">Ação</th>
+                            {% endif %}
+                        {% endif %}
+                    </tr>
+
+                    <tr>
+                        {% if qualitativa %}
+                            <th>Qualidade</th><th>Média</th><th>Status</th>
+                            <th>Qualidade</th><th>Média</th><th>Status</th>
+                            <th>Qualidade</th><th>Média</th><th>Status</th>
+                        {% else %}
+                            <th>ACS1</th><th>ACS2</th><th>AT</th><th>Média</th>
+                            <th>ACS1</th><th>ACS2</th><th>AT</th><th>Média</th>
+                            <th>ACS1</th><th>ACS2</th><th>AT</th><th>Média</th>
+                        {% endif %}
+                    </tr>
+                </thead>
+
+                <tbody>
+                {% for aluno in alunos %}
+                <tr>
+                    <form action="/nota/{{ aluno[0] }}?disciplina_id={{ disciplina_id }}" method="POST">
+                        <td>{{ loop.index }}</td>
+                        <td><strong>{{ aluno[1] }}</strong></td>
+                        <td>{{ aluno[2] }}</td>
+
+                        {% if qualitativa %}
+                            <!-- ===== 1º TRIMESTRE - QUALITATIVA ===== -->
+                            <td>
+                                <select name="qualidade_t1" class="qualitativa" {% if bloqueado %}disabled{% endif %}>
+                                    <option value="">Selecione</option>
+                                    <option value="Muito Bom" {% if aluno[17] == 'Muito Bom' %}selected{% endif %}>MB - Muito Bom</option>
+                                    <option value="Bom" {% if aluno[17] == 'Bom' %}selected{% endif %}>B - Bom</option>
+                                    <option value="Suficiente" {% if aluno[17] == 'Suficiente' %}selected{% endif %}>S - Suficiente</option>
+                                    <option value="Insuficiente" {% if aluno[17] == 'Insuficiente' %}selected{% endif %}>I - Insuficiente</option>
+                                </select>
+                            </td>
+                            <td>
+                                <span class="media 
+                                    {% if aluno[6] is not none and aluno[6] >= 14 %}bg-green
+                                    {% elif aluno[6] is not none and aluno[6] >= 10 %}bg-yellow
+                                    {% elif aluno[6] is not none and aluno[6] < 10 %}bg-red
+                                    {% else %}bg-gray{% endif %}">
+                                    {{ aluno[6] if aluno[6] is not none else '—' }}
+                                </span>
+                            </td>
+                            <td>
+                                {% if aluno[17] == 'Muito Bom' %}
+                                    <span class="media qualitativa-mb">✅ MB</span>
+                                {% elif aluno[17] == 'Bom' %}
+                                    <span class="media qualitativa-b">✅ B</span>
+                                {% elif aluno[17] == 'Suficiente' %}
+                                    <span class="media qualitativa-s">⚠️ S</span>
+                                {% elif aluno[17] == 'Insuficiente' %}
+                                    <span class="media qualitativa-i">❌ I</span>
+                                {% else %}
+                                    <span class="media qualitativa-none">⚪ —</span>
+                                {% endif %}
+                            </td>
+
+                            <!-- ===== 2º TRIMESTRE - QUALITATIVA ===== -->
+                            <td>
+                                <select name="qualidade_t2" class="qualitativa" {% if bloqueado %}disabled{% endif %}>
+                                    <option value="">Selecione</option>
+                                    <option value="Muito Bom" {% if aluno[18] == 'Muito Bom' %}selected{% endif %}>MB - Muito Bom</option>
+                                    <option value="Bom" {% if aluno[18] == 'Bom' %}selected{% endif %}>B - Bom</option>
+                                    <option value="Suficiente" {% if aluno[18] == 'Suficiente' %}selected{% endif %}>S - Suficiente</option>
+                                    <option value="Insuficiente" {% if aluno[18] == 'Insuficiente' %}selected{% endif %}>I - Insuficiente</option>
+                                </select>
+                            </td>
+                            <td>
+                                <span class="media 
+                                    {% if aluno[10] is not none and aluno[10] >= 14 %}bg-green
+                                    {% elif aluno[10] is not none and aluno[10] >= 10 %}bg-yellow
+                                    {% elif aluno[10] is not none and aluno[10] < 10 %}bg-red
+                                    {% else %}bg-gray{% endif %}">
+                                    {{ aluno[10] if aluno[10] is not none else '—' }}
+                                </span>
+                            </td>
+                            <td>
+                                {% if aluno[18] == 'Muito Bom' %}
+                                    <span class="media qualitativa-mb">✅ MB</span>
+                                {% elif aluno[18] == 'Bom' %}
+                                    <span class="media qualitativa-b">✅ B</span>
+                                {% elif aluno[18] == 'Suficiente' %}
+                                    <span class="media qualitativa-s">⚠️ S</span>
+                                {% elif aluno[18] == 'Insuficiente' %}
+                                    <span class="media qualitativa-i">❌ I</span>
+                                {% else %}
+                                    <span class="media qualitativa-none">⚪ —</span>
+                                {% endif %}
+                            </td>
+
+                            <!-- ===== 3º TRIMESTRE - QUALITATIVA ===== -->
+                            <td>
+                                <select name="qualidade_t3" class="qualitativa" {% if bloqueado %}disabled{% endif %}>
+                                    <option value="">Selecione</option>
+                                    <option value="Muito Bom" {% if aluno[19] == 'Muito Bom' %}selected{% endif %}>MB - Muito Bom</option>
+                                    <option value="Bom" {% if aluno[19] == 'Bom' %}selected{% endif %}>B - Bom</option>
+                                    <option value="Suficiente" {% if aluno[19] == 'Suficiente' %}selected{% endif %}>S - Suficiente</option>
+                                    <option value="Insuficiente" {% if aluno[19] == 'Insuficiente' %}selected{% endif %}>I - Insuficiente</option>
+                                </select>
+                            </td>
+                            <td>
+                                <span class="media 
+                                    {% if aluno[14] is not none and aluno[14] >= 14 %}bg-green
+                                    {% elif aluno[14] is not none and aluno[14] >= 10 %}bg-yellow
+                                    {% elif aluno[14] is not none and aluno[14] < 10 %}bg-red
+                                    {% else %}bg-gray{% endif %}">
+                                    {{ aluno[14] if aluno[14] is not none else '—' }}
+                                </span>
+                            </td>
+                            <td>
+                                {% if aluno[19] == 'Muito Bom' %}
+                                    <span class="media qualitativa-mb">✅ MB</span>
+                                {% elif aluno[19] == 'Bom' %}
+                                    <span class="media qualitativa-b">✅ B</span>
+                                {% elif aluno[19] == 'Suficiente' %}
+                                    <span class="media qualitativa-s">⚠️ S</span>
+                                {% elif aluno[19] == 'Insuficiente' %}
+                                    <span class="media qualitativa-i">❌ I</span>
+                                {% else %}
+                                    <span class="media qualitativa-none">⚪ —</span>
+                                {% endif %}
+                            </td>
+
+                            <!-- ===== STATUS ===== -->
+                            <td>
+                                {% if aluno[15] is none %}
+                                    <span class="status-sem-nota">⚪ Sem nota</span>
+                                {% elif aluno[15] < 10 %}
+                                    <span class="status-reprovado">🔴 Reprovado</span>
+                                {% elif aluno[15] < 14 %}
+                                    <span class="status-recuperacao">🟠 Recuperação</span>
+                                {% else %}
+                                    <span class="status-aprovado">🟢 Aprovado</span>
+                                {% endif %}
+                            </td>
+
+                        {% else %}
+                            <!-- ===== NOTAS NUMÉRICAS NORMAIS ===== -->
+                            <!-- T1 -->
+                            <td><input name="acs1_t1" value="{{ aluno[3] }}" {% if bloqueado %}disabled{% endif %}></td>
+                            <td><input name="acs2_t1" value="{{ aluno[4] }}" {% if bloqueado %}disabled{% endif %}></td>
+                            <td><input name="at_t1" value="{{ aluno[5] }}" {% if bloqueado %}disabled{% endif %}></td>
+                            <td>
+                                <span class="media 
+                                    {% if aluno[6] is not none and aluno[6] >= 14 %}bg-green
+                                    {% elif aluno[6] is not none and aluno[6] >= 10 %}bg-yellow
+                                    {% elif aluno[6] is not none and aluno[6] < 10 %}bg-red
+                                    {% else %}bg-gray{% endif %}">
+                                    {{ aluno[6] if aluno[6] is not none else '—' }}
+                                </span>
+                            </td>
+
+                            <!-- T2 -->
+                            <td><input name="acs1_t2" value="{{ aluno[7] }}" {% if bloqueado %}disabled{% endif %}></td>
+                            <td><input name="acs2_t2" value="{{ aluno[8] }}" {% if bloqueado %}disabled{% endif %}></td>
+                            <td><input name="at_t2" value="{{ aluno[9] }}" {% if bloqueado %}disabled{% endif %}></td>
+                            <td>
+                                <span class="media 
+                                    {% if aluno[10] is not none and aluno[10] >= 14 %}bg-green
+                                    {% elif aluno[10] is not none and aluno[10] >= 10 %}bg-yellow
+                                    {% elif aluno[10] is not none and aluno[10] < 10 %}bg-red
+                                    {% else %}bg-gray{% endif %}">
+                                    {{ aluno[10] if aluno[10] is not none else '—' }}
+                                </span>
+                            </td>
+
+                            <!-- T3 -->
+                            <td><input name="acs1_t3" value="{{ aluno[11] }}" {% if bloqueado %}disabled{% endif %}></td>
+                            <td><input name="acs2_t3" value="{{ aluno[12] }}" {% if bloqueado %}disabled{% endif %}></td>
+                            <td><input name="at_t3" value="{{ aluno[13] }}" {% if bloqueado %}disabled{% endif %}></td>
+                            <td>
+                                <span class="media 
+                                    {% if aluno[14] is not none and aluno[14] >= 14 %}bg-green
+                                    {% elif aluno[14] is not none and aluno[14] >= 10 %}bg-yellow
+                                    {% elif aluno[14] is not none and aluno[14] < 10 %}bg-red
+                                    {% else %}bg-gray{% endif %}">
+                                    {{ aluno[14] if aluno[14] is not none else '—' }}
+                                </span>
+                            </td>
+
+                            <!-- MÉDIA FINAL -->
+                            <td>
+                                <span class="media 
+                                    {% if aluno[15] is not none and aluno[15] >= 14 %}bg-green
+                                    {% elif aluno[15] is not none and aluno[15] >= 10 %}bg-yellow
+                                    {% elif aluno[15] is not none and aluno[15] < 10 %}bg-red
+                                    {% else %}bg-gray{% endif %}">
+                                    {{ aluno[15] if aluno[15] is not none else '—' }}
+                                </span>
+                            </td>
+
+                            <!-- STATUS -->
+                            <td>
+                                {% if aluno[15] is none %}
+                                    <span class="status-sem-nota">⚪ Sem nota</span>
+                                {% elif aluno[15] < 10 %}
+                                    <span class="status-reprovado">🔴 Reprovado</span>
+                                {% elif aluno[15] < 14 %}
+                                    <span class="status-recuperacao">🟠 Recuperação</span>
+                                {% else %}
+                                    <span class="status-aprovado">🟢 Aprovado</span>
+                                {% endif %}
+                            </td>
+                        {% endif %}
+
+                        {% if tipo == "professor" %}
+                        <td>
+                            <button type="submit" class="salvar" {% if bloqueado %}disabled{% endif %}>
+                                💾 Salvar
+                            </button>
+                        </td>
+                        {% endif %}
+                    </form>
+                </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+
+        </div>
+
+        <!-- ===== FOOTER ===== -->
+        <div class="footer">
+            <div class="dev">
+                Desenvolvido por <strong>Klésio Yannick Cassamo</strong> <span class="gold">✦</span>
+                <br>
+                <span style="font-size: 10px; color: rgba(255,255,255,0.25);">
+                    VIRTUS © 2026 — Todos os direitos reservados
+                </span>
+            </div>
+        </div>
+
+    </div>
+
+</body>
+</html>

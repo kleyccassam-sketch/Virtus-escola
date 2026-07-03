@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VIRTUS - Configurar Pagamentos de Acesso</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background: linear-gradient(135deg, #1a0a2e, #2d1b3d);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container {
+            max-width: 700px;
+            margin: 0 auto;
+            background: rgba(255,255,255,0.95);
+            border-radius: 24px;
+            padding: 30px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            animation: fadeIn 0.5s ease;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid rgba(255,215,0,0.2);
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        .header-left { display: flex; align-items: center; gap: 20px; flex-wrap: wrap; }
+        .logo-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #ffd700, #f59e0b);
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            font-weight: 900;
+            color: #0f0c29;
+            font-family: 'Georgia', serif;
+        }
+        .logo-text {
+            font-size: 24px;
+            font-weight: 900;
+            letter-spacing: 5px;
+            background: linear-gradient(135deg, #ffd700, #f59e0b);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-family: 'Georgia', serif;
+        }
+        .header-title {
+            color: #1a1a2e;
+            font-size: 20px;
+            font-weight: 700;
+            border-left: 2px solid rgba(255,215,0,0.2);
+            padding-left: 18px;
+        }
+        .header-title .sub {
+            font-size: 13px;
+            font-weight: 400;
+            color: #6b7280;
+            display: block;
+        }
+        .btn-voltar {
+            background: #6b7280;
+            color: white;
+            padding: 10px 22px;
+            border-radius: 12px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 14px;
+            transition: 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .btn-voltar:hover { background: #4b5563; transform: translateY(-2px); }
+        
+        .card {
+            background: #f8f6f2;
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border: 1px solid rgba(255,215,0,0.1);
+        }
+        .card h3 {
+            color: #1a1a2e;
+            font-size: 17px;
+            font-weight: 700;
+            margin-bottom: 15px;
+            border-left: 4px solid #ffd700;
+            padding-left: 12px;
+        }
+        .card h3 i { color: #f59e0b; margin-right: 8px; }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            color: #374151;
+            font-size: 14px;
+            margin-bottom: 5px;
+        }
+        .form-group label .info {
+            font-weight: 400;
+            color: #6b7280;
+            font-size: 12px;
+        }
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: 0.3s;
+            background: white;
+        }
+        .form-group input:focus, .form-group select:focus {
+            border-color: #f59e0b;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(245,158,11,0.1);
+        }
+        .form-group .input-group {
+            display: flex;
+            align-items: center;
+            position: relative;
+        }
+        .form-group .input-group .prefix {
+            position: absolute;
+            left: 16px;
+            font-weight: 700;
+            color: #6b7280;
+            font-size: 16px;
+        }
+        .form-group .input-group input {
+            padding-left: 50px;
+        }
+        
+        .btn-salvar {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, #4f46e5, #7c3aed);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        .btn-salvar:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(79,70,229,0.3);
+        }
+        
+        .alert-success {
+            background: #dcfce7;
+            color: #065f46;
+            padding: 15px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            border-left: 4px solid #10b981;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .alert-error {
+            background: #fee2e2;
+            color: #991b1b;
+            padding: 15px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            border-left: 4px solid #dc2626;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .info-box {
+            background: #eff6ff;
+            padding: 15px 20px;
+            border-radius: 12px;
+            border-left: 4px solid #3b82f6;
+            margin-bottom: 20px;
+            color: #1e40af;
+            font-size: 14px;
+        }
+        .info-box i { margin-right: 8px; }
+        .info-box strong { color: #1e3a8a; }
+        
+        .valores-atuais {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin: 15px 0;
+        }
+        .valores-atuais .item {
+            background: white;
+            padding: 15px;
+            border-radius: 12px;
+            text-align: center;
+            border: 1px solid #e2e8f0;
+        }
+        .valores-atuais .item .valor {
+            font-size: 24px;
+            font-weight: 900;
+            color: #4f46e5;
+        }
+        .valores-atuais .item .label {
+            font-size: 13px;
+            color: #6b7280;
+        }
+        .valores-atuais .item .icon { font-size: 24px; display: block; margin-bottom: 5px; }
+        
+        .config-metodos {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 15px;
+            margin: 15px 0;
+        }
+        .config-metodos .metodo-item {
+            background: white;
+            padding: 15px;
+            border-radius: 12px;
+            border: 2px solid #e2e8f0;
+            transition: 0.3s;
+        }
+        .config-metodos .metodo-item:hover { border-color: #f59e0b; }
+        .config-metodos .metodo-item .nome {
+            font-weight: 700;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 10px;
+        }
+        .config-metodos .metodo-item .nome .cor-mpesa { color: #4f46e5; }
+        .config-metodos .metodo-item .nome .cor-emola { color: #10b981; }
+        .config-metodos .metodo-item .nome .cor-mkesh { color: #f59e0b; }
+        .config-metodos .metodo-item input {
+            width: 100%;
+            padding: 8px 10px;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 13px;
+            font-family: 'Courier New', monospace;
+        }
+        .config-metodos .metodo-item input:focus {
+            border-color: #f59e0b;
+            outline: none;
+        }
+        .config-metodos .metodo-item .hint {
+            font-size: 11px;
+            color: #9ca3af;
+            margin-top: 4px;
+        }
+        
+        .footer {
+            text-align: center;
+            margin-top: 25px;
+            padding-top: 20px;
+            border-top: 1px solid #e2e8f0;
+            color: #9ca3af;
+            font-size: 12px;
+        }
+        .footer strong { color: #4b5563; }
+        .footer .gold { color: #f59e0b; }
+        
+        @media (max-width: 768px) {
+            .container { padding: 20px; }
+            .header { flex-direction: column; align-items: stretch; text-align: center; }
+            .header-left { flex-wrap: wrap; justify-content: center; }
+            .header-title { border-left: none; padding-left: 0; }
+            .valores-atuais { grid-template-columns: 1fr; }
+            .config-metodos { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+
+    <!-- ===== HEADER ===== -->
+    <div class="header">
+        <div class="header-left">
+            <div class="logo-icon">V</div>
+            <span class="logo-text">VIRTUS</span>
+            <div class="header-title">
+                ⚙️ Configurar Pagamentos
+                <span class="sub"><i class="fas fa-school"></i> {{ escola_nome }}</span>
+            </div>
+        </div>
+        <a href="/super-admin" class="btn-voltar"><i class="fas fa-arrow-left"></i> Voltar</a>
+    </div>
+
+    <!-- ===== ALERTAS ===== -->
+    {% if sucesso %}
+    <div class="alert-success">
+        <i class="fas fa-check-circle" style="font-size: 20px;"></i>
+        {{ sucesso }}
+    </div>
+    {% endif %}
+    
+    {% if erro %}
+    <div class="alert-error">
+        <i class="fas fa-exclamation-circle" style="font-size: 20px;"></i>
+        {{ erro }}
+    </div>
+    {% endif %}
+
+    <!-- ===== INFO ===== -->
+    <div class="info-box">
+        <i class="fas fa-info-circle"></i>
+        <strong>Configure os valores</strong> que os alunos devem pagar e os <strong>números de telefone</strong> 
+        para onde o dinheiro deve ser enviado (PayBill / Merchant).
+    </div>
+
+    <!-- ===== VALORES ATUAIS ===== -->
+    <div class="valores-atuais">
+        <div class="item">
+            <span class="icon">📊</span>
+            <div class="valor">{{ "%.2f"|format(valor_notas) }} MT</div>
+            <div class="label">Acesso às Notas</div>
+        </div>
+        <div class="item">
+            <span class="icon">📚</span>
+            <div class="valor">{{ "%.2f"|format(valor_biblioteca) }} MT</div>
+            <div class="label">Acesso à Biblioteca</div>
+        </div>
+    </div>
+
+    <!-- ===== FORMULÁRIO ===== -->
+    <form method="POST">
+
+        <!-- ===== VALORES DOS SERVIÇOS ===== -->
+        <div class="card">
+            <h3><i class="fas fa-coins"></i> Valores dos Serviços</h3>
+            
+            <div class="form-group">
+                <label>📊 Acesso às Notas <span class="info">(em Meticais)</span></label>
+                <div class="input-group">
+                    <span class="prefix">MT</span>
+                    <input type="number" name="valor_notas" 
+                           value="{{ valor_notas if valor_notas > 0 else '' }}" 
+                           step="0.50" min="0" 
+                           placeholder="Ex: 50.00" required>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>📚 Acesso à Biblioteca <span class="info">(em Meticais)</span></label>
+                <div class="input-group">
+                    <span class="prefix">MT</span>
+                    <input type="number" name="valor_biblioteca" 
+                           value="{{ valor_biblioteca if valor_biblioteca > 0 else '' }}" 
+                           step="0.50" min="0" 
+                           placeholder="Ex: 30.00" required>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== NÚMEROS PARA PAGAMENTO ===== -->
+        <div class="card">
+            <h3><i class="fas fa-phone"></i> Números para Pagamento (PayBill / Merchant)</h3>
+            <p style="font-size: 13px; color: #6b7280; margin-bottom: 15px;">
+                <i class="fas fa-info-circle"></i>
+                Os alunos vão pagar para estes números. Certifique-se de que estão corretos.
+            </p>
+
+            <div class="config-metodos">
+                <!-- M-PESA -->
+                <div class="metodo-item">
+                    <div class="nome">
+                        <span class="cor-mpesa"><i class="fas fa-mobile-alt"></i> M-PESA</span>
+                    </div>
+                    <input type="text" name="mpesa_numero" 
+                           value="{{ mpesa_numero or '' }}" 
+                           placeholder="Ex: 123456">
+                    <div class="hint">Número PayBill do M-PESA</div>
+                </div>
+
+                <!-- E-Mola -->
+                <div class="metodo-item">
+                    <div class="nome">
+                        <span class="cor-emola"><i class="fas fa-credit-card"></i> E-Mola</span>
+                    </div>
+                    <input type="text" name="emola_numero" 
+                           value="{{ emola_numero or '' }}" 
+                           placeholder="Ex: 123456">
+                    <div class="hint">Número Merchant do E-Mola</div>
+                </div>
+
+                <!-- M-Kesh -->
+                <div class="metodo-item">
+                    <div class="nome">
+                        <span class="cor-mkesh"><i class="fas fa-university"></i> M-Kesh</span>
+                    </div>
+                    <input type="text" name="mkesh_numero" 
+                           value="{{ mkesh_numero or '' }}" 
+                           placeholder="Ex: 123456">
+                    <div class="hint">Número Merchant do M-Kesh</div>
+                </div>
+            </div>
+        </div>
+
+        <button type="submit" class="btn-salvar">
+            <i class="fas fa-save"></i> Salvar Configurações
+        </button>
+
+    </form>
+
+    <!-- ===== FOOTER ===== -->
+    <div class="footer">
+        Desenvolvido por <strong>Klésio Yannick Cassamo</strong> <span class="gold">✦</span>
+        <br>
+        VIRTUS © 2026 — Todos os direitos reservados
+    </div>
+
+</div>
+
+</body>
+</html>

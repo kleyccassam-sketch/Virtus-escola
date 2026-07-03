@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VIRTUS - Dashboard do Aluno</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background: linear-gradient(135deg, #1a0a2e, #2d1b3d);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: rgba(255,255,255,0.95);
+            border-radius: 24px;
+            padding: 30px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            animation: fadeIn 0.5s ease;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid rgba(255,215,0,0.2);
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        .header-left { display: flex; align-items: center; gap: 20px; }
+        .logo-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #ffd700, #f59e0b);
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            font-weight: 900;
+            color: #0f0c29;
+            font-family: 'Georgia', serif;
+        }
+        .logo-text {
+            font-size: 24px;
+            font-weight: 900;
+            letter-spacing: 5px;
+            background: linear-gradient(135deg, #ffd700, #f59e0b);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-family: 'Georgia', serif;
+        }
+        .header-title {
+            color: #1a1a2e;
+            font-size: 20px;
+            font-weight: 700;
+            border-left: 2px solid rgba(255,215,0,0.2);
+            padding-left: 18px;
+        }
+        .header-title .sub {
+            font-size: 13px;
+            font-weight: 400;
+            color: #6b7280;
+            display: block;
+        }
+        .btn-sair {
+            background: #dc2626;
+            color: white;
+            padding: 10px 22px;
+            border-radius: 12px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 14px;
+            transition: 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .btn-sair:hover { background: #b91c1c; transform: translateY(-2px); }
+        
+        /* ===== ACESSO BLOQUEADO ===== */
+        .acesso-bloqueado {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 60vh;
+        }
+        .acesso-bloqueado .card-bloqueado {
+            text-align: center;
+            max-width: 500px;
+            padding: 40px;
+            background: #fef3c7;
+            border-radius: 20px;
+            border: 2px solid #f59e0b;
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.3); }
+            70% { box-shadow: 0 0 0 15px rgba(245, 158, 11, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(245, 158, 11, 0); }
+        }
+        .acesso-bloqueado .card-bloqueado .icon { font-size: 64px; display: block; margin-bottom: 15px; }
+        .acesso-bloqueado .card-bloqueado h2 { color: #78350f; margin-bottom: 10px; }
+        .acesso-bloqueado .card-bloqueado p { color: #92400e; margin-bottom: 15px; }
+        .acesso-bloqueado .card-bloqueado .valor { 
+            color: #78350f; 
+            font-weight: 700; 
+            margin-bottom: 20px; 
+            font-size: 24px;
+            background: white;
+            padding: 10px 20px;
+            border-radius: 12px;
+            display: inline-block;
+        }
+        .acesso-bloqueado .card-bloqueado .btn-pagar {
+            display: inline-block;
+            padding: 14px 40px;
+            background: linear-gradient(135deg, #4f46e5, #7c3aed);
+            color: white;
+            border-radius: 12px;
+            text-decoration: none;
+            font-weight: 700;
+            transition: 0.3s;
+        }
+        .acesso-bloqueado .card-bloqueado .btn-pagar:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(79,70,229,0.3);
+        }
+        .acesso-bloqueado .card-bloqueado .info {
+            margin-top: 15px;
+            font-size: 12px;
+            color: #92400e;
+        }
+        .acesso-bloqueado .card-bloqueado .info i { margin-right: 5px; }
+        
+        /* ===== CONTEÚDO NORMAL ===== */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        .dashboard-card {
+            background: white;
+            border-radius: 16px;
+            padding: 25px;
+            border: 1px solid #e2e8f0;
+            transition: all 0.3s ease;
+            text-align: center;
+            text-decoration: none;
+            color: #1a1a2e;
+        }
+        .dashboard-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+            border-color: #f59e0b;
+        }
+        .dashboard-card .icon { font-size: 40px; display: block; margin-bottom: 10px; }
+        .dashboard-card h3 { font-size: 16px; font-weight: 700; }
+        .dashboard-card p { font-size: 13px; color: #6b7280; margin-top: 5px; }
+        
+        .footer {
+            text-align: center;
+            margin-top: 25px;
+            padding-top: 20px;
+            border-top: 1px solid #e2e8f0;
+            color: #9ca3af;
+            font-size: 12px;
+        }
+        .footer strong { color: #4b5563; }
+        .footer .gold { color: #f59e0b; }
+        
+        @media (max-width: 768px) {
+            .container { padding: 15px; }
+            .header { flex-direction: column; align-items: stretch; text-align: center; }
+            .header-left { flex-wrap: wrap; justify-content: center; }
+            .header-title { border-left: none; padding-left: 0; }
+            .dashboard-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+
+    <!-- ===== HEADER ===== -->
+    <div class="header">
+        <div class="header-left">
+            <div class="logo-icon">V</div>
+            <span class="logo-text">VIRTUS</span>
+            <div class="header-title">
+                👨‍🎓 Dashboard do Aluno
+                <span class="sub"><i class="fas fa-user-graduate"></i> {{ session.user }}</span>
+            </div>
+        </div>
+        <div class="header-right">
+            <a href="/logout" class="btn-sair"><i class="fas fa-sign-out-alt"></i> Sair</a>
+        </div>
+    </div>
+
+    <!-- ===== VERIFICAÇÃO DE ACESSO ===== -->
+    {% if not acesso_notas %}
+    <div class="acesso-bloqueado">
+        <div class="card-bloqueado">
+            <span class="icon">🔒</span>
+            <h2>Acesso Bloqueado</h2>
+            <p>Para ver as suas notas, precisa pagar o acesso.</p>
+            <div class="valor">💰 {{ "%.2f"|format(valor_notas) }} MT</div>
+            <br>
+            <a href="/aluno/pagar-acesso/notas" class="btn-pagar">
+                <i class="fas fa-lock-open"></i> Pagar e Aceder
+            </a>
+            <p class="info">
+                <i class="fas fa-info-circle"></i> Após o pagamento, o acesso é liberado imediatamente.
+            </p>
+        </div>
+    </div>
+    {% else %}
+
+    <!-- ===== CONTEÚDO NORMAL DO DASHBOARD ===== -->
+    <h2 style="color: #1a1a2e; margin-bottom: 5px;">
+        <i class="fas fa-chart-line" style="color: #f59e0b;"></i> 
+        Bem-vindo, {{ session.user }}!
+    </h2>
+    <p style="color: #6b7280; margin-bottom: 20px;">
+        <i class="fas fa-check-circle" style="color: #10b981;"></i> 
+        Acesso às notas liberado ✅
+    </p>
+
+    <div class="dashboard-grid">
+        <a href="/aluno/ver-notas" class="dashboard-card">
+            <span class="icon">📊</span>
+            <h3>Ver Notas</h3>
+            <p>Consulte as suas notas por disciplina</p>
+        </a>
+        <a href="/aluno/biblioteca" class="dashboard-card">
+            <span class="icon">📚</span>
+            <h3>Biblioteca Digital</h3>
+            <p>Aceda a livros e materiais de estudo</p>
+        </a>
+        <a href="/aluno/trocar-senha" class="dashboard-card">
+            <span class="icon">🔑</span>
+            <h3>Trocar Senha</h3>
+            <p>Altere a sua senha de acesso</p>
+        </a>
+    </div>
+
+    {% endif %}
+
+    <!-- ===== FOOTER ===== -->
+    <div class="footer">
+        Desenvolvido por <strong>Klésio Yannick Cassamo</strong> <span class="gold">✦</span>
+        <br>
+        VIRTUS © 2026 — Todos os direitos reservados
+    </div>
+
+</div>
+
+</body>
+</html>

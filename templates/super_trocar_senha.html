@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VIRTUS - Trocar Senha Super Admin</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', Arial, sans-serif; background: #0f0c29; display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; }
+        .container { max-width: 450px; background: rgba(255,255,255,0.95); padding: 40px; border-radius: 20px; box-shadow: 0 25px 60px rgba(0,0,0,0.5); width: 100%; }
+        .logo { text-align: center; margin-bottom: 20px; }
+        .logo .icon { font-size: 48px; }
+        h1 { text-align: center; color: #1a1a2e; font-size: 24px; }
+        .subtitle { text-align: center; color: #6c757d; font-size: 14px; margin-bottom: 25px; }
+        .form-group { margin-bottom: 20px; }
+        label { display: block; margin-bottom: 5px; font-weight: 600; color: #2d3748; }
+        input { width: 100%; padding: 12px 16px; border: 2px solid #e2e8f0; border-radius: 10px; font-size: 14px; transition: all 0.3s ease; }
+        input:focus { border-color: #4f46e5; outline: none; box-shadow: 0 0 0 3px rgba(79,70,229,0.1); }
+        button { width: 100%; padding: 14px; background: linear-gradient(135deg, #4f46e5, #7c3aed); color: white; border: none; border-radius: 10px; font-size: 16px; font-weight: 700; cursor: pointer; transition: all 0.3s ease; }
+        button:hover { transform: translateY(-2px); box-shadow: 0 10px 30px rgba(79,70,229,0.3); }
+        .btn-voltar { background: #6c757d; margin-top: 10px; }
+        .btn-voltar:hover { background: #5a6268; }
+        .erro { color: #721c24; background: #f8d7da; padding: 12px; border-radius: 8px; margin-bottom: 15px; border: 1px solid #f5c6cb; }
+        .sucesso { color: #155724; background: #d4edda; padding: 12px; border-radius: 8px; margin-bottom: 15px; border: 1px solid #c3e6cb; }
+        .footer { text-align: center; margin-top: 20px; padding-top: 15px; border-top: 1px solid #e2e8f0; color: #6c757d; font-size: 12px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="logo">
+            <span class="icon">🔑</span>
+        </div>
+        <h1>Trocar Senha</h1>
+        <p class="subtitle">Alterar senha do Super Admin</p>
+
+        {% if erro %}
+        <div class="erro">{{ erro }}</div>
+        {% endif %}
+
+        {% if sucesso %}
+        <div class="sucesso">{{ sucesso }}</div>
+        {% endif %}
+
+        <form method="POST">
+            <div class="form-group">
+                <label>🔒 Senha Atual</label>
+                <input type="password" name="senha_atual" placeholder="Digite a senha atual" required>
+            </div>
+            <div class="form-group">
+                <label>🔒 Nova Senha</label>
+                <input type="password" name="nova_senha" placeholder="Mínimo 4 caracteres" required minlength="4">
+            </div>
+            <div class="form-group">
+                <label>✅ Confirmar Nova Senha</label>
+                <input type="password" name="confirmar_senha" placeholder="Digite a senha novamente" required>
+            </div>
+            <button type="submit">💾 Alterar Senha</button>
+            <a href="/super-login"><button type="button" class="btn-voltar">← Voltar ao Login</button></a>
+        </form>
+
+        <div class="footer">
+            Sistema VIRTUS — Acesso Autorizado Apenas
+        </div>
+    </div>
+</body>
+</html>

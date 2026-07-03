@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+<meta charset="UTF-8">
+<title>Logs do Sistema</title>
+
+<style>
+    body{
+        font-family: Arial;
+        background: #f4f6f9;
+        margin: 0;
+    }
+
+    .container{
+        width: 95%;
+        margin: 20px auto;
+        background: white;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+    }
+
+    h2{
+        text-align: center;
+        color: #2c3e50;
+    }
+
+    table{
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 15px;
+    }
+
+    th, td{
+        border: 1px solid #ddd;
+        padding: 10px;
+        text-align: center;
+        font-size: 14px;
+    }
+
+    th{
+        background: #34495e;
+        color: white;
+    }
+
+    tr:nth-child(even){
+        background: #f2f2f2;
+    }
+</style>
+
+</head>
+<body>
+
+<div class="container">
+
+    <h2>📜 Logs do Sistema</h2>
+
+    <table>
+        <tr>
+            <th>Usuário</th>
+            <th>Tipo</th>
+            <th>Ação</th>
+            <th>Detalhes</th>
+            <th>IP</th>
+            <th>Data (timestamp)</th>
+        </tr>
+
+        {% for log in logs %}
+        <tr>
+            <td>{{ log[0] }}</td>
+            <td>{{ log[1] }}</td>
+            <td>{{ log[2] }}</td>
+            <td>{{ log[3] }}</td>
+            <td>{{ log[4] }}</td>
+            <td>{{ log[5] }}</td>
+        </tr>
+        {% endfor %}
+<a href="/admin">
+    <button style="margin:10px; padding:8px;">
+        ⬅ Voltar
+    </button>
+</a>
+    </table>
+
+</div>
+
+</body>
+</html>

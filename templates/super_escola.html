@@ -1,0 +1,129 @@
+
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VIRTUS - Super Admin: {{ escola_nome }}</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', Arial, sans-serif; background: linear-gradient(135deg, #0f0c29, #302b63, #24243e); padding: 25px; min-height: 100vh; }
+        .container { max-width: 1200px; margin: auto; }
+        
+        /* Header */
+        .header { background: rgba(255,255,255,0.95); backdrop-filter: blur(10px); padding: 20px 30px; border-radius: 20px; margin-bottom: 25px; box-shadow: 0 15px 40px rgba(0,0,0,0.3); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px; border: 1px solid rgba(255,215,0,0.2); }
+        .header-left { display: flex; align-items: center; gap: 15px; }
+        .header-left .icon { font-size: 32px; }
+        .header-left h1 { font-size: 24px; color: #1a1a2e; }
+        .header-left h1 .gold { color: #f59e0b; }
+        .header-left .subtitle { font-size: 13px; color: rgba(255,255,255,0.5); }
+        .badge-super { display: inline-block; background: linear-gradient(135deg, #f59e0b, #ef4444); color: white; padding: 3px 12px; border-radius: 20px; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
+        .header-right { display: flex; gap: 10px; flex-wrap: wrap; }
+        .btn { padding: 10px 20px; border: none; border-radius: 10px; cursor: pointer; font-size: 14px; font-weight: 600; transition: all 0.3s ease; text-decoration: none; display: inline-flex; align-items: center; gap: 8px; }
+        .btn-primary { background: linear-gradient(135deg, #4f46e5, #7c3aed); color: white; }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 10px 30px rgba(79,70,229,0.3); }
+        .btn-secondary { background: #6c757d; color: white; }
+        .btn-secondary:hover { background: #5a6268; transform: translateY(-2px); }
+        .btn-danger { background: #dc2626; color: white; }
+        .btn-danger:hover { background: #b91c1c; transform: translateY(-2px); }
+        
+        /* Stats */
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 16px; margin-bottom: 25px; }
+        .stat-card { background: rgba(255,255,255,0.95); backdrop-filter: blur(10px); padding: 20px; border-radius: 16px; text-align: center; border: 1px solid rgba(255,215,0,0.08); box-shadow: 0 5px 20px rgba(0,0,0,0.1); transition: all 0.3s ease; }
+        .stat-card:hover { transform: translateY(-5px); box-shadow: 0 10px 30px rgba(0,0,0,0.15); }
+        .stat-card .emoji { font-size: 32px; display: block; margin-bottom: 8px; }
+        .stat-card .number { font-size: 28px; font-weight: 900; background: linear-gradient(135deg, #ffd700, #f59e0b); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+        .stat-card .label { font-size: 13px; color: #6c757d; margin-top: 4px; }
+        
+        /* Info Card */
+        .info-card { background: rgba(255,255,255,0.95); backdrop-filter: blur(10px); padding: 25px 30px; border-radius: 18px; border: 1px solid rgba(255,215,0,0.08); box-shadow: 0 10px 30px rgba(0,0,0,0.15); }
+        .info-card h2 { color: #1a1a2e; font-size: 18px; border-left: 4px solid #ffd700; padding-left: 12px; margin-bottom: 15px; }
+        .info-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; }
+        .info-item { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid rgba(0,0,0,0.05); }
+        .info-item .label { color: #6c757d; font-size: 14px; }
+        .info-item .value { color: #1a1a2e; font-weight: 600; }
+        
+        .footer { text-align: center; margin-top: 25px; color: rgba(255,255,255,0.3); font-size: 12px; padding: 20px; }
+        
+        @media (max-width: 768px) { .header { flex-direction: column; align-items: stretch; } .header-left { justify-content: center; } .header-right { justify-content: center; } .stats-grid { grid-template-columns: repeat(2, 1fr); } }
+        @media (max-width: 480px) { .stats-grid { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="header-left">
+                <span class="icon">🏫</span>
+                <div>
+                    <h1>{{ escola_nome }}</h1>
+                    <div>
+                        <span class="badge-super">👑 Super Admin</span>
+                        <span style="color: #6c757d; font-size: 13px; margin-left: 8px;">Visualização completa da escola</span>
+                    </div>
+                </div>
+            </div>
+            <div class="header-right">
+                <a href="/super-admin" class="btn btn-secondary">← Voltar</a>
+                <a href="/admin/configurar-escola" class="btn btn-primary">➕ Nova Escola</a>
+                <a href="/logout" class="btn btn-danger">🚪 Sair</a>
+            </div>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <span class="emoji">📚</span>
+                <div class="number">{{ total_turmas }}</div>
+                <div class="label">Turmas</div>
+            </div>
+            <div class="stat-card">
+                <span class="emoji">👨‍🎓</span>
+                <div class="number">{{ total_alunos }}</div>
+                <div class="label">Alunos</div>
+            </div>
+            <div class="stat-card">
+                <span class="emoji">📖</span>
+                <div class="number">{{ total_disciplinas }}</div>
+                <div class="label">Disciplinas</div>
+            </div>
+            <div class="stat-card">
+                <span class="emoji">👔</span>
+                <div class="number">{{ total_diretores }}</div>
+                <div class="label">Diretores</div>
+            </div>
+            <div class="stat-card">
+                <span class="emoji">💼</span>
+                <div class="number">{{ total_secretarias }}</div>
+                <div class="label">Secretarias</div>
+            </div>
+        </div>
+
+        <div class="info-card">
+            <h2>📋 Informações da Escola</h2>
+            <div class="info-grid">
+                <div class="info-item">
+                    <span class="label">🏷️ Nome</span>
+                    <span class="value">{{ escola_nome }}</span>
+                </div>
+                <div class="info-item">
+                    <span class="label">🔑 Acesso</span>
+                    <span class="value" style="color: #4ade80;">✅ Nível Super Admin</span>
+                </div>
+                <div class="info-item">
+                    <span class="label">📅 Criada em</span>
+                    <span class="value">—</span>
+                </div>
+                <div class="info-item">
+                    <span class="label">🔄 Licença</span>
+                    <span class="value" style="color: #4ade80;">✅ Ativa</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            🔒 Acesso invisível · Nenhum registo de auditoria é criado
+            <br>
+            <span style="font-size: 10px;">VIRTUS © 2026 — Todos os direitos reservados</span>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Backups</title>
+    <style>
+        body{font-family:Arial;background:#f5f5f5;padding:20px;}
+        .box{background:white;padding:20px;border-radius:10px;max-width:900px;margin:auto;}
+        table{width:100%;border-collapse:collapse;margin-top:20px;}
+        th,td{padding:10px;border:1px solid #ddd;text-align:center;}
+        th{background:#2563eb;color:white;}
+        a{padding:6px 10px;background:#16a34a;color:white;border-radius:5px;text-decoration:none;}
+        .danger{background:#dc2626;}
+    </style>
+</head>
+<body>
+
+<div class="box">
+
+    <h2>💾 Backups do Sistema</h2>
+
+    <a href="/admin/backup/criar">➕ Criar Backup</a>
+
+    <table>
+        <tr>
+            <th>Nome</th>
+            <th>Tamanho (KB)</th>
+            <th>Ações</th>
+        </tr>
+
+        {% for b in backups %}
+        <tr>
+            <td>{{ b.nome }}</td>
+            <td>{{ b.tamanho }}</td>
+            <td>
+                <a href="/admin/backups/download/{{ b.nome }}">Download</a>
+                <a class="danger" href="/admin/backups/restaurar/{{ b.nome }}">Restaurar</a>
+            </td>
+        </tr>
+        {% endfor %}
+
+    </table>
+
+</div>
+
+</body>
+</html>

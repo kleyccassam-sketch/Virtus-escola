@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Acesso Restrito</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', Arial, sans-serif; display: flex; justify-content: center; align-items: center; min-height: 100vh; background: #0f0c29; }
+        .container { max-width: 400px; background: rgba(255,255,255,0.95); padding: 40px; border-radius: 20px; box-shadow: 0 25px 60px rgba(0,0,0,0.5); }
+        .logo { text-align: center; margin-bottom: 20px; }
+        .logo .icon { font-size: 48px; }
+        h1 { text-align: center; color: #1a1a2e; font-size: 24px; }
+        .subtitle { text-align: center; color: #6c757d; font-size: 14px; margin-bottom: 25px; }
+        .form-group { margin-bottom: 20px; }
+        label { display: block; margin-bottom: 5px; font-weight: 600; color: #2d3748; }
+        input { width: 100%; padding: 12px 16px; border: 2px solid #e2e8f0; border-radius: 10px; font-size: 14px; transition: all 0.3s ease; }
+        input:focus { border-color: #4f46e5; outline: none; box-shadow: 0 0 0 3px rgba(79,70,229,0.1); }
+        button { width: 100%; padding: 14px; background: linear-gradient(135deg, #4f46e5, #7c3aed); color: white; border: none; border-radius: 10px; font-size: 16px; font-weight: 700; cursor: pointer; transition: all 0.3s ease; }
+        button:hover { transform: translateY(-2px); box-shadow: 0 10px 30px rgba(79,70,229,0.3); }
+        .erro { color: #721c24; background: #f8d7da; padding: 12px; border-radius: 8px; margin-bottom: 15px; border: 1px solid #f5c6cb; text-align: center; }
+        .links { text-align: center; margin-top: 20px; padding-top: 15px; border-top: 1px solid #e2e8f0; }
+        .links a { color: #4f46e5; text-decoration: none; font-weight: 600; font-size: 14px; transition: all 0.3s ease; }
+        .links a:hover { text-decoration: underline; }
+        .footer { text-align: center; margin-top: 20px; color: #6c757d; font-size: 12px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="logo">
+            <span class="icon">🔐</span>
+        </div>
+        <h1>Acesso Restrito</h1>
+        <p class="subtitle">Área de Administração Central</p>
+
+        {% if erro %}
+        <div class="erro">{{ erro }}</div>
+        {% endif %}
+
+        <form method="POST">
+            <div class="form-group">
+                <label>Usuário</label>
+                <input type="text" name="usuario" placeholder="superadmin" required>
+            </div>
+            <div class="form-group">
+                <label>Senha</label>
+                <input type="password" name="senha" placeholder="Digite a senha" required>
+            </div>
+            <button type="submit">🔓 Entrar</button>
+        </form>
+
+        <div class="links">
+            <a href="/super-login/trocar-senha">🔑 Trocar Senha</a>
+        </div>
+
+        <div class="footer">
+            Sistema VIRTUS — Acesso Autorizado Apenas
+        </div>
+    </div>
+</body>
+</html>

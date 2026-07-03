@@ -1,0 +1,102 @@
+<!<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VIRTUS - Configurar Pagamentos</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', Arial, sans-serif; background: linear-gradient(135deg, #1a1a2e, #2d1b3d); padding: 25px; min-height: 100vh; }
+        .container { max-width: 700px; margin: auto; background: rgba(255,255,255,0.95); backdrop-filter: blur(10px); padding: 30px; border-radius: 18px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
+        h1 { color: #1a1a2e; text-align: center; margin-bottom: 5px; }
+        h1 .gold { color: #f59e0b; }
+        .subtitle { text-align: center; color: #6c757d; margin-bottom: 25px; font-size: 14px; }
+        .form-group { margin-bottom: 20px; }
+        label { display: block; margin-bottom: 5px; font-weight: 600; color: #2d3748; }
+        .input-group { position: relative; }
+        .input-group .prefix { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: #6c757d; font-weight: 600; font-size: 14px; }
+        .input-group input { width: 100%; padding: 12px 16px 12px 45px; border: 2px solid #e2e8f0; border-radius: 10px; font-size: 15px; transition: all 0.3s ease; background: #f7fafc; }
+        .input-group input:focus { border-color: #4f46e5; outline: none; box-shadow: 0 0 0 3px rgba(79,70,229,0.1); background: white; }
+        .info { background: #e3f2fd; padding: 15px; border-radius: 8px; margin-bottom: 20px; border-left: 4px solid #2196f3; }
+        .info ul { margin: 10px 0 0 20px; }
+        .info ul li { margin-bottom: 5px; }
+        button { width: 100%; padding: 14px; background: linear-gradient(135deg, #4f46e5, #7c3aed); color: white; border: none; border-radius: 10px; font-size: 16px; font-weight: 700; cursor: pointer; transition: all 0.3s ease; }
+        button:hover { transform: translateY(-2px); box-shadow: 0 10px 30px rgba(79,70,229,0.3); }
+        .btn-voltar { background: #6c757d; margin-top: 10px; }
+        .btn-voltar:hover { background: #5a6268; }
+        .erro { color: #721c24; background: #f8d7da; padding: 12px; border-radius: 8px; margin-bottom: 15px; border: 1px solid #f5c6cb; }
+        .sucesso { color: #155724; background: #d4edda; padding: 12px; border-radius: 8px; margin-bottom: 15px; border: 1px solid #c3e6cb; }
+        .meses-info { background: #fef9c3; padding: 10px 15px; border-radius: 8px; margin-top: 5px; font-size: 13px; color: #854d0e; }
+        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .header .logo { display: flex; align-items: center; gap: 10px; }
+        .header .logo .icon { width: 40px; height: 40px; background: linear-gradient(135deg, #ffd700, #f59e0b); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 18px; font-weight: 900; color: #0f0c29; font-family: 'Georgia', serif; }
+        .header .logo .text { font-size: 20px; font-weight: 900; letter-spacing: 4px; background: linear-gradient(135deg, #ffd700, #f59e0b); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-family: 'Georgia', serif; }
+        .btn-sair { background: #dc2626; color: white; padding: 8px 20px; border: none; border-radius: 8px; cursor: pointer; font-size: 14px; font-weight: 600; transition: all 0.3s ease; text-decoration: none; display: inline-block; }
+        .btn-sair:hover { background: #b91c1c; transform: translateY(-2px); }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo">
+                <div class="icon">V</div>
+                <span class="text">VIRTUS</span>
+            </div>
+            <a href="/logout" class="btn-sair">🚪 Sair</a>
+        </div>
+
+        <h1>💰 <span class="gold">Configurar Pagamentos</span></h1>
+        <p class="subtitle">Defina os valores para cada tipo de pagamento da escola</p>
+        
+        <div class="info">
+            <strong>📌 Tipos de Pagamento:</strong>
+            <ul>
+                <li><strong>Matrícula:</strong> Pago uma vez por ano no ato da matrícula</li>
+                <li><strong>Mensalidade:</strong> Pago mensalmente (Fevereiro a Novembro)</li>
+                <li><strong>Testes:</strong> Pagamento para testes/avaliações</li>
+            </ul>
+        </div>
+        
+        {% if erro %}
+        <div class="erro">{{ erro }}</div>
+        {% endif %}
+        
+        {% if sucesso %}
+        <div class="sucesso">{{ sucesso }}</div>
+        {% endif %}
+        
+        <form method="POST">
+            <div class="form-group">
+                <label>📝 Valor da Matrícula</label>
+                <div class="input-group">
+                    <span class="prefix">MT</span>
+                    <input type="number" name="valor_matricula" step="0.01" min="0" 
+                           value="{{ valor_matricula }}" placeholder="0.00">
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label>📅 Valor da Mensalidade</label>
+                <div class="input-group">
+                    <span class="prefix">MT</span>
+                    <input type="number" name="valor_mensalidade" step="0.01" min="0" 
+                           value="{{ valor_mensalidade }}" placeholder="0.00">
+                </div>
+                <div class="meses-info">📆 Meses: Fevereiro, Março, Abril, Maio, Junho, Julho, Agosto, Setembro, Outubro, Novembro</div>
+            </div>
+            
+            <div class="form-group">
+                <label>📝 Valor dos Testes</label>
+                <div class="input-group">
+                    <span class="prefix">MT</span>
+                    <input type="number" name="valor_testes" step="0.01" min="0" 
+                           value="{{ valor_testes }}" placeholder="0.00">
+                </div>
+            </div>
+            
+            <button type="submit">💾 Salvar Valores</button>
+            <a href="/admin"><button type="button" class="btn-voltar">← Voltar ao Painel</button></a>
+        </form>
+    </div>
+</body>
+</html>

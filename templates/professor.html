@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <title>Professor - Minhas Disciplinas</title>
+    <style>
+        body { font-family: Arial; background: #f0f2f5; padding: 20px; }
+        .container { max-width: 800px; margin: auto; }
+        .card { background: white; padding: 20px; border-radius: 10px; margin-bottom: 15px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        h1 { color: #1e3a8a; }
+        .btn-frequencia { background: #2563eb; color: white; padding: 8px 16px; border: none; border-radius: 5px; cursor: pointer; text-decoration: none; display: inline-block; }
+        .btn-exame { background: #8b5cf6; color: white; padding: 8px 16px; border: none; border-radius: 5px; cursor: pointer; text-decoration: none; display: inline-block; margin-left: 10px; }
+        .logout { background: #dc2626; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; float: right; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📚 Bem-vindo, Professor {{ session.user }}!</h1>
+        <a href="/logout"><button class="logout">Sair</button></a>
+        
+        <h2>Minhas Disciplinas:</h2>
+        
+        {% for disciplina in disciplinas %}
+        <div class="card">
+            <h3>{{ disciplina.nome }}</h3>
+            <p><strong>Turma:</strong> {{ disciplina.turma_nome }}</p>
+            
+            <a href="/professor/disciplina/{{ disciplina.id }}" class="btn-frequencia">
+                📝 Lançar Notas de Frequência
+            </a>
+            
+            <a href="/professor/exames/{{ disciplina.id }}" class="btn-exame">
+                📝 Lançar Notas de Exame
+            </a>
+        </div>
+        {% endfor %}
+    </div>
+</body>
+</html>

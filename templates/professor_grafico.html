@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Gráfico - {{ nome_disciplina }}</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: Arial;
+            margin: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            max-width: 800px;
+            margin: auto;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 { text-align: center; color: #333; }
+        canvas { max-width: 100%; margin: 20px 0; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: center; }
+        th { background: #4CAF50; color: white; }
+        button { padding: 10px 20px; margin-top: 20px; cursor: pointer; }
+        .btn-voltar { background: #666; color: white; border: none; border-radius: 5px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📊 Desempenho - {{ nome_disciplina }}</h1>
+        
+        <canvas id="grafico"></canvas>
+        
+        <table>
+            <thead>
+                <tr>
+                    <th>Turma</th>
+                    <th>Média</th>
+                    <th>Aprovados</th>
+                    <th>Total Alunos</th>
+                    <th>Aproveitamento</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for d in dados %}
+                <tr>
+                    <td><strong>{{ d.turma }}</strong>侧
+                    <td>{{ d.media }}侧
+                    <td>{{ d.aprovados }}/{{ d.total }}侧
+                    <td>{{ d.percentagem }}%侧
+                    <td>
+                        <div style="background: #ddd; border-radius: 5px;">
+                            <div style="background: {% if d.percentagem >= 70 %}green{% elif d.percentagem >= 50 %}orange{% else %}red{% endif %}; width: {{ d.percentagem }}%; height: 20px; border-radius: 5px;"></div>
+                        </div>
+                    侧
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        
+        <div style="text-align: center;">
+            <button class="btn-voltar" onclick="window.location.href='/'">← Voltar</button>
+        </div>
+    </div>
+    
+    <script>
+        const ctx = document.getElementById('grafico').getContext('2d');
+        const dados = {{ dados|tojson }};
+        
+        new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: dados.map(d => d.turma),
+                datasets: [{
+                    label: 'Percentagem de Aproveitamento (%)',
+                    data: dados.map(d => d.percentagem),
+                    backgroundColor: dados.map(d => d.percentagem >= 70 ? '#4CAF50' : (d.percentagem >= 50 ? '#FF9800' : '#F44336')),
+                    borderRadius: 5
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        max: 100,
+                        title: { display: true, text: 'Aproveitamento (%)' }
+                    }
+                },
+                plugins: {
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                return `Aproveitamento: ${context.raw}%`;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>

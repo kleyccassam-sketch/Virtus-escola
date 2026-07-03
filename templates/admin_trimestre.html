@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <title>Configurar Trimestre Ativo</title>
+    <style>
+        body {
+            font-family: Arial;
+            background: #f5f5f5;
+            padding: 30px;
+        }
+        .card {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            max-width: 500px;
+            margin: auto;
+        }
+        select, button {
+            padding: 10px;
+            margin: 10px 0;
+            width: 100%;
+        }
+        button {
+            background: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        .atual {
+            background: #e0f2fe;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        .erro { color: red; }
+        .sucesso { color: green; }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h1>📅 Configurar Trimestre Ativo</h1>
+        
+        <div class="atual">
+            <strong>Trimestre Atualmente Ativo:</strong> {{ trimestre_atual }}º Trimestre
+        </div>
+        
+        {% if erro %}<p class="erro">{{ erro }}</p>{% endif %}
+        {% if sucesso %}<p class="sucesso">{{ sucesso }}</p>{% endif %}
+        
+        <form method="POST">
+            <select name="trimestre">
+                <option value="1">1º Trimestre</option>
+                <option value="2">2º Trimestre</option>
+                <option value="3">3º Trimestre</option>
+            </select>
+            <button type="submit">Ativar Trimestre</button>
+        </form>
+        
+        <br>
+        <a href="/admin">← Voltar ao Admin</a>
+    </div>
+</body>
+</html>

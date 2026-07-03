@@ -1,0 +1,990 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VIRTUS - Painel do Diretor</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #0a0a1a;
+            min-height: 100vh;
+            padding: 20px;
+            background-image: 
+                radial-gradient(ellipse at 10% 20%, rgba(79, 70, 229, 0.08) 0%, transparent 50%),
+                radial-gradient(ellipse at 90% 80%, rgba(245, 158, 11, 0.06) 0%, transparent 50%),
+                radial-gradient(ellipse at 50% 50%, rgba(139, 92, 246, 0.04) 0%, transparent 70%);
+        }
+
+        /* ===== CONTAINER PRINCIPAL ===== */
+        .container {
+            max-width: 1800px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.97);
+            backdrop-filter: blur(20px);
+            border-radius: 32px;
+            padding: 30px;
+            box-shadow: 
+                0 25px 80px rgba(0, 0, 0, 0.5),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            position: relative;
+            overflow: hidden;
+            animation: slideUp 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        .container::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle, rgba(255, 215, 0, 0.03), transparent 70%);
+            pointer-events: none;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(40px) scale(0.98);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        /* ===== HEADER ===== */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding: 0 5px 20px 5px;
+            border-bottom: 2px solid rgba(255, 215, 0, 0.12);
+            flex-wrap: wrap;
+            gap: 15px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .logo-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .logo-icon {
+            width: 52px;
+            height: 52px;
+            background: linear-gradient(135deg, #ffd700, #f59e0b);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            font-weight: 900;
+            color: #0a0a1a;
+            font-family: 'Georgia', serif;
+            box-shadow: 0 4px 20px rgba(255, 215, 0, 0.3);
+            transition: transform 0.3s ease;
+            flex-shrink: 0;
+        }
+
+        .logo-icon:hover {
+            transform: rotate(-8deg) scale(1.05);
+        }
+
+        .logo-text {
+            font-size: 26px;
+            font-weight: 900;
+            letter-spacing: 6px;
+            background: linear-gradient(135deg, #ffd700, #f59e0b, #fbbf24);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-family: 'Georgia', serif;
+        }
+
+        .header-title {
+            color: #1a1a2e;
+            font-size: 20px;
+            font-weight: 700;
+            border-left: 2px solid rgba(255, 215, 0, 0.2);
+            padding-left: 18px;
+            line-height: 1.3;
+        }
+
+        .header-title .sub {
+            font-size: 13px;
+            font-weight: 400;
+            color: #6b7280;
+            display: block;
+            margin-top: 2px;
+        }
+
+        .header-title .badge {
+            display: inline-block;
+            background: linear-gradient(135deg, #ffd700, #f59e0b);
+            color: #0a0a1a;
+            font-size: 10px;
+            font-weight: 700;
+            padding: 2px 12px;
+            border-radius: 20px;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            margin-left: 8px;
+            -webkit-text-fill-color: #0a0a1a;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        /* ===== BOTÃO SAIR ===== */
+        .btn-logout {
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+            color: white;
+            padding: 10px 24px;
+            border-radius: 14px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 14px;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(239, 68, 68, 0.25);
+        }
+
+        .btn-logout:hover {
+            transform: translateY(-2px) scale(1.02);
+            box-shadow: 0 8px 30px rgba(239, 68, 68, 0.35);
+        }
+
+        /* ===== TÍTULO DA PAUTA ===== */
+        .page-title {
+            text-align: center;
+            margin-bottom: 25px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .page-title h2 {
+            font-size: 28px;
+            font-weight: 800;
+            color: #1a1a2e;
+            letter-spacing: -0.5px;
+        }
+
+        .page-title .gold {
+            background: linear-gradient(135deg, #ffd700, #f59e0b);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .page-title .subtitle {
+            font-size: 14px;
+            color: #6b7280;
+            font-weight: 400;
+            margin-top: 5px;
+            letter-spacing: 1px;
+        }
+
+        /* ===== BOTÕES DE PAUTAS (NOVO) ===== */
+        .acoes-pautas {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin: 0 0 25px 0;
+            padding: 20px;
+            background: #f8f6f2;
+            border-radius: 16px;
+            border: 1px solid rgba(255, 215, 0, 0.1);
+            animation: fadeIn 0.6s ease 0.15s both;
+        }
+
+        .acoes-pautas .item-pauta {
+            text-align: center;
+            flex: 1;
+            min-width: 200px;
+            padding: 10px;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+        }
+
+        .acoes-pautas .item-pauta:hover {
+            background: rgba(255, 215, 0, 0.05);
+        }
+
+        .acoes-pautas .item-pauta h4 {
+            color: #1a1a2e;
+            margin-bottom: 10px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .acoes-pautas .item-pauta .icon-pdf {
+            font-size: 28px;
+            display: block;
+            margin-bottom: 6px;
+        }
+
+        .btn-pauta {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .btn-pauta:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .btn-pauta.frequencia {
+            background: linear-gradient(135deg, #4f46e5, #7c3aed);
+            color: white;
+        }
+
+        .btn-pauta.frequencia:hover {
+            box-shadow: 0 8px 25px rgba(79, 70, 229, 0.35);
+        }
+
+        .btn-pauta.exames {
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+            color: white;
+        }
+
+        .btn-pauta.exames:hover {
+            box-shadow: 0 8px 25px rgba(245, 158, 11, 0.35);
+        }
+
+        /* ===== WRAPPER DA TABELA ===== */
+        .table-wrapper {
+            overflow-x: auto;
+            border-radius: 20px;
+            border: 1px solid rgba(0, 0, 0, 0.04);
+            background: #faf8f5;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.02);
+            position: relative;
+            z-index: 1;
+        }
+
+        .table-wrapper::-webkit-scrollbar {
+            height: 8px;
+        }
+
+        .table-wrapper::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+
+        .table-wrapper::-webkit-scrollbar-thumb {
+            background: linear-gradient(135deg, #ffd700, #f59e0b);
+            border-radius: 10px;
+        }
+
+        .table-wrapper::-webkit-scrollbar-thumb:hover {
+            background: #f59e0b;
+        }
+
+        /* ===== TABELA ===== */
+        table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            min-width: 1400px;
+            font-size: 13px;
+            font-family: 'Inter', sans-serif;
+        }
+
+        /* ===== CABEÇALHO ===== */
+        thead th {
+            padding: 12px 8px;
+            text-align: center;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        thead th.group {
+            background: linear-gradient(135deg, #1a0a2e, #2d1b3d);
+            color: #ffd700;
+            border-bottom: 3px solid #ffd700;
+            padding: 14px 8px;
+            font-size: 13px;
+            font-weight: 800;
+            letter-spacing: 0.8px;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        thead th.group:first-child {
+            border-radius: 16px 0 0 0;
+        }
+
+        thead th.group:last-child {
+            border-radius: 0 16px 0 0;
+        }
+
+        thead th.sub {
+            background: rgba(26, 10, 46, 0.9);
+            color: #cbd5e1;
+            font-size: 10px;
+            padding: 10px 6px;
+            border-bottom: 1px solid rgba(255, 215, 0, 0.08);
+            font-weight: 600;
+            letter-spacing: 0.3px;
+        }
+
+        thead th.sub:first-child {
+            background: rgba(26, 10, 46, 0.95);
+            color: #ffd700;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        /* ===== CORPO ===== */
+        tbody tr {
+            transition: all 0.2s ease;
+        }
+
+        tbody tr:hover {
+            background: #fffbeb !important;
+            transform: scale(1.001);
+        }
+
+        tbody tr:nth-child(even) {
+            background: #f8f6f2;
+        }
+
+        tbody td {
+            padding: 10px 8px;
+            text-align: center;
+            border-bottom: 1px solid #f1f5f9;
+            font-size: 13px;
+            vertical-align: middle;
+            color: #1e293b;
+        }
+
+        tbody td.nome {
+            font-weight: 700;
+            color: #1a1a2e;
+            text-align: left;
+            padding-left: 18px;
+            background: rgba(255, 215, 0, 0.04);
+            font-size: 14px;
+            position: sticky;
+            left: 0;
+            z-index: 2;
+            min-width: 160px;
+        }
+
+        tbody tr:hover td.nome {
+            background: rgba(255, 215, 0, 0.1);
+        }
+
+        /* ===== MÉDIAS ===== */
+        td .media-box {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 13px;
+            min-width: 30px;
+        }
+
+        td .media-box.t1 {
+            background: linear-gradient(135deg, #dbeafe, #bfdbfe);
+            color: #1e40af;
+        }
+
+        td .media-box.t2 {
+            background: linear-gradient(135deg, #fef3c7, #fde68a);
+            color: #78350f;
+        }
+
+        td .media-box.t3 {
+            background: linear-gradient(135deg, #d1fae5, #a7f3d0);
+            color: #065f46;
+        }
+
+        td .media-box.final {
+            background: linear-gradient(135deg, #ede9fe, #c4b5fd);
+            color: #4c1d95;
+            font-weight: 800;
+            font-size: 14px;
+            padding: 4px 14px;
+        }
+
+        td .status-badge {
+            display: inline-block;
+            padding: 4px 14px;
+            border-radius: 20px;
+            font-weight: 700;
+            font-size: 14px;
+            min-width: 50px;
+            transition: all 0.3s ease;
+        }
+
+        td .status-badge.aprovado {
+            background: linear-gradient(135deg, #d1fae5, #a7f3d0);
+            color: #065f46;
+            box-shadow: 0 2px 8px rgba(16, 185, 129, 0.15);
+        }
+
+        td .status-badge.reprovado {
+            background: linear-gradient(135deg, #fee2e2, #fecaca);
+            color: #991b1b;
+            box-shadow: 0 2px 8px rgba(239, 68, 68, 0.15);
+        }
+
+        td .status-badge:hover {
+            transform: scale(1.05);
+        }
+
+        /* ===== BOTÕES DE AÇÕES ===== */
+        .actions {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 30px;
+            padding-top: 25px;
+            border-top: 2px solid rgba(255, 215, 0, 0.1);
+            flex-wrap: wrap;
+            position: relative;
+            z-index: 1;
+        }
+
+        .btn {
+            padding: 14px 32px;
+            border: none;
+            border-radius: 16px;
+            cursor: pointer;
+            font-size: 15px;
+            font-weight: 700;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            font-family: 'Inter', sans-serif;
+            letter-spacing: 0.3px;
+        }
+
+        .btn:hover {
+            transform: translateY(-3px) scale(1.02);
+        }
+
+        .btn:active {
+            transform: scale(0.98);
+        }
+
+        .btn-exame {
+            background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+            color: white;
+            box-shadow: 0 4px 20px rgba(139, 92, 246, 0.3);
+        }
+
+        .btn-exame:hover {
+            box-shadow: 0 8px 35px rgba(139, 92, 246, 0.4);
+        }
+
+        .btn-grafico {
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+            color: white;
+            box-shadow: 0 4px 20px rgba(245, 158, 11, 0.3);
+        }
+
+        .btn-grafico:hover {
+            box-shadow: 0 8px 35px rgba(245, 158, 11, 0.4);
+        }
+
+        .btn-logout-action {
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+            color: white;
+            box-shadow: 0 4px 20px rgba(239, 68, 68, 0.3);
+        }
+
+        .btn-logout-action:hover {
+            box-shadow: 0 8px 35px rgba(239, 68, 68, 0.4);
+        }
+
+        .btn i {
+            font-size: 16px;
+        }
+
+        /* ===== FOOTER ===== */
+        .footer {
+            text-align: center;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(0, 0, 0, 0.04);
+            position: relative;
+            z-index: 1;
+        }
+
+        .footer .dev {
+            color: #9ca3af;
+            font-size: 13px;
+            font-weight: 400;
+            letter-spacing: 0.5px;
+        }
+
+        .footer .dev strong {
+            color: #4b5563;
+            font-weight: 600;
+        }
+
+        .footer .dev .gold {
+            color: #f59e0b;
+        }
+
+        .footer .year {
+            display: block;
+            font-size: 11px;
+            color: #d1d5db;
+            margin-top: 4px;
+            letter-spacing: 1px;
+        }
+
+        /* ===== RESPONSIVIDADE ===== */
+        @media (max-width: 1024px) {
+            .container {
+                padding: 20px;
+                border-radius: 24px;
+            }
+            .header-title {
+                font-size: 17px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+            .container {
+                padding: 15px;
+                border-radius: 20px;
+            }
+            .header {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 12px;
+                padding-bottom: 15px;
+            }
+            .header-left {
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 12px;
+            }
+            .logo-wrapper {
+                gap: 10px;
+            }
+            .logo-text {
+                font-size: 20px;
+                letter-spacing: 4px;
+            }
+            .logo-icon {
+                width: 44px;
+                height: 44px;
+                font-size: 20px;
+            }
+            .header-title {
+                border-left: none;
+                padding-left: 0;
+                text-align: center;
+                font-size: 16px;
+                width: 100%;
+            }
+            .header-title .sub {
+                font-size: 12px;
+            }
+            .header-right {
+                justify-content: center;
+            }
+            .page-title h2 {
+                font-size: 22px;
+            }
+            .acoes-pautas {
+                flex-direction: column;
+                align-items: center;
+                padding: 15px;
+            }
+            .acoes-pautas .item-pauta {
+                width: 100%;
+            }
+            .actions {
+                flex-direction: column;
+                align-items: center;
+                gap: 12px;
+            }
+            .btn {
+                width: 100%;
+                max-width: 320px;
+                justify-content: center;
+                padding: 12px 24px;
+                font-size: 14px;
+            }
+            table {
+                font-size: 11px;
+                min-width: 1000px;
+            }
+            thead th {
+                font-size: 9px;
+                padding: 6px 4px;
+            }
+            thead th.group {
+                font-size: 11px;
+                padding: 10px 4px;
+            }
+            tbody td {
+                font-size: 11px;
+                padding: 6px 4px;
+            }
+            tbody td.nome {
+                font-size: 12px;
+                padding-left: 10px;
+                min-width: 120px;
+            }
+            td .media-box {
+                font-size: 11px;
+                padding: 2px 8px;
+            }
+            td .status-badge {
+                font-size: 12px;
+                padding: 2px 10px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .logo-text {
+                font-size: 17px;
+                letter-spacing: 3px;
+            }
+            .logo-icon {
+                width: 38px;
+                height: 38px;
+                font-size: 17px;
+                border-radius: 12px;
+            }
+            .page-title h2 {
+                font-size: 18px;
+            }
+            .btn {
+                font-size: 13px;
+                padding: 10px 18px;
+            }
+            .container {
+                padding: 10px;
+                border-radius: 16px;
+            }
+            .table-wrapper {
+                border-radius: 12px;
+            }
+        }
+
+        /* ===== ANIMAÇÕES ADICIONAIS ===== */
+        .fade-in {
+            animation: fadeIn 0.5s ease forwards;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .table-wrapper {
+            animation: fadeIn 0.8s ease 0.2s both;
+        }
+
+        .actions {
+            animation: fadeIn 0.8s ease 0.4s both;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+
+        <!-- ===== HEADER ===== -->
+        <header class="header">
+            <div class="header-left">
+                <div class="logo-wrapper">
+                    <div class="logo-icon">V</div>
+                    <span class="logo-text">VIRTUS</span>
+                </div>
+                <div class="header-title">
+                    👔 Diretor de Turma
+                    <span class="sub">
+                        <i class="fas fa-school" style="margin-right: 4px;"></i>
+                        Sistema de Gestão Escolar
+                        <span class="badge">2026</span>
+                    </span>
+                </div>
+            </div>
+            <div class="header-right">
+                <a href="/logout" class="btn-logout">
+                    <i class="fas fa-sign-out-alt"></i>
+                    Sair
+                </a>
+            </div>
+        </header>
+
+        <!-- ===== TÍTULO ===== -->
+        <div class="page-title">
+            <h2>
+                <i class="fas fa-clipboard-list" style="color: #f59e0b; margin-right: 12px;"></i>
+                Pauta da Turma — <span class="gold">{{ turma_nome }}</span>
+            </h2>
+            <div class="subtitle">
+                <i class="fas fa-user-graduate" style="margin-right: 6px;"></i>
+                Acompanhamento de notas e desempenho
+            </div>
+        </div>
+
+        <!-- ===== BOTÕES DE PAUTAS (NOVO) ===== -->
+        <div class="acoes-pautas">
+            <div class="item-pauta">
+                <span class="icon-pdf">📋</span>
+                <h4>Pauta de Frequência</h4>
+                <a href="/diretor/pauta/frequencia" target="_blank" class="btn-pauta frequencia">
+                    <i class="fas fa-file-pdf"></i> Gerar PDF
+                </a>
+            </div>
+            <div class="item-pauta">
+                <span class="icon-pdf">📝</span>
+                <h4>Pauta de Exames</h4>
+                <a href="/diretor/pauta/exames" target="_blank" class="btn-pauta exames">
+                    <i class="fas fa-file-pdf"></i> Gerar PDF
+                </a>
+            </div>
+        </div>
+
+        <!-- ===== TABELA ===== -->
+        <div class="table-wrapper">
+
+            <table>
+                <thead>
+
+                    <!-- DISCIPLINAS -->
+                    <tr>
+                        <th rowspan="3" class="group" style="min-width: 160px;">
+                            <i class="fas fa-user" style="margin-right: 6px;"></i>
+                            Aluno
+                        </th>
+
+                        {% for d in disciplinas %}
+                        <th colspan="13" class="group">
+                            <i class="fas fa-book" style="margin-right: 8px;"></i>
+                            {{ d.nome }}
+                            {% if d.qualitativa %}
+                            <span style="font-size: 9px; background: rgba(255,215,0,0.2); padding: 2px 8px; border-radius: 12px; margin-left: 8px; font-weight: 400;">
+                                <i class="fas fa-star" style="color: #ffd700;"></i> Qualitativa
+                            </span>
+                            {% endif %}
+                        </th>
+                        {% endfor %}
+
+                        <th rowspan="3" class="group" style="min-width: 100px;">
+                            <i class="fas fa-chart-line" style="margin-right: 6px;"></i>
+                            Média Geral
+                        </th>
+                    </tr>
+
+                    <!-- TRIMESTRES -->
+                    <tr>
+
+                        {% for d in disciplinas %}
+
+                        <th colspan="4" class="sub">
+                            <i class="fas fa-calendar-alt" style="margin-right: 4px;"></i> 1º Trim
+                        </th>
+                        <th colspan="4" class="sub">
+                            <i class="fas fa-calendar-alt" style="margin-right: 4px;"></i> 2º Trim
+                        </th>
+                        <th colspan="4" class="sub">
+                            <i class="fas fa-calendar-alt" style="margin-right: 4px;"></i> 3º Trim
+                        </th>
+                        <th rowspan="2" class="sub" style="background: rgba(26, 10, 46, 0.95); color: #ffd700; font-size: 11px;">
+                            <i class="fas fa-flag-checkered"></i> Final
+                        </th>
+
+                        {% endfor %}
+
+                    </tr>
+
+                    <!-- SUB COLUNAS -->
+                    <tr>
+
+                        {% for d in disciplinas %}
+
+                        <!-- T1 -->
+                        <th class="sub" title="ACS1 - Trimestre 1">ACS1</th>
+                        <th class="sub" title="ACS2 - Trimestre 1">ACS2</th>
+                        <th class="sub" title="AT - Trimestre 1">AT</th>
+                        <th class="sub" style="background: rgba(219, 234, 254, 0.15); color: #93c5fd;">
+                            <i class="fas fa-calculator"></i> M
+                        </th>
+
+                        <!-- T2 -->
+                        <th class="sub" title="ACS1 - Trimestre 2">ACS1</th>
+                        <th class="sub" title="ACS2 - Trimestre 2">ACS2</th>
+                        <th class="sub" title="AT - Trimestre 2">AT</th>
+                        <th class="sub" style="background: rgba(254, 243, 199, 0.15); color: #fbbf24;">
+                            <i class="fas fa-calculator"></i> M
+                        </th>
+
+                        <!-- T3 -->
+                        <th class="sub" title="ACS1 - Trimestre 3">ACS1</th>
+                        <th class="sub" title="ACS2 - Trimestre 3">ACS2</th>
+                        <th class="sub" title="AT - Trimestre 3">AT</th>
+                        <th class="sub" style="background: rgba(167, 243, 208, 0.15); color: #34d399;">
+                            <i class="fas fa-calculator"></i> M
+                        </th>
+
+                        {% endfor %}
+
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                    {% for aluno in alunos %}
+
+                    <tr>
+
+                        <td class="nome">
+                            <i class="fas fa-user-circle" style="color: #f59e0b; margin-right: 10px;"></i>
+                            {{ aluno.nome }}
+                        </td>
+
+                        {% for n in aluno.notas %}
+
+                        <!-- T1 -->
+                        <td>{{ n.acs1_t1 if n.acs1_t1 != 0 else '-' }}</td>
+                        <td>{{ n.acs2_t1 if n.acs2_t1 != 0 else '-' }}</td>
+                        <td>{{ n.at_t1 if n.at_t1 != 0 else '-' }}</td>
+                        <td>
+                            <span class="media-box t1">
+                                {{ n.media_t1 if n.media_t1 is not none else '-' }}
+                            </span>
+                        </td>
+
+                        <!-- T2 -->
+                        <td>{{ n.acs1_t2 if n.acs1_t2 != 0 else '-' }}</td>
+                        <td>{{ n.acs2_t2 if n.acs2_t2 != 0 else '-' }}</td>
+                        <td>{{ n.at_t2 if n.at_t2 != 0 else '-' }}</td>
+                        <td>
+                            <span class="media-box t2">
+                                {{ n.media_t2 if n.media_t2 is not none else '-' }}
+                            </span>
+                        </td>
+
+                        <!-- T3 -->
+                        <td>{{ n.acs1_t3 if n.acs1_t3 != 0 else '-' }}</td>
+                        <td>{{ n.acs2_t3 if n.acs2_t3 != 0 else '-' }}</td>
+                        <td>{{ n.at_t3 if n.at_t3 != 0 else '-' }}</td>
+                        <td>
+                            <span class="media-box t3">
+                                {{ n.media_t3 if n.media_t3 is not none else '-' }}
+                            </span>
+                        </td>
+
+                        <!-- FINAL -->
+                        <td>
+                            <span class="media-box final">
+                                {{ n.media_final if n.media_final is not none else '-' }}
+                            </span>
+                        </td>
+
+                        {% endfor %}
+
+                        <td>
+                            <span class="status-badge {% if aluno.media_geral >= 10 %}aprovado{% else %}reprovado{% endif %}">
+                                {% if aluno.media_geral >= 10 %}
+                                <i class="fas fa-check-circle"></i> {{ aluno.media_geral }}
+                                {% else %}
+                                <i class="fas fa-times-circle"></i> {{ aluno.media_geral }}
+                                {% endif %}
+                            </span>
+                        </td>
+
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+        <!-- ===== BOTÕES ===== -->
+        <div class="actions">
+            <a href="/diretor/exames" class="btn btn-exame">
+                <i class="fas fa-file-alt"></i>
+                Resultados dos Exames
+            </a>
+
+            <a href="/diretor/grafico" class="btn btn-grafico">
+                <i class="fas fa-chart-bar"></i>
+                Gráficos da Turma
+            </a>
+
+            <a href="/logout" class="btn btn-logout-action">
+                <i class="fas fa-sign-out-alt"></i>
+                Sair
+            </a>
+        </div>
+
+        <!-- ===== FOOTER ===== -->
+        <footer class="footer">
+            <div class="dev">
+                Desenvolvido por <strong>Klésio Yannick Cassamo</strong>
+                <span class="gold">✦</span>
+                <span class="year">VIRTUS © 2026 — Todos os direitos reservados</span>
+            </div>
+        </footer>
+
+    </div>
+
+</body>
+</html>
