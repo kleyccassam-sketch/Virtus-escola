@@ -830,6 +830,114 @@ def zumbopay_consultar_status(transaction_id):
         print(f"❌ Erro ao consultar: {e}")
         return {"status": "error", "message": str(e)}
 
+
+@app.route("/super-admin/configurar-pagamentos-acesso", methods=["GET", "POST"])
+def super_configurar_pagamentos_acesso():
+    if session.get("tipo") != "super_admin":
+        return redirect("/super-login")
+    
+    escola_id = request.args.get("escola_id")
+    if not escola_id:
+        return redirect("/super-admin")
+    
+    erro = ""
+    sucesso = ""
+    
+    conn = conectar()
+    cursor = conn.cursor()
+    
+    if request.method == "POST":
+        valor_notas = request.form.get("valor_notas")
+        valor_biblioteca = request.form.get("valor_biblioteca")
+        mpesa_numero = request.form.get("mpesa_numero", "").strip()
+        emola_numero = request.form.get("emola_numero", "").strip()
+        mkesh_numero = request.form.get("mkesh_numero", "").strip()
+        
+        mes_referencia = datetime.now().strftime("%Y-%m")
+        
+        # 🔥 ATUALIZA VALORES DE PAGAMENTO
+        cursor.execute("""
+            UPDATE config_pagamentos_acesso 
+            SET ativo = 0 
+            WHERE escola_id = ? AND tipo IN ('notas', 'biblioteca')
+        """, (escola_id,))
+        
+        if valor_notas and float(valor_notas) > 0:
+            cursor.execute("""
+                INSERT INTO config_pagamentos_acesso (escola_id, tipo, valor, mes_referencia, ativo)
+                VALUES (?, 'notas', ?, ?, 1)
+            """, (escola_id, float(valor_notas), mes_referencia))
+        
+        if valor_biblioteca and float(valor_biblioteca) > 0:
+            cursor.execute("""
+                INSERT INTO config_pagamentos_acesso (escola_id, tipo, valor, mes_referencia, ativo)
+                VALUES (?, 'biblioteca', ?, ?, 1)
+            """, (escola_id, float(valor_biblioteca), mes_referencia))
+        
+        # 🔥 SALVA OS NÚMEROS DE TELEFONE
+        cursor.execute("""
+            INSERT OR REPLACE INTO config (chave, valor, escola_id)
+            VALUES ('mpesa_numero', ?, ?)
+        """, (mpesa_numero, escola_id))
+        
+        cursor.execute("""
+            INSERT OR REPLACE INTO config (chave, valor, escola_id)
+            VALUES ('emola_numero', ?, ?)
+        """, (emola_numero, escola_id))
+        
+        cursor.execute("""
+            INSERT OR REPLACE INTO config (chave, valor, escola_id)
+            VALUES ('mkesh_numero', ?, ?)
+        """, (mkesh_numero, escola_id))
+        
+        conn.commit()
+        sucesso = "✅ Configurações atualizadas com sucesso!"
+    
+    # 🔥 BUSCA VALORES ATUAIS
+    cursor.execute("""
+        SELECT tipo, valor FROM config_pagamentos_acesso 
+        WHERE escola_id = ? AND ativo = 1
+    """, (escola_id,))
+    
+    valores = cursor.fetchall()
+    valor_notas = 0
+    valor_biblioteca = 0
+    
+    for tipo, valor in valores:
+        if tipo == 'notas':
+            valor_notas = valor
+        elif tipo == 'biblioteca':
+            valor_biblioteca = valor
+    
+    # 🔥 BUSCA OS NÚMEROS SALVOS
+    cursor.execute("SELECT valor FROM config WHERE chave = 'mpesa_numero' AND escola_id = ?", (escola_id,))
+    mpesa_numero = cursor.fetchone()
+    mpesa_numero = mpesa_numero[0] if mpesa_numero else ""
+    
+    cursor.execute("SELECT valor FROM config WHERE chave = 'emola_numero' AND escola_id = ?", (escola_id,))
+    emola_numero = cursor.fetchone()
+    emola_numero = emola_numero[0] if emola_numero else ""
+    
+    cursor.execute("SELECT valor FROM config WHERE chave = 'mkesh_numero' AND escola_id = ?", (escola_id,))
+    mkesh_numero = cursor.fetchone()
+    mkesh_numero = mkesh_numero[0] if mkesh_numero else ""
+    
+    cursor.execute("SELECT nome FROM escolas WHERE id = ?", (escola_id,))
+    escola_nome = cursor.fetchone()[0]
+    
+    conn.close()
+    
+    return render_template("super_configurar_pagamentos_acesso.html",
+        escola_id=escola_id,
+        escola_nome=escola_nome,
+        valor_notas=valor_notas,
+        valor_biblioteca=valor_biblioteca,
+        mpesa_numero=mpesa_numero,
+        emola_numero=emola_numero,
+        mkesh_numero=mkesh_numero,
+        erro=erro,
+        sucesso=sucesso)
+    
 # ================= WEBHOOK ZUMBOPAY =================
 
 @app.route("/webhook/zumbopay", methods=["POST"])
